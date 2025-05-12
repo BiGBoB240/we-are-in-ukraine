@@ -202,18 +202,18 @@ document.addEventListener('DOMContentLoaded', function() {
                     ${post.content ? `<div class="post-content-box">${post.content}</div>` : ''}
                     ${isLoggedIn ? `<button class="report-btn" id="modal-report-post-btn" onclick="reportPost(${post.id})" style="float:right;">Побачили помилку?</button>` : ''}
                     ${window.isAdmin ? `<button class="buttons-style-one" id="modal-edit-post-btn" style="float:left; margin-right:10px;">Редагувати пост</button>` : ''}
-                          ${post.comments ? `
+                    ${post.comments ? `
                         <button class="like-button${post.has_liked ? ' liked' : ''}" onclick="togglePostLike(${post.id}, this)">
                             <span class="like-icon">❤️</span> <span class="likes-count">${post.post_likes}</span>
                         </button>   
+                    ${isLoggedIn || post.comments.length > 0 ? `
                         <div class="comment-section comment-section-box">
-                            <h3>Коментарі</h3>
-                        ${isLoggedIn ? `
-                        <form class="comment-form">
-                            <textarea placeholder="Додати коментар..." maxlength="300"></textarea>
-                            <button class="buttons-style-one" type="submit">Відправити</button>
-                        </form>
-                    ` : ''}
+                            <h3>Коментарі</h3>` : ''}
+                            ${isLoggedIn ? `
+                                <form class="comment-form">
+                                    <textarea placeholder="Додати коментар..." maxlength="300"></textarea>
+                                    <button class="buttons-style-one" type="submit">Відправити</button>
+                                </form>` : ''}
                             ${post.comments.map(comment => `
                                 <div class="comment" data-comment-id="${comment.id}">
                                     <div class="comment-content">
@@ -244,7 +244,6 @@ document.addEventListener('DOMContentLoaded', function() {
                             `).join('')}
                         </div>
                     ` : ''}
-
                 `;
 
                 // Initialize slider in modal if exists
