@@ -1,3 +1,30 @@
+// Функція видалення поста
+function deletePost(postId) {
+    if (confirm('Ви впевнені, що хочете видалити цей пост?')) {
+        fetch('api/delete_post.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ post_id: postId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Пост успішно видалено!');
+                // Оновлюємо сторінку
+                window.location.reload();
+            } else {
+                alert('Помилка при видаленні поста: ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Помилка при видаленні поста');
+        });
+    }
+}
+
 // Модалка для редагування поста
 window.editPostModal = function(post) {
     // Якщо вже існує модалка, видаляємо
@@ -25,6 +52,7 @@ window.editPostModal = function(post) {
                     `).join('')}
                 </div>
                 <button class="modal-add-post-btn" type="submit">Зберегти зміни</button>
+                <button class="modal-delete-post-btn" type="button" data-post-id="${post.id}">Видалити пост</button>
             </form>
         </div>
     `;
@@ -77,6 +105,15 @@ window.editPostModal = function(post) {
     });
 
     // Обробка форми редагування
+    // Додаємо обробник для кнопки видалення
+    const deleteButton = document.querySelector('.modal-delete-post-btn');
+    if (deleteButton) {
+        deleteButton.onclick = function() {
+            const postId = this.dataset.postId;
+            deletePost(postId);
+        };
+    }
+
     document.getElementById('edit-post-form').onsubmit = function(e) {
         e.preventDefault();
         const formData = new FormData();

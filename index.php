@@ -31,7 +31,7 @@ if (isset($_SESSION['user_id'])) {
                     <a href="index.php">ПАБ МИ В УКРАЇНІ</a>
                 </div>
                 <div class="search-bar">
-                    <input type="text" id="search" placeholder="Пошук...">
+                    <input type="text" id="search" autocomplete="off" placeholder="Пошук...">
                     <div id="search-results" class="search-results"></div>
                 </div>
                 <?php if (isset($_SESSION['user_id'])): ?><button class="report-btn" title="Поскаржитись на пост"></button><?php endif; ?>

@@ -62,9 +62,13 @@ try {
     $stmt = $pdo->prepare('DELETE FROM Comments WHERE user_id = ?');
     $stmt->execute([$userId]);
     
-    // Delete user's reports
+    // Delete reports created by the user
     $stmt = $pdo->prepare('DELETE FROM Reports WHERE reported_by_id = ?');
     $stmt->execute([$userId]);
+    
+    // Delete reports about the user
+    $stmt = $pdo->prepare('DELETE FROM Reports WHERE content_type = ? AND content_id IN (SELECT id FROM Users WHERE id = ?)');
+    $stmt->execute(['user', $userId]);
     
     // Delete user from Administrations if exists
     $stmt = $pdo->prepare('DELETE FROM Administrations WHERE user_id = ?');

@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', function() {
         postDiv.className = 'post';
         postDiv.innerHTML = `
             <h2>${post.title}</h2>
-            ${post.images.length > 0 ? createImageSlider(post.images) : ''}
+            ${post.images.length > 0 ? createImageSlider(post.images, false) : ''}
             ${post.content ? `<div class="post-content">${post.content}</div>` : ''}
             <div class="post-footer">
                 <div class="rating">
@@ -129,7 +129,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Initialize image slider if exists
         const slider = postDiv.querySelector('.image-slider');
-        if (slider) {
+        if (slider && post.images.length > 0) {
             initializeImageSlider(slider, post.images);
         }
 
@@ -137,11 +137,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Create image slider
-    function createImageSlider(images) {
+    function createImageSlider(images, isInModal = false) {
         if (images.length === 0) return '';
         return `
-            <div class="image-slider" data-current="0">
-                <img src="assets/upload/${images[0]}" alt="Post image" class="slider-main-img">
+            <div class="image-slider">
+                <img src="assets/upload/${images[0]}" alt="Post image" class="slider-main-img" data-is-modal="${isInModal}">
                 ${images.length > 1 ? `
                     <button class="slider-prev">&lt;</button>
                     <button class="slider-next">&gt;</button>
@@ -179,9 +179,12 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        mainImg.addEventListener('click', () => {
-            window.open(mainImg.src, '_blank');
-        });
+        // Add click handler only for modal images
+        if (mainImg.dataset.isModal === 'true') {
+            mainImg.addEventListener('click', () => {
+                window.open(mainImg.src, '_blank');
+            });
+        }
 
         // Инициализация
         showImage(currentIndex);
@@ -195,7 +198,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const modalBody = modalContainer.querySelector('.modal-body');
                 modalBody.innerHTML = `
                     <h2>${post.title}</h2>
-                    ${post.images.length > 0 ? createImageSlider(post.images) : ''}
+                    ${post.images.length > 0 ? createImageSlider(post.images, true) : ''}
                     ${post.content ? `<div class="post-content-box">${post.content}</div>` : ''}
                     ${isLoggedIn ? `<button class="report-btn" id="modal-report-post-btn" onclick="reportPost(${post.id})" style="float:right;">Побачили помилку?</button>` : ''}
                     ${window.isAdmin ? `<button class="buttons-style-one" id="modal-edit-post-btn" style="float:left; margin-right:10px;">Редагувати пост</button>` : ''}

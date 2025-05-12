@@ -162,7 +162,6 @@ document.addEventListener('DOMContentLoaded', function() {
                             </div>
                         `;
                     }
-                    // Додаємо кнопку для майбутнього функціоналу
                     // Додаємо кнопку закриття скарги з data-атрибутами
                     content += `<button class="close-report-btn" data-content-id="${report[report.type]?.id || ''}" data-content-type="${report.type}">Закрити скаргу</button>`;
                     const div = document.createElement('div');
@@ -263,4 +262,32 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     });
+
+
+    window.deleteComment = function(commentId) {
+        if (confirm('Ви впевнені, що хочете видалити цей коментар?')) {
+            fetch('api/delete_comment.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ comment_id: commentId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Оновлюємо список скарг
+                    loadReports();
+                } else {
+                    alert(data.error || 'Помилка при видаленні коментаря');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Помилка при видаленні коментаря');
+            });
+        }
+    };
+
 });
+

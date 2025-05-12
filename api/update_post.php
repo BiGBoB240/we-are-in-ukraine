@@ -55,7 +55,15 @@ for ($i = 1; $i <= 3; $i++) {
             $params[] = $fileName;
         }
     } elseif (isset($_POST['remove_image'.$i])) {
-        // Видалення зображення
+        // Видаляємо зображення з файлової системи
+        $existingFile = $post["picture{$i}_path"];
+        if ($existingFile) {
+            $fullPath = $uploadDir . $existingFile;
+            if (file_exists($fullPath)) {
+                unlink($fullPath);
+            }
+        }
+        // Видалення зображення з бази даних
         $updateFields[] = "picture{$i}_path = NULL";
         // НЕ додаємо у $params
     } else {

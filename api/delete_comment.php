@@ -45,11 +45,28 @@ try {
         }
     }
 
-    // Delete comment
-    $stmt = $pdo->prepare("DELETE FROM Comments WHERE id = ?");
-    $stmt->execute([$commentId]);
+    // Start transaction
+    $pdo->beginTransaction();
     
-    echo json_encode(['success' => 'Коментар видалено']);
+    try {
+        // Delete comment
+        $stmt = $pdo->prepare("DELETE FROM Comments WHERE id = ?");
+        $stmt->execute([$commentId]);
+        
+        // Delete related likes
+        $stmt = $pdo->prepare("DELETE FROM CommentLikes WHERE comment_id = ?");
+        $stmt->execute([$commentId]);
+        
+        // Delete related reports without sending email
+        $stmt = $pdo->prepare("DELETE FROM Reports WHERE content_id = ? AND content_type = 'comment'");
+        $stmt->execute([$commentId]);
+        
+        $pdo->commit();
+        echo json_encode(['success' => true, 'message' => 'Коментар видалено']);
+    } catch (Exception $e) {
+        $pdo->rollBack();
+        echo json_encode(['error' => 'Помилка при видаленні коментаря: ' . $e->getMessage()]);
+    }
 } catch (PDOException $e) {
     echo json_encode(['error' => 'Помилка при видаленні коментаря']);
 }
