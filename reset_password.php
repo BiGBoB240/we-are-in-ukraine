@@ -20,7 +20,10 @@ if (isset($_SESSION['user_id']) || !$token) {
         <div class="container">
             <div class="header-content">
                 <div class="logo">
-                    <a href="index.php">Ми в Україні</a>
+                    <a href="index.php">
+                        <span class="logo-part1">ПАБ</span>
+                        <span class="logo-part2">МИ В УКРАЇНІ</span>
+                    </a>
                 </div>
                 <nav class="nav-links">
                     <a href="login.php">Вхід</a>

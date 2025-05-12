@@ -164,12 +164,6 @@ body {
     margin-bottom: 10px;
 }
 
-/* Для кнопки скарги справа в модалці */
-#modal-report-post-btn {
-    float: right;
-    margin-left: 10px;
-}
-
 @media (max-width: 600px) {
   .post-content-box, .comment-section-box {
     padding: 10px 6px;
@@ -182,7 +176,6 @@ body {
     text-align: center;
   }
 }
-
 
 .report-btn {
     color: #E57300;
@@ -207,7 +200,32 @@ body {
     position: sticky;
     top: 0;
     z-index: 1000;
-    min-height: 65px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Logo parts */
+.logo-part1, .logo-part2 {
+    display: inline;
+}
+
+/* Hide ПАБ on small screens */
+@media (max-width: 768px) {
+    .logo-part1 {
+        display: none;
+    }
+    .logo-part2 {
+        font-size: 1.2rem;
+    }
+}
+
+/* Adjust logo size on very small screens */
+@media (max-width: 480px) {
+    .logo-part2 {
+        font-size: 1rem;
+    }
+    .search-bar {
+        display: none;
+    }
 }
 
 .header-content {
@@ -268,9 +286,13 @@ body {
 
 .search-bar input {
     width: 100%;
+    min-width: 150px;
     padding: 0.5rem;
     border: none;
     border-radius: 4px;
+    background: #f5f5f5;
+    font-size: 1rem;
+    transition: all 0.3s ease;
 }
 
 .search-results {

@@ -24,7 +24,10 @@ if (isset($_SESSION['user_id'])) {
         <div class="container">
             <div class="header-content">
                 <div class="logo">
-                    <a href="index.php">ПАБ МИ В УКРАЇНІ</a>
+                    <a href="index.php">
+                        <span class="logo-part1">ПАБ</span>
+                        <span class="logo-part2">МИ В УКРАЇНІ</span>
+                    </a>
                 </div>
                 <button class="nav-toggle" aria-label="Відкрити меню">
                     <span class="nav-toggle-bar"></span>

@@ -28,7 +28,10 @@ if (isset($_SESSION['user_id'])) {
         <div class="container">
             <div class="header-content">
                 <div class="logo">
-                    <a href="index.php">ПАБ МИ В УКРАЇНІ</a>
+                    <a href="index.php">
+                        <span class="logo-part1">ПАБ</span>
+                        <span class="logo-part2">МИ В УКРАЇНІ</span>
+                    </a>
                 </div>
                 <div class="search-bar">
                     <input type="text" id="search" autocomplete="off" placeholder="Пошук...">
@@ -36,11 +39,11 @@ if (isset($_SESSION['user_id'])) {
                 </div>
                 <?php if (isset($_SESSION['user_id'])): ?><button class="report-btn" title="Поскаржитись на пост"></button><?php endif; ?>
                 <button class="nav-toggle" aria-label="Відкрити меню">
-    <span class="nav-toggle-bar"></span>
-    <span class="nav-toggle-bar"></span>
-    <span class="nav-toggle-bar"></span>
-</button>
-<nav class="nav-links">
+                    <span class="nav-toggle-bar"></span>
+                    <span class="nav-toggle-bar"></span>
+                    <span class="nav-toggle-bar"></span>
+                </button>
+                <nav class="nav-links">
                     <a href="feedback.php">ЗВОРОТНІЙ ЗВ'ЯЗОК</a>
                     <?php if(isset($_SESSION['user_id'])): ?>
                         <a href="profile.php?id=<?php echo (int)$_SESSION['user_id']; ?>">ПРОФІЛЬ</a>
