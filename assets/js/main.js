@@ -26,8 +26,18 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Global variable to check if user is logged in
-    const isLoggedIn = document.querySelector('.nav-links').innerHTML.includes('Профіль');
-
+    let isLoggedIn = false;
+    
+    // Check login status
+    fetch('api/check_login.php')
+        .then(response => response.json())
+        .then(data => {
+            isLoggedIn = data.isLoggedIn;
+        })
+        .catch(error => {
+            console.error('Error checking login status:', error);
+        });
+        
     // Search functionality
     let searchTimeout;
     searchInput.addEventListener('input', function() {
@@ -123,7 +133,6 @@ document.addEventListener('DOMContentLoaded', function() {
             initializeImageSlider(slider, post.images);
         }
 
-        // Кнопку скарги у стрічці більше не додаємо
         return postDiv;
     }
 

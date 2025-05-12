@@ -24,12 +24,42 @@ if ($token) {
 <head>
     <meta charset="UTF-8">
     <title>Підтвердження акаунта</title>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body>
-    <div class="container" style="margin-top: 5rem; text-align: center;">
+<header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <a href="../index.php">ПАБ МИ В УКРАЇНІ</a>
+                </div>
+                <button class="nav-toggle" aria-label="Відкрити меню">
+                    <span class="nav-toggle-bar"></span>
+                    <span class="nav-toggle-bar"></span>
+                    <span class="nav-toggle-bar"></span>
+                </button>
+                <nav class="nav-links">
+                    <a href="../index.php">НА ГОЛОВНУ</a>
+                    <a href="../login.php">ВХІД</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+    <main class="main-content">
+    <div class="container" style="text-align: center;">
         <h1><?php echo htmlspecialchars($message); ?></h1>
-        <a href="../login.php">Перейти до входу</a>
+        <br />
+        <a class="buttons-style-one" href="../login.php">Перейти до входу</a>
     </div>
+
+    </main>
+    <footer class="footer">
+        <div class="container">
+            <p>Copyright © Всі права захищені</p>
+        </div>
+    </footer>
+    <script src="../assets/js/register.js"></script>
+    <script src="../assets/js/register.js"></script>
+    <script src="../assets/js/mobileMenu.js"></script>
 </body>
 </html>
