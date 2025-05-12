@@ -1,0 +1,59 @@
+<?php
+session_start();
+$token = $_GET['token'] ?? '';
+if (isset($_SESSION['user_id']) || !$token) {
+    header('Location: index.php');
+    exit;
+}
+?>
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Скидання пароля</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="icon" type="image/png" href="http://my-v-ukrayini.rv.ua/wp-content/uploads/2018/03/logoalphasmallwhite.png">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <a href="index.php">Ми в Україні</a>
+                </div>
+                <nav class="nav-links">
+                    <a href="login.php">Вхід</a>
+                    <a href="register.php">Реєстрація</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+    <main class="main-content">
+        <div class="container">
+            <div class="auth-section">
+                <h1>Скидання пароля</h1>
+                <form id="resetForm">
+                    <input type="hidden" id="token" name="token" value="<?php echo htmlspecialchars($token); ?>">
+                    <div class="form-group">
+                        <label for="password">Новий пароль*</label>
+                        <input type="password" id="password" name="password" required minlength="8">
+                    </div>
+                    <div class="form-group">
+                        <label for="password_confirm">Підтвердіть пароль*</label>
+                        <input type="password" id="password_confirm" name="password_confirm" required minlength="8">
+                    </div>
+                    <button type="submit" class="buttons-style-one">Зберегти</button>
+                </form>
+                <div id="resetMessage"></div>
+            </div>
+        </div>
+    </main>
+    <footer class="footer">
+        <div class="container">
+            <p>Copyright © Всі права захищені</p>
+        </div>
+    </footer>
+    <script src="assets/js/reset_password.js"></script>
+</body>
+</html>

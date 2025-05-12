@@ -1,0 +1,114 @@
+.like-button {
+    background: none;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: transform 0.2s;
+}
+
+.like-button:hover {
+    transform: scale(1.1);
+}
+
+.like-button .like-icon {
+    font-size: 16px;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+}
+
+.like-button.liked .like-icon {
+    opacity: 1;
+}
+
+.like-button .likes-count {
+    font-size: 14px;
+    color: #666;
+}
+
+.like-button.liked .likes-count {
+    color: #e74c3c;
+}
+
+.comment-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.comment-actions button {
+    min-width: 130px;
+    display: inline-block;
+    background: linear-gradient(90deg, #4ffaff, #00c0ff);
+    color: #333;
+    border: none;
+    border-radius: 8px;
+    padding: 9px 22px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(255, 193, 7, 0.13);
+    transition: background 0.18s, color 0.18s, box-shadow 0.2s;
+}
+
+.comment-actions button:hover {
+    opacity: 80%;
+}
+
+.edit-form {
+    margin-top: 10px;
+}
+
+.modal-reports .edit-form textarea{
+    width: 100%;
+    min-height: 110px;
+    padding: 12px 16px;
+    border: 1.5px solid #ffd180;
+    border-radius: 8px;
+    font-size: 16px;
+    background: #fffbe6;
+    resize: vertical;
+    margin-bottom: 14px;
+    transition: border 0.2s, box-shadow 0.2s;
+}
+
+
+.edit-form textarea {
+    width: 100%;
+    min-height: 110px;
+    padding: 12px 16px;
+    border: 1.5px solid #b3e5fc;
+    border-radius: 8px;
+    font-size: 16px;
+    background: #f6faff;
+    resize: vertical;
+    margin-bottom: 14px;
+    transition: border 0.2s, box-shadow 0.2s;
+}
+
+.edit-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.edit-buttons button {
+    min-width: 130px;
+    display: inline-block;
+    background: linear-gradient(90deg, #4ffaff, #00c0ff);
+    color: #333;
+    border: none;
+    border-radius: 8px;
+    padding: 9px 22px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(255, 193, 7, 0.13);
+    transition: background 0.18s, color 0.18s, box-shadow 0.2s;
+}
+
+.edit-buttons button:first-child {
+    background: linear-gradient(90deg, #58e946, #50c100);
+}
+
