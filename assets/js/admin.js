@@ -4,22 +4,26 @@ document.addEventListener('DOMContentLoaded', function() {
     // Проверяем глобальную переменную window.isAdmin, которую выставит index.php
     if (!window.isAdmin) return;
 
-    // Добавляем панель админа
+    // Добавляем админ кнопки в filter-buttons
     const container = document.querySelector('.posts-header');
     if (!container) return;
-    const adminPanel = document.createElement('div');
-    adminPanel.className = 'admin-panel';
-    adminPanel.innerHTML = `
-        <button id="admin-add-post" class="buttons-style-one">ДОДАТИ ПОСТ</button>
-        <button id="admin-reports-btn" class="buttons-style-one">СКАРГИ</button>
-    `;
-    // Вставити admin-panel перед .filter-buttons
     const filterButtons = container.querySelector('.filter-buttons');
-    if (filterButtons) {
-        container.insertBefore(adminPanel, filterButtons);
-    } else {
-        container.appendChild(adminPanel);
-    }
+    if (!filterButtons) return;
+
+    // Добавляем админ кнопки в filter-buttons
+    const adminAddPostBtn = document.createElement('button');
+    adminAddPostBtn.id = 'admin-add-post';
+    adminAddPostBtn.className = 'buttons-style-one';
+    adminAddPostBtn.textContent = 'ДОДАТИ ПОСТ';
+
+    const adminReportsBtn = document.createElement('button');
+    adminReportsBtn.id = 'admin-reports-btn';
+    adminReportsBtn.className = 'buttons-style-one';
+    adminReportsBtn.textContent = 'СКАРГИ';
+
+    // Добавляем админ кнопки в начало filter-buttons
+    filterButtons.insertBefore(adminAddPostBtn, filterButtons.firstChild);
+    filterButtons.insertBefore(adminReportsBtn, filterButtons.firstChild);
 
     // Модальное окно для добавления поста
     const modal = document.createElement('div');

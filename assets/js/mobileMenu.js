@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Показувати тільки на малих екранах
     function handleResize() {
-        if(window.innerWidth <= 700) {
+        if(window.innerWidth <= 1000) {
             navToggle.style.display = '';
             document.querySelector('.nav-links').style.display = 'none';
         } else {

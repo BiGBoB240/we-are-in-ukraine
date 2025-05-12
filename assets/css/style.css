@@ -1,7 +1,7 @@
 :root {
     --primary-gray: #333333;
-    --light-gray: #f5f5f5;
-    --white: #ffffff;
+    --light-gray: #e5e5e5;
+    --white: #f5f5f5;
     --primary-orange: #E57300;
 }
 
@@ -9,6 +9,14 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+h1  {
+    margin-bottom: 1rem;
+}
+
+input {
+    font-family: 'Montserrat', sans-serif;
 }
 
 body {
@@ -23,6 +31,94 @@ body {
     display: flex;
     gap: 1rem;
     transition: right 0.3s;
+}
+
+/* Auth links styles */
+.auth-section {
+    max-width: 400px;
+    width: 90%;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+.auth-links {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+}
+
+/* Responsive adjustments for auth-section */
+@media (max-width: 768px) {
+    .auth-section {
+        max-width: 350px;
+        padding: 1.5rem 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .auth-section {
+        max-width: 300px;
+        padding: 1rem 0.5rem;
+    }
+}
+
+.auth-section button[type="submit"] {
+    display: block;
+    margin: 1rem auto;
+    width: 100%;
+    max-width: 300px;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    text-align: center;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+/* Make register form button responsive */
+@media (max-width: 400px) {
+    .auth-section button[type="submit"] {
+        font-size: 0.9rem;
+        padding: 0.6rem 1rem;
+    }
+}
+
+.auth-section.forgot-password button{
+    max-width: 450px;
+    white-space: normal;
+}
+.auth-section.forgot-password {
+    max-width: 500px;
+}
+
+.auth-links button,
+.register-form button[type="submit"] {
+    width: 100%;
+    max-width: 300px;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    text-align: center;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+    margin: 1rem 0;
+}
+
+/* Make register form button responsive */
+@media (max-width: 400px) {
+    .auth-links button,
+    .register-form button[type="submit"] {
+        font-size: 0.9rem;
+        padding: 0.6rem 1rem;
+    }
+}
+
+/* Make auth links responsive */
+@media (max-width: 400px) {
+    .auth-links button {
+        font-size: 0.9rem;
+        padding: 0.6rem 1rem;
+    }
 }
 
 .nav-toggle {
@@ -48,7 +144,7 @@ body {
     transition: 0.3s;
 }
 
-@media (max-width: 700px) {
+@media (max-width: 1000px) {
     .mobile-menu-modal {
         display: none;
         position: fixed;
@@ -111,7 +207,7 @@ body {
         background: #f5f5f5;
     }
 }
-@media (max-width: 700px) {
+@media (max-width: 1000px) {
     .nav-links {
         position: fixed;
         top: 60px;
@@ -135,11 +231,15 @@ body {
     }
 }
 
-
 .container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 15px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', serif;
 }
 
 /* Інші стилі */
@@ -201,6 +301,7 @@ body {
     top: 0;
     z-index: 1000;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    font-family: 'Montserrat', sans-serif;
 }
 
 /* Logo parts */
@@ -213,16 +314,10 @@ body {
     .logo-part1 {
         display: none;
     }
-    .logo-part2 {
-        font-size: 1.2rem;
-    }
 }
 
 /* Adjust logo size on very small screens */
 @media (max-width: 480px) {
-    .logo-part2 {
-        font-size: 1rem;
-    }
     .search-bar {
         display: none;
     }
@@ -281,7 +376,7 @@ body {
 
 .search-bar {
     position: relative;
-    width: 300px;
+    width: 400px;
 }
 
 .search-bar input {
@@ -312,12 +407,17 @@ body {
     border-top-left-radius: 0;
 }
 
+
+
 .nav-links a {
     white-space: nowrap;
-
     color: var(--white);
     text-decoration: none;
     margin-left: 1.5rem;
+}
+
+.nav-links a:hover {
+    opacity: 80%;
 }
 
 /* Main Content */
@@ -325,24 +425,6 @@ body {
     flex: 1;
     padding: 2rem 0;
 }
-
-.posts-header {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 16px;
-    margin-bottom: 1rem;
-    position: relative;
-}
-
-
-.filter-buttons {
-    display: flex;
-    flex-direction: row;
-    gap: 8px;
-}
-
 
 .buttons-style-one {
     padding: 0.5rem 1rem;
@@ -358,12 +440,6 @@ body {
 .buttons-style-one:hover {
     opacity: 80%;
     background: var(--primary-orange);
-}
-
-.filter-buttons {
-    display: flex;
-    flex-direction: row;
-    gap: 8px;
 }
 
 .profile-control-btn {
@@ -386,7 +462,7 @@ body {
 }
 
 textarea{
-    font-family: Arial;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .posts-container {
@@ -415,6 +491,7 @@ textarea{
     margin-bottom: 1.5rem;
     cursor: pointer;
     transition: transform 0.2s;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .post:hover {
@@ -702,6 +779,7 @@ textarea{
     border-radius: 8px;
     max-height: 90vh;
     overflow-y: auto;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .modal-close {
@@ -753,6 +831,76 @@ textarea:focus {
     resize: vertical;
 }
 
+
+.filter-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.filter-buttons button {
+    width: calc(50% - 0.5rem); /* 50% minus half the gap */
+    min-width: 120px;
+    max-width: 45%;
+    padding: 0.5rem 1rem;
+    text-align: center;
+    font-size: 0.9rem;
+    white-space: normal;
+    word-break: break-word;
+    line-height: 1.4;
+}
+
+/* Make buttons stack vertically on small screens */
+@media (max-width: 600px) {
+    .filter-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    .filter-buttons button {
+        width: 100%;
+        max-width: 300px;
+        margin: 0.5rem 0;
+    }
+    .posts-header {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+/* Admin panel styles */
+.admin-panel {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.admin-panel button {
+    flex: 1;
+    min-width: 120px;
+    max-width: 200px;
+    text-align: center;
+    font-size: 0.9rem;
+    white-space: normal;
+    word-break: break-word;
+    line-height: 1.4;
+}
+
+/* Make admin buttons stack vertically on small screens */
+@media (max-width: 768px) {
+    .admin-panel {
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+    .admin-panel button {
+        width: 100%;
+        max-width: 300px;
+        margin: 0.5rem 0;
+    }
+}
+
 .rating-buttons {
     display: flex;
     gap: 1rem;
@@ -784,6 +932,7 @@ textarea:focus {
     max-width: 800px;
     margin: 0 auto;
     padding: 2rem 0;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .feedback-section h1 {
@@ -851,15 +1000,6 @@ textarea:focus {
     padding: 0.75rem 2rem;
 }
 
-/* Admin Section */
-.admin-panel {
-    display: flex;
-    flex-direction: row;
-    gap: 8px;
-    margin-right: 24px;
-    position: static;
-}
-
 .modal-add-image-btn {
     border: 1px solid #ddd;
     background: #fff;
@@ -898,8 +1038,18 @@ textarea:focus {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    margin-top: 1rem;
+    margin-bottom: 1rem;
+    position: relative;
     flex-wrap: wrap;
+    gap: 1rem;
+}
+
+button{
+    font-family: 'Montserrat', sans-serif;
+}
+
+a{
+    font-family: 'Montserrat', sans-serif;
 }
 
 .admin-section {
@@ -957,20 +1107,33 @@ textarea:focus {
 
 /* Footer */
 .footer {
-    background-color: var(--primary-gray);
-    color: var(--white);
-    padding: 1rem 0;
-    text-align: center;
+background-color: var(--primary-gray);
+color: var(--white);
+padding: 1rem 0;
+text-align: center;
+margin-top: auto;
+position: relative;
 }
 
 /* Back to top button */
 .back-to-top {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
+position: fixed;
+bottom: 20px;
+right: 20px;
+width: 50px;
+height: 50px;
+border-radius: 50%;
+background-color: var(--primary-gray);
+color: white;
+text-align: center;
+line-height: 50px;
+font-size: 20px;
+cursor: pointer;
+opacity: 0;
+visibility: hidden;
+transition: opacity 0.3s, visibility 0.3s;
+z-index: 1000;
+box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
     background-color: var(--primary-gray);
     color: white;
     text-align: center;

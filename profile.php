@@ -37,6 +37,8 @@ $lastName = isset($nameParts[1]) ? $nameParts[1] : '';
     <link rel="stylesheet" href="assets/css/comments.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="icon" type="image/png" href="http://my-v-ukrayini.rv.ua/wp-content/uploads/2018/03/logoalphasmallwhite.png">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Playfair+Display:400,400i,700,700i,900,900i" rel="stylesheet">
     <script>
         window.isLoggedIn = <?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>;
         window.profileUserId = <?php echo (int)$profileUserId; ?>;
@@ -136,10 +138,10 @@ $lastName = isset($nameParts[1]) ? $nameParts[1] : '';
                   <!-- ! <h2><?php echo (isset($_SESSION['user_id']) && $_SESSION['user_id'] == $profileUserId) ? 'МОЇ КОМЕНТАРІ' : 'КОМЕНТАРІ КОРИСТУВАЧА'; ?></h2> -->
                     <div class="profile-actions-bars">
                     <div class="filter-buttons">
-                        <button class="buttons-style-one filter-btn" id="filter-date-new" data-filter="date-new">За ДАТОЮ: НОВІШЕ</button>
-                        <button class="buttons-style-one filter-btn" id="filter-date-old" data-filter="date-old">За ДАТОЮ: ДАВНІШЕ</button>
-                        <button class="buttons-style-one filter-btn" id="filter-rating-high" data-filter="rating-high">За ОЦІНКОЮ: ВІД БІЛЬШОЇ</button>
-                        <button class="buttons-style-one filter-btn" id="filter-rating-low" data-filter="rating-low">За ОЦІНКОЮ: ВІД МЕНШОЇ</button>
+                        <button class="buttons-style-one filter-btn" id="filter-date-new" data-filter="date-new">ЗА ДАТОЮ: НОВІШЕ</button>
+                        <button class="buttons-style-one filter-btn" id="filter-date-old" data-filter="date-old">ЗА ДАТОЮ: ДАВНІШЕ</button>
+                        <button class="buttons-style-one filter-btn" id="filter-rating-high" data-filter="rating-high">ЗА ОЦІНКОЮ: ВІД БІЛЬШОЇ</button>
+                        <button class="buttons-style-one filter-btn" id="filter-rating-low" data-filter="rating-low">ЗА ОЦІНКОЮ: ВІД МЕНШОЇ</button>
                     </div>
                     </div>
                     <div id="comments-container">
