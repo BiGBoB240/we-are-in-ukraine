@@ -63,7 +63,7 @@ try {
     $stmt->execute([$userId]);
     
     // Delete user's reports
-    $stmt = $pdo->prepare('DELETE FROM Reports WHERE user_id = ?');
+    $stmt = $pdo->prepare('DELETE FROM Reports WHERE reported_by_id = ?');
     $stmt->execute([$userId]);
     
     // Delete user from Administrations if exists
