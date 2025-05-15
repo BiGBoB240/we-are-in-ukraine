@@ -201,16 +201,16 @@ function loadComments(filter = 'date-new') {
                     <div class="edit-form" id="edit-form-${comment.id}" style="display: none;">
                         <textarea class="edit-textarea">${comment.comment_text}</textarea>
                         <div class="edit-buttons">
-                            <button onclick="saveComment(${comment.id})">Зберегти</button>
-                            <button onclick="cancelEdit(${comment.id})">Скасувати</button>
+                            <button class="buttons-style-one" onclick="saveCommentprofile(${comment.id})">Зберегти</button>
+                            <button class="buttons-style-one" onclick="cancelEdit(${comment.id})">Скасувати</button>
                         </div>
                     </div>
                 `;
 
                 const actionButtons = comment.can_edit || comment.can_delete ? `
                     <div class="comment-actions">
-                        ${comment.can_edit ? `<button onclick="editComment(${comment.id})">Редагувати</button>` : ''}
-                        ${comment.can_delete ? `<button onclick="deleteComment(${comment.id})">Видалити</button>` : ''}
+                        ${comment.can_edit ? `<button class="buttons-style-one" onclick="editComment(${comment.id})">Редагувати</button>` : ''}
+                        ${comment.can_delete ? `<button class="buttons-style-one" onclick="deleteComment(${comment.id})">Видалити</button>` : ''}
                     </div>
                 ` : '';
 
@@ -223,6 +223,7 @@ function loadComments(filter = 'date-new') {
             commentsContainer.innerHTML = '<p class="error">Помилка при завантаженні коментарів</p>';
         });
 }
+
 
 // Глобальна функція для скарги на коментар (використовується у кнопці)
 window.reportComment = function(commentId) {
@@ -238,19 +239,8 @@ window.reportComment = function(commentId) {
     }
 };
 
-// Edit comment
-function editComment(commentId) {
-    const commentText = document.getElementById(`comment-text-${commentId}`);
-    const editForm = document.getElementById(`edit-form-${commentId}`);
-    
-    if (commentText && editForm) {
-        commentText.style.display = 'none';
-        editForm.style.display = 'block';
-    }
-}
-
 // Save edited comment
-function saveComment(commentId) {
+function saveCommentprofile(commentId) {
     const editForm = document.getElementById(`edit-form-${commentId}`);
     const textarea = editForm.querySelector('.edit-textarea');
     const newText = textarea.value.trim();
@@ -288,7 +278,7 @@ function saveComment(commentId) {
         alert('Помилка при оновленні коментаря');
     });
 }
-
+/*
 // Delete comment
 function deleteComment(commentId) {
     if (confirm('Ви впевнені, що хочете видалити цей коментар?')) {
@@ -311,6 +301,18 @@ function deleteComment(commentId) {
         });
     }
 }
+
+// Edit comment
+function editComment(commentId) {
+    const commentText = document.getElementById(`comment-text-${commentId}`);
+    const editForm = document.getElementById(`edit-form-${commentId}`);
+        
+    if (commentText && editForm) {
+        commentText.style.display = 'none';
+        editForm.style.display = 'block';
+    }
+}
+*/
 
 // Toggle comment like
 window.toggleCommentLike = function(commentId, button) {

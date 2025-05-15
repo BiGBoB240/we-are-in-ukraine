@@ -230,14 +230,14 @@ document.addEventListener('DOMContentLoaded', function() {
                                     <div class="edit-form" id="edit-form-${comment.id}" style="display: none;">
                                         <textarea class="edit-textarea">${comment.comment_text}</textarea>
                                         <div class="edit-buttons">
-                                            <button onclick="saveComment(${comment.id})">Зберегти</button>
-                                            <button onclick="cancelEdit(${comment.id})">Скасувати</button>
+                                            <button class="buttons-style-one" onclick="saveComment(${comment.id})">Зберегти</button>
+                                            <button class="buttons-style-one" onclick="cancelEdit(${comment.id})">Скасувати</button>
                                         </div>
                                     </div>
                                     ${comment.can_edit || comment.can_delete ? `
                                         <div class="comment-actions">
-                                            ${comment.can_edit ? `<button onclick="editComment(${comment.id})">Редагувати</button>` : ''}
-                                            ${comment.can_delete ? `<button onclick="deleteComment(${comment.id})">Видалити</button>` : ''}
+                                            ${comment.can_edit ? `<button class="buttons-style-one" onclick="editComment(${comment.id})">Редагувати</button>` : ''}
+                                            ${comment.can_delete ? `<button class="buttons-style-one" onclick="deleteComment(${comment.id})">Видалити</button>` : ''}
                                         </div>
                                     ` : ''}
                                 </div>
@@ -296,6 +296,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         .catch(() => alert('Помилка при надсиланні скарги'));
                     }
                 };
+                
                 // Handle comment submission
                 const commentForm = modalBody.querySelector('.comment-form');
                 if (commentForm) {
@@ -467,10 +468,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 comment_id: commentId
             })
         })
+
         .then(response => response.json())
         .then(data => {
             if (data.success) {
                 const commentDiv = document.querySelector(`[data-comment-id="${commentId}"]`);
+                console.log(commentDiv); // Убедитесь, что элемент есть в DOM
                 if (commentDiv) {
                     commentDiv.remove();
                 }
