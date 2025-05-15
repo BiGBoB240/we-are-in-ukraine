@@ -53,7 +53,6 @@ if (isset($_SESSION['user_id'])) {
                     </div>
                     <div class="auth-links">
                     <button type="submit" class="buttons-style-one">УВІТИ</button>
-                    
                     <button type="button" class="buttons-style-one" onclick="window.location.href='register.php'">ЗАРЕЄСТРУВАТИСЯ</button>
                     <button type="button" class="buttons-style-one" onclick="window.location.href='forgot_password.php'">ЗАБУЛИ ПАРОЛЬ?</button>
                     </div>
