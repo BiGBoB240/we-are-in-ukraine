@@ -45,14 +45,20 @@ window.editPostModal = function(post) {
                 <div id="edit-images-block">
                     ${[0,1,2].map(i => `
                         <div class="image-preview-container">
-                            <img id="edit-preview-image${i+1}" src="assets/upload/${post.images && post.images[i] ? post.images[i] : ''}" style="display:${post.images && post.images[i] ? 'block' : 'none'}">
-                            <input type="file" name="image${i+1}" accept="image/*" class="modal-add-image-btn" id="edit-image-input${i+1}"><br>
+                         <img id="edit-preview-image${i+1}" src="assets/upload/${post.images && post.images[i] ? post.images[i] : ''}" style="display:${post.images && post.images[i] ? 'block' : 'none'}">
+                         <label class="buttons-style-one">
+                            <input type="file" name="image${i+1}" accept="image/*" class="modal-add-image-btn" id="edit-image-input${i+1}" style="display:none;">
+                            <span id="edit-custom-btn-${i+1}">Обрати фото</span>
+                        </label>
+                        <div class="file-name" id="edit-file-name-${i+1}">${post.images && post.images[i] ? post.images[i] : 'Фото не було обране'}</div>
                             <button type="button" class="buttons-style-one" id="edit-remove-image${i+1}" style="display:${post.images && post.images[i] ? 'inline-block' : 'none'}; margin-left:10px;">Видалити</button>
                         </div>
                     `).join('')}
                 </div>
+                <div class="post-edit-buttons">
                 <button class="buttons-style-one" type="submit">Зберегти зміни</button>
-                <button class="buttons-style-one" type="button" data-post-id="${post.id}">Видалити пост</button>
+                <button class="buttons-style-one modal-delete-post-btn" type="button" data-post-id="${post.id}">Видалити пост</button>
+                </div>
             </form>
         </div>
     `;
@@ -70,7 +76,19 @@ window.editPostModal = function(post) {
         const input = document.getElementById('edit-image-input'+i);
         const preview = document.getElementById('edit-preview-image'+i);
         const removeBtn = document.getElementById('edit-remove-image'+i);
-        // Превʼю
+        const fileNameField = document.getElementById('edit-file-name-'+i);
+        const customBtn = document.getElementById('edit-custom-btn-'+i);
+
+        // Клик по кастомной кнопке — открыть выбор файла
+        if (customBtn) {
+            customBtn.onclick = function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                input.click();
+                return false;
+            };
+        }
+        // Превʼю и имя файла
         input.onchange = function() {
             const file = this.files[0];
             if (file && file.type.startsWith('image/')) {
@@ -81,10 +99,12 @@ window.editPostModal = function(post) {
                     removeBtn.style.display = 'inline-block';
                 };
                 reader.readAsDataURL(file);
+                if (fileNameField) fileNameField.textContent = file.name;
             } else {
                 preview.src = '';
                 preview.style.display = 'none';
                 removeBtn.style.display = 'none';
+                if (fileNameField) fileNameField.textContent = 'Фото не було обране';
             }
         };
         // Видалення
@@ -92,15 +112,14 @@ window.editPostModal = function(post) {
             preview.src = '';
             preview.style.display = 'none';
             removeBtn.style.display = 'none';
-            input.value = ''; // Очищаємо поле вводу
-            
+            input.value = '';
+            if (fileNameField) fileNameField.textContent = 'Фото не було обране';
             // Додаємо приховане поле для видалення
             const hiddenInput = document.createElement('input');
             hiddenInput.type = 'hidden';
             hiddenInput.name = 'remove_image' + i;
             hiddenInput.value = '1';
             input.parentNode.insertBefore(hiddenInput, input.nextSibling);
-        
         };
     });
 

@@ -39,17 +39,29 @@ document.addEventListener('DOMContentLoaded', function() {
                 <textarea name="content" placeholder="Введіть текст поста..." required></textarea><br>
                 <div class="image-preview-container">
                     <img id="preview-image1">
-                    <input type="file" name="image1" accept="image/*" class="modal-add-image-btn"><br>
+                    <label class="buttons-style-one">
+                        <input type="file" name="image1" accept="image/*" class="modal-add-image-btn" style="display:none;">
+                        <span id="custom-btn-1">Обрати фото</span>
+                    </label>
+                    <div class="file-name" id="file-name-1">Фото не було обране</div>
                     <button class="buttons-style-one" type="button" id="remove-image1" style="display:none; margin-left:10px;">Видалити</button>
                 </div>
                 <div class="image-preview-container">
                     <img id="preview-image2">
-                    <input type="file" name="image2" accept="image/*" class="modal-add-image-btn"><br>
+                    <label class="buttons-style-one">
+                        <input type="file" name="image2" accept="image/*" class="modal-add-image-btn" style="display:none;">
+                        <span id="custom-btn-2">Обрати фото</span>
+                    </label>
+                    <div class="file-name" id="file-name-2">Фото не було обране</div>
                     <button class="buttons-style-one" type="button" id="remove-image2" style="display:none; margin-left:10px;">Видалити</button>
                 </div>
                 <div class="image-preview-container">
                     <img id="preview-image3">
-                    <input type="file" name="image3" accept="image/*" class="modal-add-image-btn"><br>
+                    <label class="buttons-style-one">
+                        <input type="file" name="image3" accept="image/*" class="modal-add-image-btn" style="display:none;">
+                        <span id="custom-btn-3">Обрати фото</span>
+                    </label>
+                    <div class="file-name" id="file-name-3">Фото не було обране</div>
                     <button class="buttons-style-one" type="button" id="remove-image3" style="display:none; margin-left:10px;">Видалити</button>
                 </div>
                 <button class="buttons-style-one" type="submit">Опублікувати</button>
@@ -78,31 +90,48 @@ document.addEventListener('DOMContentLoaded', function() {
         // Додаємо прев’ю для кожного input[type=file]
         const files = modal.querySelectorAll('.modal-add-image-btn');
         files.forEach((input, idx) => {
-            const preview = modal.querySelector(`#preview-image${idx+1}`);
-            const removeBtn = modal.querySelector(`#remove-image${idx+1}`);
-            input.onchange = function() {
-                const file = this.files[0];
-                if (file && file.type.startsWith('image/')) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        preview.src = e.target.result;
-                        preview.style.display = 'block';
-                        removeBtn.style.display = 'inline-block';
-                    };
-                    reader.readAsDataURL(file);
-                } else {
-                    preview.src = '';
-                    preview.style.display = 'none';
-                    removeBtn.style.display = 'none';
-                }
+    const i = idx + 1;
+    const preview = modal.querySelector(`#preview-image${i}`);
+    const removeBtn = modal.querySelector(`#remove-image${i}`);
+    const fileNameField = modal.querySelector(`#file-name-${i}`);
+    const customBtn = modal.querySelector(`#custom-btn-${i}`);
+
+    // Clicking the custom button triggers file input
+    if (customBtn) {
+        customBtn.onclick = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            input.click();
+            return false;
+        };
+    }
+
+    input.onchange = function() {
+        const file = this.files[0];
+        if (file && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+                removeBtn.style.display = 'inline-block';
             };
-            removeBtn.onclick = function() {
-                input.value = '';
-                preview.src = '';
-                preview.style.display = 'none';
-                removeBtn.style.display = 'none';
-            };
-        });
+            reader.readAsDataURL(file);
+            if (fileNameField) fileNameField.textContent = file.name;
+        } else {
+            preview.src = '';
+            preview.style.display = 'none';
+            removeBtn.style.display = 'none';
+            if (fileNameField) fileNameField.textContent = 'Фото не було обране';
+        }
+    };
+    removeBtn.onclick = function() {
+        input.value = '';
+        preview.src = '';
+        preview.style.display = 'none';
+        removeBtn.style.display = 'none';
+        if (fileNameField) fileNameField.textContent = 'Фото не було обране';
+    };
+});
     };
 
 

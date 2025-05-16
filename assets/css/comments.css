@@ -3,7 +3,6 @@
     border: none;
     padding: 5px 10px;
     cursor: pointer;
-    display: inline-flex;
     align-items: center;
     gap: 5px;
     transition: transform 0.2s;
@@ -43,13 +42,18 @@
 }
 
 
-.edit-buttons {
+.post-edit-buttons {
     display: flex;
+    justify-content: space-between;
     gap: 10px;
 }
 
+.post-edit-buttons .buttons-style-one{
+    width: 100%;
+}
+
 .comment .buttons-style-one{
- width: 110px;    
+ width: 135px;    
 }
 
 .edit-textarea{
