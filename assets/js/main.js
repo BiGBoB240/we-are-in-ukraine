@@ -106,11 +106,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Create post element
     function createPostElement(post) {
+        const filteredImages = post.images ? post.images.filter(img => img) : [];
         const postDiv = document.createElement('div');
         postDiv.className = 'post';
         postDiv.innerHTML = `
             <h2>${post.title}</h2>
-            ${post.images.length > 0 ? createImageSlider(post.images, false) : ''}
+            ${filteredImages.length > 0 ? createImageSlider(filteredImages, false) : ''}
             ${post.content ? `<div class="post-content">${post.content}</div>` : ''}
             <div class="post-footer">
                 <div class="rating">
@@ -129,8 +130,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Initialize image slider if exists
         const slider = postDiv.querySelector('.image-slider');
-        if (slider && post.images.length > 0) {
-            initializeImageSlider(slider, post.images);
+        if (slider && filteredImages.length > 0) {
+            initializeImageSlider(slider, filteredImages);
         }
 
         return postDiv;
@@ -195,10 +196,11 @@ document.addEventListener('DOMContentLoaded', function() {
         fetch(`api/post.php?id=${postId}`)
             .then(response => response.json())
             .then(post => {
+                const filteredImages = post.images ? post.images.filter(img => img) : [];
                 const modalBody = modalContainer.querySelector('.modal-body');
                 modalBody.innerHTML = `
                     <h2>${post.title}</h2>
-                    ${post.images.length > 0 ? createImageSlider(post.images, true) : ''}
+                    ${filteredImages.length > 0 ? createImageSlider(filteredImages, true) : ''}
                     ${post.content ? `<div class="post-content-box">${post.content}</div>` : ''}
                     ${isLoggedIn ? `
                         <div class="post-content-box">
@@ -252,7 +254,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Initialize slider in modal if exists
                 const modalSlider = modalBody.querySelector('.image-slider');
                 if (modalSlider) {
-                    initializeImageSlider(modalSlider, post.images);
+                    initializeImageSlider(modalSlider, filteredImages);
                 }
 
                 modalContainer.style.display = 'block';

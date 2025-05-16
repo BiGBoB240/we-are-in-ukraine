@@ -39,12 +39,12 @@ try {
     foreach ($posts as &$post) {
         $hasImages = !empty($post['picture1_path']) || !empty($post['picture2_path']) || !empty($post['picture3_path']);
         
-        // Get images array
-        $post['images'] = array_filter([
+        // Get images array (always 3 elements, even if some are empty)
+        $post['images'] = [
             $post['picture1_path'],
             $post['picture2_path'],
             $post['picture3_path']
-        ]);
+        ];
         
         // Truncate content based on type
         if ($hasImages && !empty($post['content'])) {

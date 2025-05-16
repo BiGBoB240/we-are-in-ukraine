@@ -42,11 +42,11 @@ try {
     }
 
     // Get post images
-    $post['images'] = array_filter([
+    $post['images'] = [
         $post['picture1_path'],
         $post['picture2_path'],
         $post['picture3_path']
-    ]);
+    ];
     unset($post['picture1_path'], $post['picture2_path'], $post['picture3_path']);
 
     // Определяем, лайкал ли пользователь этот пост
