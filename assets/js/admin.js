@@ -34,25 +34,26 @@ document.addEventListener('DOMContentLoaded', function() {
             <span class="close"></span>
             <h2>Додати пост</h2>
             <form id="add-post-form" enctype="multipart/form-data">
+            <div id="edit-images-block">
                 <input type="text" name="title" placeholder="Назва" required class="modal-add-post-input"><br>
                 <textarea name="content" placeholder="Введіть текст поста..." required></textarea><br>
-                <input type="file" name="image1" accept="image/*" class="modal-add-image-btn"><br>
                 <div class="image-preview-container">
-                    <img id="preview-image1" style="max-width: 100px; max-height: 100px; display:none; margin-bottom:5px;">
-                    <button type="button" id="remove-image1" style="display:none; margin-left:10px;">Видалити</button>
+                    <img id="preview-image1">
+                    <input type="file" name="image1" accept="image/*" class="modal-add-image-btn"><br>
+                    <button class="buttons-style-one" type="button" id="remove-image1" style="display:none; margin-left:10px;">Видалити</button>
                 </div>
-                <input type="file" name="image2" accept="image/*" class="modal-add-image-btn"><br>
                 <div class="image-preview-container">
-                    <img id="preview-image2" style="max-width: 100px; max-height: 100px; display:none; margin-bottom:5px;">
-                    <button type="button" id="remove-image2" style="display:none; margin-left:10px;">Видалити</button>
+                    <img id="preview-image2">
+                    <input type="file" name="image2" accept="image/*" class="modal-add-image-btn"><br>
+                    <button class="buttons-style-one" type="button" id="remove-image2" style="display:none; margin-left:10px;">Видалити</button>
                 </div>
-                <input type="file" name="image3" accept="image/*" class="modal-add-image-btn"><br>
                 <div class="image-preview-container">
-                    <img id="preview-image3" style="max-width: 100px; max-height: 100px; display:none; margin-bottom:5px;">
-                    <button type="button" id="remove-image3" style="display:none; margin-left:10px;">Видалити</button>
+                    <img id="preview-image3">
+                    <input type="file" name="image3" accept="image/*" class="modal-add-image-btn"><br>
+                    <button class="buttons-style-one" type="button" id="remove-image3" style="display:none; margin-left:10px;">Видалити</button>
                 </div>
-
-                <button type="submit" class="modal-add-post-btn">Опублікувати</button>
+                <button class="buttons-style-one" type="submit">Опублікувати</button>
+            </div>
             </form>
         </div>
     `;
@@ -125,7 +126,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             <div class="report-item">
                                 <b>Пост:</b> ${report.post.title} <br>
                                 <b>Дата створення:</b> ${report.post.created_at}<br>
-                                <button class="report-action-btn" onclick="openPost(${report.post.id})">Відкрити пост</button>
+                                <button class="buttons-style-one" onclick="openPost(${report.post.id})">Відкрити пост</button>
                             </div>
                         `;
                     }
@@ -133,7 +134,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         content = `
                             <div class="report-item">
                                 <b>Користувач:</b> ${report.user.username} (ID: ${report.user.id})<br>
-                                <button class="report-action-btn" onclick="openUserProfile(${report.user.id})">Відкрити профіль</button>
+                                <button class="buttons-style-one" onclick="openUserProfile(${report.user.id})">Відкрити профіль</button>
                             </div>
                         `;
                     }
@@ -153,21 +154,21 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <div class="edit-form" id="edit-form-${c.id}" style="display: none;">
                                     <textarea class="edit-textarea">${c.comment_text}</textarea>
                                     <div class="edit-buttons">
-                                        <button onclick="saveComment(${c.id}, true)">Зберегти</button>
-                                        <button onclick="cancelEdit(${c.id})">Скасувати</button>
+                                        <button class="buttons-style-one" onclick="saveComment(${c.id}, true)">Зберегти</button>
+                                        <button class="buttons-style-one" onclick="cancelEdit(${c.id})">Скасувати</button>
                                     </div>
                                 </div>
                                 ${(c.can_edit || c.can_delete) ? `
                                     <div class="comment-actions">
-                                        ${c.can_edit ? `<button onclick="editComment(${c.id})">Редагувати</button>` : ''}
-                                        ${c.can_delete ? `<button onclick="deleteComment(${c.id})">Видалити</button>` : ''}
+                                        ${c.can_edit ? `<button class="buttons-style-one" onclick="editComment(${c.id})">Редагувати</button>` : ''}
+                                        ${c.can_delete ? `<button class="buttons-style-one" onclick="deleteComment(${c.id})">Видалити</button>` : ''}
                                     </div>
                                 ` : ''}
                             </div>
                         `;
                     }
                     // Додаємо кнопку закриття скарги з data-атрибутами
-                    content += `<button class="close-report-btn" data-content-id="${report[report.type]?.id || ''}" data-content-type="${report.type}">Закрити скаргу</button>`;
+                    content += `<button class="close-report-btn buttons-style-one" data-content-id="${report[report.type]?.id || ''}" data-content-type="${report.type}">Закрити скаргу</button>`;
                     const div = document.createElement('div');
                     div.innerHTML = content;
                     reportsList.appendChild(div);

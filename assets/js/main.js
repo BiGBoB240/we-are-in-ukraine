@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function() {
             ${post.content ? `<div class="post-content">${post.content}</div>` : ''}
             <div class="post-footer">
                 <div class="rating">
-                    <span>Оцінка: ${post.post_likes}</span>
+                    <span>❤️ ${post.post_likes}</span>
                 </div>
                 <div class="date">${post.created_at}</div>
             </div>
@@ -200,13 +200,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     <h2>${post.title}</h2>
                     ${post.images.length > 0 ? createImageSlider(post.images, true) : ''}
                     ${post.content ? `<div class="post-content-box">${post.content}</div>` : ''}
-                    ${isLoggedIn ? `<button class="report-btn" id="modal-report-post-btn" onclick="reportPost(${post.id})" style="float:right;">Побачили помилку?</button>` : ''}
-                    ${window.isAdmin ? `<button class="buttons-style-one" id="modal-edit-post-btn" style="float:left; margin-right:10px;">Редагувати пост</button>` : ''}
-                    ${post.comments ? `
+                    ${isLoggedIn ? `
+                        <div class="post-content-box">
+                        ${window.isAdmin ? `<button class="buttons-style-one" id="modal-edit-post-btn" style="float:left; margin-right:10px;">Редагувати пост</button>` : ''}
                         <button class="like-button${post.has_liked ? ' liked' : ''}" onclick="togglePostLike(${post.id}, this)">
                             <span class="like-icon">❤️</span> <span class="likes-count">${post.post_likes}</span>
-                        </button>   
-                    ${isLoggedIn || post.comments.length > 0 ? `
+                        </button>
+                        <button class="report-btn" id="modal-report-post-btn" onclick="reportPost(${post.id})" style="float:right;">Побачили помилку?</button>
+                        </div>` : ''}
+                    ${post.comments ? `
+                        ${isLoggedIn || post.comments.length > 0 ? `
                         <div class="comment-section comment-section-box">
                             <h3>Коментарі</h3>` : ''}
                             ${isLoggedIn ? `
@@ -245,7 +248,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         </div>
                     ` : ''}
                 `;
-
+                
                 // Initialize slider in modal if exists
                 const modalSlider = modalBody.querySelector('.image-slider');
                 if (modalSlider) {
@@ -472,8 +475,18 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
+                // Try to find the comment in the modal first
+                const modalBody = document.querySelector('.modal-body');
+                if (modalBody) {
+                    const commentDiv = modalBody.querySelector(`[data-comment-id="${commentId}"]`);
+                    if (commentDiv) {
+                        commentDiv.remove();
+                        return;
+                    }
+                }
+
+                // If not found in modal, try to find it in profile
                 const commentDiv = document.querySelector(`[data-comment-id="${commentId}"]`);
-                console.log(commentDiv); // Убедитесь, что элемент есть в DOM
                 if (commentDiv) {
                     commentDiv.remove();
                 }

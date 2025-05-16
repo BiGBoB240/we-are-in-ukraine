@@ -45,14 +45,14 @@ window.editPostModal = function(post) {
                 <div id="edit-images-block">
                     ${[0,1,2].map(i => `
                         <div class="image-preview-container">
-                            <img id="edit-preview-image${i+1}" src="assets/upload/${post.images && post.images[i] ? post.images[i] : ''}" style="max-width: 100px; max-height: 100px; display:${post.images && post.images[i] ? 'block' : 'none'}; margin-bottom:5px;">
+                            <img id="edit-preview-image${i+1}" src="assets/upload/${post.images && post.images[i] ? post.images[i] : ''}" style="display:${post.images && post.images[i] ? 'block' : 'none'}">
                             <input type="file" name="image${i+1}" accept="image/*" class="modal-add-image-btn" id="edit-image-input${i+1}"><br>
-                            <button type="button" id="edit-remove-image${i+1}" style="display:${post.images && post.images[i] ? 'inline-block' : 'none'}; margin-left:10px;">Видалити</button>
+                            <button type="button" class="buttons-style-one" id="edit-remove-image${i+1}" style="display:${post.images && post.images[i] ? 'inline-block' : 'none'}; margin-left:10px;">Видалити</button>
                         </div>
                     `).join('')}
                 </div>
-                <button class="modal-add-post-btn" type="submit">Зберегти зміни</button>
-                <button class="modal-delete-post-btn" type="button" data-post-id="${post.id}">Видалити пост</button>
+                <button class="buttons-style-one" type="submit">Зберегти зміни</button>
+                <button class="buttons-style-one" type="button" data-post-id="${post.id}">Видалити пост</button>
             </form>
         </div>
     `;

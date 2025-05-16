@@ -82,10 +82,8 @@ if (isset($_SESSION['user_id'])) {
         </div>
     </footer>
 
-    <script>
-        window.isAdmin = <?php echo $isAdmin ? 'true' : 'false'; ?>;
-        window.currentUserId = <?php echo isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 'null'; ?>;
-    </script>
+    <script>window.isAdmin = <?php echo $isAdmin ? 'true' : 'false'; ?>;
+            window.currentUserId = <?php echo isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 'null'; ?>;</script>
     <script src="assets/js/main.js"></script>
     <script src="assets/js/editPostModal.js"></script>
     <script src="assets/js/mobileMenu.js"></script>

@@ -201,9 +201,7 @@ $lastName = isset($nameParts[1]) ? $nameParts[1] : '';
             <p>Copyright © Всі права захищені</p>
         </div>
     </footer>
-    <script>
-        window.currentUserId = <?php echo isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 'null'; ?>;
-    </script>
+    <script>window.currentUserId = <?php echo isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 'null'; ?>;</script>
     <script src="assets/js/profile.js"></script>
     <script src="assets/js/main.js"></script>
     <script src="assets/js/mobileMenu.js"></script>
