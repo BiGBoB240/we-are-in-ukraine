@@ -473,8 +473,8 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     window.deleteComment = function(commentId) {
-        custom('Ви впевнені, що хочете видалити цей коментар?', function(result) {
-            if (!result) return;
+        customConfirm('Ви впевнені, що хочете видалити цей коментар?').then(function(confirmed){
+            if (confirmed) {
 
             fetch('api/delete_comment.php', {
                 method: 'POST',
@@ -509,6 +509,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.error('Error:', error);
                 customAlert('Помилка при видаленні коментаря');
             });
+        }
         });
     };
 

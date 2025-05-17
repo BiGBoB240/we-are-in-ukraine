@@ -198,7 +198,7 @@ function loadComments(filter = 'date-new') {
             }
 
             if (!data.comments || data.comments.length === 0) {
-                commentsContainer.innerHTML = '<p>Немає коментарів</p>';
+                commentsContainer.innerHTML = '<p class="existed-comments">Користувач ще не залишав коментарі</p>';
                 return;
             }
 
