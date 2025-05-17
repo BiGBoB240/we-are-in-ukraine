@@ -60,5 +60,6 @@ if (isset($_SESSION['user_id']) || !$token) {
         </div>
     </footer>
     <script src="assets/js/reset_password.js"></script>
+    <script src="assets/js/customAlert.js"></script>
 </body>
 </html>

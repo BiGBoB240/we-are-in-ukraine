@@ -29,16 +29,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 body: formData
             })
             .then(response => response.json())
-            .then(data => {
+            .then(data => { 
                 if (data.success) {
                     customAlert('Дякуємо за ваше звернення! Ми зв\'яжемося з вами найближчим часом.');
                     feedbackForm.reset();
                 } else {
-                    alert(data.error || 'Помилка при відправці звернення. Спробуйте пізніше.');
+                    customAlert(data.error || 'Помилка при відправці звернення. Спробуйте пізніше.');
                 }
             })
             .catch(error => {
-                alert('Помилка при відправці звернення. Спробуйте пізніше.');
+                customAlert('Помилка при відправці звернення. Спробуйте пізніше.');
             });
         });
     }
@@ -98,12 +98,12 @@ function resolveFeedback(feedbackId) {
             if (feedbackItem) {
                 feedbackItem.remove();
             }
-            alert('Звернення позначено як вирішене. Користувачу відправлено повідомлення.');
+            customAlert('Звернення позначено як вирішене. Користувачу відправлено повідомлення.');
         } else {
-            alert(data.error || 'Помилка при обробці звернення.');
+            customAlert(data.error || 'Помилка при обробці звернення.');
         }
     })
     .catch(error => {
-        alert('Помилка при обробці звернення.');
+        customAlert('Помилка при обробці звернення.');
     });
 }

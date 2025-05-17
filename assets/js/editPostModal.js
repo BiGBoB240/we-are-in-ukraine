@@ -13,12 +13,12 @@ function deletePost(postId) {
             if (data.success) {
                 window.location.reload();
             } else {
-                alert('Помилка при видаленні поста: ' + data.error);
+                customAlert('Помилка при видаленні поста: ' + data.error);
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Помилка при видаленні поста');
+            customAlert('Помилка при видаленні поста');
         });
     }
 }
@@ -162,13 +162,11 @@ window.editPostModal = function(post) {
         .then(res => res.json())
         .then(data => {
             if (data.success) {
-                alert('Пост оновлено!');
-                editModal.remove();
                 window.location.reload();
             } else {
-                alert(data.error || 'Помилка при оновленні поста!');
+                customAlert(data.error || 'Помилка при оновленні поста!');
             }
         })
-        .catch(() => alert('Помилка при оновленні поста!'));
+        .catch(() => customAlert('Помилка при оновленні поста!'));
     };
 };

@@ -69,5 +69,6 @@ if (isset($_SESSION['user_id'])) {
     </footer>
     <script src="assets/js/login.js"></script>
     <script src="assets/js/mobileMenu.js"></script>
+    <script src="assets/js/customAlert.js"></script>
 </body>
 </html>

@@ -217,7 +217,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } else if (window.openPostModal) {
             window.openPostModal(id);
         } else {
-            alert('Функція openPostModal не знайдена');
+            customAlert('Функція openPostModal не знайдена');
         }
     };
     window.openUserProfile = function(id) {
@@ -255,7 +255,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (result.success) {
             window.location.reload();
         } else {
-            alert(result.error || 'Помилка!');
+            customAlert(result.error || 'Помилка!');
         }
     };
 
@@ -266,7 +266,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const contentId = btn.getAttribute('data-content-id');
             const contentType = btn.getAttribute('data-content-type');
             if (!contentId || !contentType) {
-                alert('Не вдалося визначити елемент скарги.');
+                customAlert('Не вдалося визначити елемент скарги.');
                 return;
             }
             btn.disabled = true;
@@ -279,14 +279,14 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
-                    alert('Скаргу успішно закрито. Користувачі отримають повідомлення.');
+                    customAlert('Скаргу успішно закрито. Користувачі отримають повідомлення.');
                     loadReports(); // Оновити список скарг
                 } else {
-                    alert('Помилка при закритті скарги: ' + (data.error || ''));
+                    customAlert('Помилка при закритті скарги: ' + (data.error || ''));
                 }
             })
             .catch(() => {
-                alert('Помилка при з’єднанні з сервером.');
+                customAlert('Помилка при з’єднанні з сервером.');
             })
             .finally(() => {
                 btn.disabled = false;
@@ -311,12 +311,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Оновлюємо список скарг
                     loadReports();
                 } else {
-                    alert(data.error || 'Помилка при видаленні коментаря');
+                    customAlert(data.error || 'Помилка при видаленні коментаря');
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Помилка при видаленні коментаря');
+                customAlert('Помилка при видаленні коментаря');
             });
         }
     };

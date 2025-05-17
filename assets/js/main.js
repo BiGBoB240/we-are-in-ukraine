@@ -271,8 +271,8 @@ document.addEventListener('DOMContentLoaded', function() {
                                 body: JSON.stringify({ content_id: post.id, content_type: 'post' })
                             })
                             .then(res => res.json())
-                            .then(data => alert(data.success || data.error))
-                            .catch(() => alert('Помилка при надсиланні скарги'));
+                            .then(data => customAlert(data.success || data.error))
+                            .catch(() => customAlert('Помилка при надсиланні скарги'));
                         }
                     });
                 }
@@ -284,7 +284,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         if (typeof window.editPostModal === 'function') {
                             window.editPostModal(post);
                         } else {
-                            alert('Функція редагування поста ще не реалізована.');
+                            customAlert('Функція редагування поста ще не реалізована.');
                         }
                     });
                 }
@@ -297,8 +297,8 @@ document.addEventListener('DOMContentLoaded', function() {
                             body: JSON.stringify({ content_id: commentId, content_type: 'comment' })
                         })
                         .then(res => res.json())
-                        .then(data => alert(data.success || data.error))
-                        .catch(() => alert('Помилка при надсиланні скарги'));
+                        .then(data => customAlert(data.success || data.error))
+                        .catch(() => customAlert('Помилка при надсиланні скарги'));
                     }
                 };
                 
@@ -320,7 +320,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             if (data.success) {
                                 openPostModal(postId);
                             } else {
-                                alert("Ви повинні бути авторизовані" || 'Помилка під час додавання коментаря');
+                                customAlert("Ви повинні бути авторизовані" || 'Помилка під час додавання коментаря');
                             }
                         })
                         .catch(err => console.error('Comment error:', err));
@@ -359,12 +359,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         button.classList.remove('liked');
                     }
                 } else {
-                    alert(data.error || 'Помилка при оновленні лайку');
+                    customAlert(data.error || 'Помилка при оновленні лайку');
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Помилка при оновленні лайку');
+                customAlert('Помилка при оновленні лайку');
             });
         };
 
@@ -391,12 +391,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     button.classList.remove('liked');
                 }
             } else {
-                alert(data.error || 'Помилка при оновленні лайку');
+                customAlert(data.error || 'Помилка при оновленні лайку');
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Помилка при оновленні лайку');
+            customAlert('Помилка при оновленні лайку');
         });
     };
 
@@ -458,12 +458,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     editForm.style.display = 'none';
                 }
             } else {
-                alert(data.error || 'Помилка при оновленні коментаря');
+                customAlert(data.error || 'Помилка при оновленні коментаря');
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Помилка при оновленні коментаря');
+            customAlert('Помилка при оновленні коментаря');
         });
     };
 
@@ -497,12 +497,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     }
                 } else {
-                    alert(data.error || 'Помилка при видаленні коментаря');
+                    customAlert(data.error || 'Помилка при видаленні коментаря');
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Помилка при видаленні коментаря');
+                customAlert('Помилка при видаленні коментаря');
             });
         });
     };

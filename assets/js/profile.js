@@ -139,15 +139,15 @@ function deleteUserProfile(userId) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            alert('Профіль користувача успішно видалено');
+            customAlert('Профіль користувача успішно видалено');
             window.location.href = 'index.php';
         } else {
-            alert(data.error || 'Помилка при видаленні профілю');
+            customAlert(data.error || 'Помилка при видаленні профілю');
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Помилка при видаленні профілю');
+        customAlert('Помилка при видаленні профілю');
     });
 }
 
@@ -234,8 +234,8 @@ window.reportComment = function(commentId) {
             body: JSON.stringify({ content_id: commentId, content_type: 'comment' })
         })
         .then(res => res.json())
-        .then(data => alert(data.success || data.error))
-        .catch(() => alert('Помилка при надсиланні скарги'));
+        .then(data => customAlert(data.success || data.error))
+        .catch(() => customAlert('Помилка при надсиланні скарги'));
     }
 };
 
@@ -246,12 +246,12 @@ function saveCommentprofile(commentId) {
     const newText = textarea.value.trim();
 
     if (!newText) {
-        alert('Коментар не може бути порожнім');
+        customAlert('Коментар не може бути порожнім');
         return;
     }
 
     if (newText.length > 300) {
-        alert('Коментар не може бути довшим за 300 символів');
+        customAlert('Коментар не може бути довшим за 300 символів');
         return;
     }
 
@@ -270,12 +270,12 @@ function saveCommentprofile(commentId) {
         if (data.success) {
             window.location.reload();
         } else {
-            alert(data.error || 'Помилка при оновленні коментаря');
+            customAlert(data.error || 'Помилка при оновленні коментаря');
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Помилка при оновленні коментаря');
+        customAlert('Помилка при оновленні коментаря');
     });
 }
 /*
@@ -296,7 +296,7 @@ function deleteComment(commentId) {
             if (data.success) {
                 window.location.reload();
             } else {
-                alert(data.error);
+                customAlert(data.error);
             }
         });
     }
@@ -337,11 +337,11 @@ window.toggleCommentLike = function(commentId, button) {
                 button.classList.remove('liked');
             }
         } else {
-            alert(data.error || 'Помилка при оновленні лайку');
+            customAlert(data.error || 'Помилка при оновленні лайку');
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Помилка при оновленні лайку');
+        customAlert('Помилка при оновленні лайку');
     });
 };
