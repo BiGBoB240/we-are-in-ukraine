@@ -61,3 +61,24 @@ function showCustomConfirm(message, callback) {
     });
 }
 window.customConfirm = showCustomConfirm;
+
+// Показывать alert после обновления страницы
+function showAlertAfterReload(message) {
+    sessionStorage.setItem('postReloadAlert', message);
+    window.location.reload();
+}
+window.showAlertAfterReload = showAlertAfterReload;
+
+// Проверка и показ alert после reload
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', showPostReloadAlert);
+} else {
+    showPostReloadAlert();
+}
+function showPostReloadAlert() {
+    const msg = sessionStorage.getItem('postReloadAlert');
+    if (msg) {
+        customAlert(msg);
+        sessionStorage.removeItem('postReloadAlert');
+    }
+}

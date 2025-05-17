@@ -468,7 +468,7 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     window.deleteComment = function(commentId) {
-        customConfirm('Ви впевнені, що хочете видалити цей коментар?', function(result) {
+        custom('Ви впевнені, що хочете видалити цей коментар?', function(result) {
             if (!result) return;
 
             fetch('api/delete_comment.php', {

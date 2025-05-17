@@ -162,7 +162,7 @@ window.editPostModal = function(post) {
         .then(res => res.json())
         .then(data => {
             if (data.success) {
-                window.location.reload();
+                showAlertAfterReload('Пост успішно оновлено!');
             } else {
                 customAlert(data.error || 'Помилка при оновленні поста!');
             }
