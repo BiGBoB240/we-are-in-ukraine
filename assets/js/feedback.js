@@ -80,10 +80,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Resolve feedback (for admin)
 function resolveFeedback(feedbackId) {
-    if (!confirm('Ви впевнені, що хочете позначити це звернення як вирішене?')) {
-        return;
-    }
-
+    customConfirm('Ви впевнені, що хочете позначити це звернення як вирішене?').then(function(confirmed){
+        if (confirmed) {
     fetch('api/resolve_feedback.php', {
         method: 'POST',
         headers: {
@@ -106,4 +104,6 @@ function resolveFeedback(feedbackId) {
     .catch(error => {
         customAlert('Помилка при обробці звернення.');
     });
+}
+});
 }

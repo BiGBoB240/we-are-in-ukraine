@@ -18,7 +18,16 @@ $stmt->execute([$profileUserId]);
 $user = $stmt->fetch();
 
 if (!$user) {
-    echo '<div style="margin:2rem;color:red;text-align:center;">Користувач не знайдений</div>';
+    // Формируем минимальную HTML-страницу с подключением customAlert.js
+    echo "<!DOCTYPE html>\n";
+    echo "<html lang=\"uk\">\n<head>\n";
+    echo "    <meta charset=\"UTF-8\">\n";
+    echo "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n";
+    echo "    <title>Профіль</title>\n";
+    echo "    <script src=\"assets/js/customAlert.js\"></script>\n";
+    echo "</head>\n<body>\n";
+    echo "<script>showAlertOnIndex('Користувач не знайдений');</script>";
+    echo "</body>\n</html>";
     exit;
 }
 
@@ -206,28 +215,5 @@ $lastName = isset($nameParts[1]) ? $nameParts[1] : '';
     <script src="assets/js/main.js"></script>
     <script src="assets/js/customAlert.js"></script>
     <script src="assets/js/mobileMenu.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    var reportBtn = document.getElementById('report-profile-btn');
-    if (reportBtn) {
-        reportBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            if (confirm('Поскаржитись на цей профіль?')) {
-                fetch('api/report.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        content_id: <?php echo (int)$profileUserId; ?>,
-                        content_type: 'user'
-                    })
-                })
-                .then(res => res.json())
-                .then(data => customAlert(data.success || data.error))
-                .catch(() => customAlert('Помилка при надсиланні скарги'));
-            }
-        });
-    }
-});
-</script>
-
 </html>
+

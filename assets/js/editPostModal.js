@@ -1,6 +1,7 @@
 // Функція видалення поста
 function deletePost(postId) {
-    if (confirm('Ви впевнені, що хочете видалити цей пост?')) {
+    customConfirm('Ви впевнені, що хочете видалити цей пост?').then(function(confirmed){
+        if (confirmed) {
         fetch('api/delete_post.php', {
             method: 'POST',
             headers: {
@@ -21,6 +22,7 @@ function deletePost(postId) {
             customAlert('Помилка при видаленні поста');
         });
     }
+});
 }
 
 // Модалка для редагування поста

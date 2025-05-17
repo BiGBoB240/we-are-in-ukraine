@@ -82,3 +82,8 @@ function showPostReloadAlert() {
         sessionStorage.removeItem('postReloadAlert');
     }
 }
+
+function showAlertOnIndex(message) {
+    sessionStorage.setItem('postReloadAlert', message);
+    window.location.href = 'index.php';
+}

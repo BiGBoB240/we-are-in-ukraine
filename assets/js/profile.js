@@ -1,4 +1,26 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Перенос обработчика жалобы на профиль из profile.php
+    var reportBtn = document.getElementById('report-profile-btn');
+    if (reportBtn) {
+        reportBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            customConfirm('Поскаржитись на цей профіль?').then(function(confirmed) {
+                if (confirmed) {
+                    fetch('api/report.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            content_id: window.profileUserId || null,
+                            content_type: 'user'
+                        })
+                    })
+                    .then(res => res.json())
+                    .then(data => customAlert(data.success || data.error))
+                    .catch(() => customAlert('Помилка при надсиланні скарги'));
+                }
+            });
+        });
+    }
     // Modal functionality
     const nameModal = document.getElementById('nameChangeModal');
     const passwordModal = document.getElementById('passwordChangeModal');
@@ -123,10 +145,9 @@ function openPasswordChangeModal() {
 
 // Function to delete a user profile (for admin)
 function deleteUserProfile(userId) {
-    if (!confirm('Ви впевнені, що хочете видалити цей профіль? Ця дія незворотна!')) {
-        return;
-    }
-    
+customConfirm('Ви впевнені, що хочете видалити цей профіль? Ця дія незворотна!').then(function(confirmed){
+        
+    if (confirmed) {
     fetch('api/delete_user.php', {
         method: 'POST',
         headers: {
@@ -139,8 +160,7 @@ function deleteUserProfile(userId) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            customAlert('Профіль користувача успішно видалено');
-            window.location.href = 'index.php';
+            showAlertOnIndex('Профіль успішно видалений');
         } else {
             customAlert(data.error || 'Помилка при видаленні профілю');
         }
@@ -149,7 +169,11 @@ function deleteUserProfile(userId) {
         console.error('Error:', error);
         customAlert('Помилка при видаленні профілю');
     });
+    }
+});
 }
+
+
 
 // Load user comments
 function loadComments(filter = 'date-new') {
@@ -225,19 +249,7 @@ function loadComments(filter = 'date-new') {
 }
 
 
-// Глобальна функція для скарги на коментар (використовується у кнопці)
-window.reportComment = function(commentId) {
-    if (confirm('Поскаржитись на цей коментар?')) {
-        fetch('api/report.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ content_id: commentId, content_type: 'comment' })
-        })
-        .then(res => res.json())
-        .then(data => customAlert(data.success || data.error))
-        .catch(() => customAlert('Помилка при надсиланні скарги'));
-    }
-};
+
 
 // Save edited comment
 function saveCommentprofile(commentId) {
@@ -278,41 +290,6 @@ function saveCommentprofile(commentId) {
         customAlert('Помилка при оновленні коментаря');
     });
 }
-/*
-// Delete comment
-function deleteComment(commentId) {
-    if (confirm('Ви впевнені, що хочете видалити цей коментар?')) {
-        fetch('api/delete_comment.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                comment_id: commentId
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                window.location.reload();
-            } else {
-                customAlert(data.error);
-            }
-        });
-    }
-}
-
-// Edit comment
-function editComment(commentId) {
-    const commentText = document.getElementById(`comment-text-${commentId}`);
-    const editForm = document.getElementById(`edit-form-${commentId}`);
-        
-    if (commentText && editForm) {
-        commentText.style.display = 'none';
-        editForm.style.display = 'block';
-    }
-}
-*/
 
 // Toggle comment like
 window.toggleCommentLike = function(commentId, button) {
@@ -345,3 +322,5 @@ window.toggleCommentLike = function(commentId, button) {
         customAlert('Помилка при оновленні лайку');
     });
 };
+
+

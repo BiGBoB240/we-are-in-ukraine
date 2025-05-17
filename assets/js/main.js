@@ -264,7 +264,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (reportPostBtn) {
                     reportPostBtn.addEventListener('click', function(e) {
                         e.stopPropagation();
-                        if (confirm('Повідомити про помилку у цьому пості?')) {
+                        customConfirm('Повідомити про помилку у цьому пості?').then(function(confirmed){
+                            if (confirmed) {
                             fetch('api/report.php', {
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/json' },
@@ -272,10 +273,12 @@ document.addEventListener('DOMContentLoaded', function() {
                             })
                             .then(res => res.json())
                             .then(data => customAlert(data.success || data.error))
-                            .catch(() => customAlert('Помилка при надсиланні скарги'));
+                            .catch(() => customAlert('Помилка при надсиланні повідомлення'));
                         }
                     });
+                });
                 }
+
                 // Кнопка "Редагувати пост" для адміна
                 const editPostBtn = document.getElementById('modal-edit-post-btn');
                 if (editPostBtn) {
@@ -284,13 +287,14 @@ document.addEventListener('DOMContentLoaded', function() {
                         if (typeof window.editPostModal === 'function') {
                             window.editPostModal(post);
                         } else {
-                            customAlert('Функція редагування поста ще не реалізована.');
+                            customAlert('Не вдалося редагувати пост.');
                         }
                     });
                 }
-                // Глобальна функція для скарги на коментар
+                // Глобальна функція для скарги на коментар (використовується у кнопці)
                 window.reportComment = function(commentId) {
-                    if (confirm('Поскаржитись на цей коментар?')) {
+                    customConfirm('Поскаржитись на цей коментар?').then(function(confirmed){
+                        if (confirmed) {
                         fetch('api/report.php', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
@@ -299,8 +303,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         .then(res => res.json())
                         .then(data => customAlert(data.success || data.error))
                         .catch(() => customAlert('Помилка при надсиланні скарги'));
-                    }
-                };
+                      }
+                 });
+                }
                 
                 // Handle comment submission
                 const commentForm = modalBody.querySelector('.comment-form');

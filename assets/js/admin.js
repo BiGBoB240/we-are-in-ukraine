@@ -297,7 +297,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     adminDeleteComment = function(commentId) {
-        if (confirm('Ви впевнені, що хочете видалити цей коментар?')) {
+        customConfirm('Ви впевнені, що хочете видалити цей коментар?').then(function(confirmed){
+            if (confirmed) {
             fetch('api/delete_comment.php', {
                 method: 'POST',
                 headers: {
@@ -319,7 +320,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 customAlert('Помилка при видаленні коментаря');
             });
         }
-    };
-
+    });
+}
 });
 
