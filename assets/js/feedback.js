@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <p><strong>Звернення:</strong> ${feedback.feedback_text}</p>
                         <p><strong>Дата:</strong> ${feedback.created_at}</p>
                         <div class="feedback-actions">
-                            <button onclick="resolveFeedback(${feedback.id})">Вирішено</button>
+                            <button class="buttons-style-one" onclick="resolveFeedback(${feedback.id})">Вирішено</button>
                         </div>
                     </div>
                 `).join('') || '<p>Немає нових звернень</p>';
@@ -82,6 +82,9 @@ document.addEventListener('DOMContentLoaded', function() {
 function resolveFeedback(feedbackId) {
     customConfirm('Ви впевнені, що хочете позначити це звернення як вирішене?').then(function(confirmed){
         if (confirmed) {
+            const btn = document.querySelector(`.feedback-item[data-id="${feedbackId}"] .buttons-style-one`);
+            btn.disabled = true;
+            btn.textContent = 'Обробка...';
     fetch('api/resolve_feedback.php', {
         method: 'POST',
         headers: {
