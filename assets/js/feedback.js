@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert('Дякуємо за ваше звернення! Ми зв\'яжемося з вами найближчим часом.');
+                    customAlert('Дякуємо за ваше звернення! Ми зв\'яжемося з вами найближчим часом.');
                     feedbackForm.reset();
                 } else {
                     alert(data.error || 'Помилка при відправці звернення. Спробуйте пізніше.');

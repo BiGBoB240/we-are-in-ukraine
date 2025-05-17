@@ -39,6 +39,7 @@ $lastName = isset($nameParts[1]) ? $nameParts[1] : '';
     <link rel="icon" type="image/png" href="http://my-v-ukrayini.rv.ua/wp-content/uploads/2018/03/logoalphasmallwhite.png">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Playfair+Display:400,400i,700,700i,900,900i" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/customAlert.css">
     <script>
         window.isLoggedIn = <?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>;
         window.profileUserId = <?php echo (int)$profileUserId; ?>;
@@ -155,7 +156,7 @@ $lastName = isset($nameParts[1]) ? $nameParts[1] : '';
     <!-- Modal for name change -->
     <div id="nameChangeModal" class="modal">
         <div class="modal-content">
-            <span class="close"></span>
+            <span class="modal-close">&times;</span>
             <h2>Змінити ім'я</h2>
             <form id="nameChangeForm">
                 <div class="form-group">
@@ -175,7 +176,7 @@ $lastName = isset($nameParts[1]) ? $nameParts[1] : '';
     <!-- Modal for password change -->
     <div id="passwordChangeModal" class="modal">
         <div class="modal-content">
-            <span class="close"></span>
+            <span class="modal-close">&times;</span>
             <h2>Змінити пароль</h2>
             <form id="passwordChangeForm">
                 <div class="form-group">
@@ -204,6 +205,7 @@ $lastName = isset($nameParts[1]) ? $nameParts[1] : '';
     <script>window.currentUserId = <?php echo isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 'null'; ?>;</script>
     <script src="assets/js/profile.js"></script>
     <script src="assets/js/main.js"></script>
+    <script src="assets/js/customAlert.js"></script>
     <script src="assets/js/mobileMenu.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {

@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
     modal.style.display = 'none';
     modal.innerHTML = `
         <div class="modal-content">
-            <span class="close"></span>
+            <span class="modal-close">&times;</span>
             <h2>Додати пост</h2>
             <form id="add-post-form" enctype="multipart/form-data">
             <div id="edit-images-block">
@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function() {
     reportsModal.style.display = 'none';
     reportsModal.innerHTML = `
         <div class="modal-content  modal-reports" style="max-width:700px;">
-            <span class="close" id="close-reports-modal"></span>
+            <span class="modal-close" id="close-reports-modal">&times;</span>
             <h2>Скарги</h2>
             <div id="reports-list">Завантаження...</div>
         </div>
@@ -190,7 +190,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 ${(c.can_edit || c.can_delete) ? `
                                     <div class="comment-actions">
                                         ${c.can_edit ? `<button class="buttons-style-one" onclick="editComment(${c.id})">Редагувати</button>` : ''}
-                                        ${c.can_delete ? `<button class="buttons-style-one" onclick="deleteComment(${c.id})">Видалити</button>` : ''}
+                                        ${c.can_delete ? `<button class="buttons-style-one" onclick="adminDeleteComment(${c.id})">Видалити</button>` : ''}
                                     </div>
                                 ` : ''}
                             </div>
@@ -232,11 +232,11 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     // Закрытие модального окна
-    modal.querySelector('.close').onclick = () => {
+    modal.querySelector('.modal-close').onclick = () => {
         modal.style.display = 'none';
     };
     // Закрытие модального окна скарг
-    reportsModal.querySelector('.close').onclick = () => {
+    reportsModal.querySelector('.modal-close').onclick = () => {
         reportsModal.style.display = 'none';
     };
     window.onclick = function(event) {
@@ -253,8 +253,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         const result = await response.json();
         if (result.success) {
-            alert('Пост додано!');
-            modal.style.display = 'none';
             window.location.reload();
         } else {
             alert(result.error || 'Помилка!');
@@ -298,7 +296,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 
-    window.deleteComment = function(commentId) {
+    adminDeleteComment = function(commentId) {
         if (confirm('Ви впевнені, що хочете видалити цей коментар?')) {
             fetch('api/delete_comment.php', {
                 method: 'POST',

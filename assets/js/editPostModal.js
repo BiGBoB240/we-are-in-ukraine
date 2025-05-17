@@ -11,8 +11,6 @@ function deletePost(postId) {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                alert('Пост успішно видалено!');
-                // Оновлюємо сторінку
                 window.location.reload();
             } else {
                 alert('Помилка при видаленні поста: ' + data.error);
@@ -37,7 +35,7 @@ window.editPostModal = function(post) {
     editModal.id = 'edit-post-modal';
     editModal.innerHTML = `
         <div class="modal-content">
-            <button class="modal-close" id="close-edit-post-modal"></button>
+            <button class="modal-close" id="close-edit-post-modal">&times;</button>
             <h2>Редагувати пост</h2>
             <form id="edit-post-form">
                 <input type="text" class="modal-add-post-input" name="title" value="${post.title.replace(/&/g, '&amp;').replace(/"/g, '&quot;')}" maxlength="255" required>

@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', function() {
             ${post.content ? `<div class="post-content">${post.content}</div>` : ''}
             <div class="post-footer">
                 <div class="rating">
-                    <span>❤️ ${post.post_likes}</span>
+                    <span>❤️ </span><span id="post-likes-${post.id}">${post.post_likes}</span>
                 </div>
                 <div class="date">${post.created_at}</div>
             </div>
@@ -343,8 +343,16 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
+                    // Обновляем лайки в модальном окне
                     const likesCount = button.querySelector('.likes-count');
-                    likesCount.textContent = data.likes_count;
+                    if (likesCount) {
+                        likesCount.textContent = data.likes_count;
+                    }
+                    // Обновляем лайки на карточке поста в ленте
+                    const cardLikes = document.getElementById(`post-likes-${postId}`);
+                    if (cardLikes) {
+                        cardLikes.textContent = data.likes_count;
+                    }
                     if (data.action === 'liked') {
                         button.classList.add('liked');
                     } else {
@@ -419,12 +427,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const newText = textarea.value.trim();
 
         if (!newText) {
-            alert('Коментар не може бути порожнім');
+            customAlert('Коментар не може бути порожнім');
             return;
         }
 
         if (newText.length > 300) {
-            alert('Коментар не може бути довшим за 300 символів');
+            customAlert('Коментар не може бути довшим за 300 символів');
             return;
         }
 
@@ -460,45 +468,42 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     window.deleteComment = function(commentId) {
-        if (!confirm('Ви впевнені, що хочете видалити цей коментар?')) {
-            return;
-        }
+        customConfirm('Ви впевнені, що хочете видалити цей коментар?', function(result) {
+            if (!result) return;
 
-        fetch('api/delete_comment.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                comment_id: commentId
+            fetch('api/delete_comment.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    comment_id: commentId
+                })
             })
-        })
-
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Try to find the comment in the modal first
-                const modalBody = document.querySelector('.modal-body');
-                if (modalBody) {
-                    const commentDiv = modalBody.querySelector(`[data-comment-id="${commentId}"]`);
-                    if (commentDiv) {
-                        commentDiv.remove();
-                        return;
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Если удаляем в модалке поста — удаляем только из modalBody
+                    if (window.location.pathname.endsWith('profile.php')) {
+                        // Профиль: удалять глобально
+                        const commentDiv = document.querySelector(`[data-comment-id="${commentId}"]`);
+                        if (commentDiv) commentDiv.remove();
+                    } else {
+                        // Пост: только из modalBody
+                        const modalBody = modalContainer.querySelector('.modal-body');
+                        if (modalBody) {
+                            const commentDiv = modalBody.querySelector(`[data-comment-id="${commentId}"]`);
+                            if (commentDiv) commentDiv.remove();
+                        }
                     }
+                } else {
+                    alert(data.error || 'Помилка при видаленні коментаря');
                 }
-
-                // If not found in modal, try to find it in profile
-                const commentDiv = document.querySelector(`[data-comment-id="${commentId}"]`);
-                if (commentDiv) {
-                    commentDiv.remove();
-                }
-            } else {
-                alert(data.error || 'Помилка при видаленні коментаря');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Помилка при видаленні коментаря');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Помилка при видаленні коментаря');
+            });
         });
     };
 
