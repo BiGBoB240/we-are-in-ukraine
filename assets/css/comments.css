@@ -31,17 +31,6 @@
     color: var(--red);
 }
 
-.comment-actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-.edit-form {
-    margin-top: 10px;
-}
-
-
 .post-edit-buttons {
     display: flex;
     justify-content: space-between;
@@ -54,6 +43,8 @@
 
 .comment .buttons-style-one{
  width: 135px;    
+ margin-top: 1rem;
+ margin-right: 1rem;
 }
 
 .edit-textarea{
