@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentPage = 1;
     let currentFilter = 'date-new';
     const MAX_POSTS_ON_PAGE = 12; // лимит одновременных постов на странице
+    let loadedPostIds = new Set(); // Для защиты от дубликатов
 
     // Create modal container
     const modalContainer = document.createElement('div');
@@ -102,13 +103,20 @@ document.addEventListener('DOMContentLoaded', function() {
                     return;
                 }
                 data.posts.forEach(post => {
+                    if (loadedPostIds.has(post.id)) return; // Не добавлять дубликаты
+                    loadedPostIds.add(post.id);
                     const postElement = createPostElement(post);
                     postsContainer.appendChild(postElement);
                 });
                 // Только после первой загрузки ограничиваем количество постов
                 if (firstLoadDone) {
                     while (postsContainer.children.length > MAX_POSTS_ON_PAGE) {
-                        postsContainer.removeChild(postsContainer.firstChild);
+                        // также удалять из loadedPostIds
+                        const firstPost = postsContainer.firstChild;
+                        if (firstPost && firstPost.dataset && firstPost.dataset.postId) {
+                            loadedPostIds.delete(parseInt(firstPost.dataset.postId));
+                        }
+                        postsContainer.removeChild(firstPost);
                     }
                 }
                 firstLoadDone = true;
@@ -120,6 +128,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const filteredImages = post.images ? post.images.filter(img => img) : [];
         const postDiv = document.createElement('div');
         postDiv.className = 'post';
+        postDiv.dataset.postId = post.id;
         postDiv.innerHTML = `
             <h2>${post.title}</h2>
             ${filteredImages.length > 0 ? createImageSlider(filteredImages, false) : ''}
@@ -538,6 +547,7 @@ document.addEventListener('DOMContentLoaded', function() {
             currentFilter = this.dataset.filter;
             currentPage = 1;
             postsContainer.innerHTML = '';
+            loadedPostIds = new Set();
             firstLoadDone = false;
             autoLoadPostsUntilScrollable();
         });
@@ -562,6 +572,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initial load
     autoLoadPostsUntilScrollable();
+
+    // Автодогрузка при изменении размера окна (например, пользователь уменьшил масштаб)
+    window.addEventListener('resize', function() {
+        // Если скролла нет и автодогрузка не идёт, запустить автодогрузку
+        const enoughScroll = document.body.offsetHeight > window.innerHeight + 20;
+        if (!enoughScroll && !autoLoadInProgress) {
+            autoLoadPostsUntilScrollable();
+        }
+    });
 
     function autoLoadPostsUntilScrollable() {
         if (autoLoadInProgress) return; // не запускать параллельно
