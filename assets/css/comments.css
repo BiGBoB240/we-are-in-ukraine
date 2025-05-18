@@ -55,7 +55,7 @@
 @media (max-width: 600px) {
     .comment-actions,
     .edit-buttons {
-        display: block;
+    display: block;
     }
     .comment-actions .buttons-style-one,
     .edit-buttons .buttons-style-one {
