@@ -1,10 +1,15 @@
 document.addEventListener('DOMContentLoaded', function() {
     const registerForm = document.getElementById('registerForm');
-    const registerMessage = document.getElementById('registerMessage');
     if (registerForm) {
         registerForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            registerMessage.textContent = '';
+
+            const btn = document.querySelector('button[type="submit"]');
+            if (btn) {
+                btn.disabled = true;
+                btn.textContent = 'Обробка...';
+            }
+
             const formData = new FormData(registerForm);
             fetch('api/register.php', {
                 method: 'POST',
@@ -13,17 +18,13 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    registerMessage.style.color = 'green';
-                    registerMessage.textContent = data.success;
-                    registerForm.reset();
+                    showAlertAfterReload(data.success);
                 } else {
-                    registerMessage.style.color = 'red';
-                    registerMessage.textContent = data.error;
+                    customAlert(data.error);
                 }
             })
             .catch(() => {
-                registerMessage.style.color = 'red';
-                registerMessage.textContent = 'Помилка при реєстрації. Спробуйте пізніше.';
+                customAlert('Помилка при реєстрації. Спробуйте пізніше.');
             });
         });
     }

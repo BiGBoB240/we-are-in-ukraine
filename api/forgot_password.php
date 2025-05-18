@@ -22,7 +22,7 @@ $stmt = $pdo->prepare("SELECT id, username FROM Users WHERE email = ?");
 $stmt->execute([$email]);
 $user = $stmt->fetch();
 if (!$user) {
-    echo json_encode(['success' => 'Якщо email існує, ви отримаєте лист для відновлення пароля.']);
+    echo json_encode(['success' => 'На ваш email було відправлено лист для відновлення пароля.']);
     exit;
 }
 $token = bin2hex(random_bytes(16));
@@ -47,7 +47,7 @@ try {
     $resetLink = 'http://' . $_SERVER['HTTP_HOST'] . dirname($_SERVER['REQUEST_URI']) . '/../reset_password.php?token=' . $token;
     $mail->Body = "<p>Щоб скинути пароль, перейдіть за <a href='$resetLink'>цим посиланням</a>.</p>";
     $mail->send();
-    echo json_encode(['success' => 'Якщо email існує, ви отримаєте лист для відновлення пароля.']);
+    echo json_encode(['success' => 'На ваш email було відправлено лист для відновлення пароля.']);
 } catch (Exception $e) {
     echo json_encode(['error' => 'Помилка при надсиланні листа: ' . $mail->ErrorInfo]);
 }

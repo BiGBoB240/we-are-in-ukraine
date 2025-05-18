@@ -81,16 +81,10 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(response => response.json())
             .then(data => {
-                const message = document.getElementById('nameChangeMessage');
                 if (data.success) {
-                    message.style.color = 'green';
-                    message.textContent = data.success;
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 1000);
+                    showAlertAfterReload(data.success);
                 } else {
-                    message.style.color = 'red';
-                    message.textContent = data.error;
+                    customAlert(data.error);
                 }
             });
         });
@@ -108,16 +102,10 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(response => response.json())
             .then(data => {
-                const message = document.getElementById('passwordChangeMessage');
                 if (data.success) {
-                    message.style.color = 'green';
-                    message.textContent = data.success;
-                    setTimeout(() => {
-                        window.location.href = 'index.php';
-                    }, 2000);
+                    showAlertAfterReload(data.success);
                 } else {
-                    message.style.color = 'red';
-                    message.textContent = data.error;
+                    customAlert(data.error);
                 }
             });
         });

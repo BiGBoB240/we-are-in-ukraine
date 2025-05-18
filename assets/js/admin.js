@@ -262,7 +262,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // Делегування події на кнопку "Закрити скаргу"
     document.addEventListener('click', function(e) {
         if (e.target && e.target.classList.contains('close-report-btn')) {
+
+            customConfirm('Ви впевнені, що хочете закрити цю скаргу?').then(function(confirmed){
+                if (confirmed) {
+
             const btn = e.target;
+            btn.disabled = true;
+            btn.textContent = 'Обробка...';
+
             const contentId = btn.getAttribute('data-content-id');
             const contentType = btn.getAttribute('data-content-type');
             if (!contentId || !contentType) {
@@ -292,9 +299,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 btn.disabled = false;
                 btn.textContent = 'Закрити скаргу';
             });
-        }
-    });
-
+            }
+        });
+    }
+});
 
     adminDeleteComment = function(commentId) {
         customConfirm('Ви впевнені, що хочете видалити цей коментар?').then(function(confirmed){

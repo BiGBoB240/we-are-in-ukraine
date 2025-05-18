@@ -16,8 +16,8 @@ if ($query !== '') {
             'type' => 'post'
         ];
     }
-    // Найти пользователей по username
-    $stmt2 = $pdo->prepare("SELECT id, username FROM Users WHERE username LIKE ? LIMIT 5");
+    // Найти пользователей по username, только верифицированных
+    $stmt2 = $pdo->prepare("SELECT id, username FROM Users WHERE username LIKE ? AND verificated = 1 LIMIT 5");
     $stmt2->execute(["%$query%"]);
     while ($row = $stmt2->fetch(PDO::FETCH_ASSOC)) {
         $results[] = [

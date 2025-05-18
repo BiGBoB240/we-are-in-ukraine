@@ -1,10 +1,15 @@
 document.addEventListener('DOMContentLoaded', function() {
     const forgotForm = document.getElementById('forgotForm');
-    const forgotMessage = document.getElementById('forgotMessage');
     if (forgotForm) {
         forgotForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            forgotMessage.textContent = '';
+
+            const btn = document.querySelector('button[type="submit"]');
+            if (btn) {
+                btn.disabled = true;
+                btn.textContent = 'Обробка...';
+            }
+
             const formData = new FormData(forgotForm);
             fetch('api/forgot_password.php', {
                 method: 'POST',
@@ -13,17 +18,13 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    forgotMessage.style.color = 'green';
-                    forgotMessage.textContent = data.success;
-                    forgotForm.reset();
+                    showAlertAfterReload(data.success);
                 } else {
-                    forgotMessage.style.color = 'red';
-                    forgotMessage.textContent = data.error;
+                    customAlert(data.error);
                 }
             })
             .catch(() => {
-                forgotMessage.style.color = 'red';
-                forgotMessage.textContent = 'Помилка при надсиланні листа. Спробуйте пізніше.';
+                customAlert('Помилка при надсиланні листа. Спробуйте пізніше.');
             });
         });
     }
