@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const postsContainer = document.getElementById('posts-container');
     let currentPage = 1;
     let currentFilter = 'date-new';
-    const MAX_POSTS_ON_PAGE = 12; // лимит одновременных постов на странице
+
     let loadedPostIds = new Set(); // Для защиты от дубликатов
 
     // Create modal container
@@ -89,8 +89,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Флаг для первой загрузки
-    let firstLoadDone = false;
     // Load posts
     function loadPosts() {
         return fetch(`api/posts.php?page=${currentPage}&filter=${currentFilter}`)
@@ -108,18 +106,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     const postElement = createPostElement(post);
                     postsContainer.appendChild(postElement);
                 });
-                // Только после первой загрузки ограничиваем количество постов
-                if (firstLoadDone) {
-                    while (postsContainer.children.length > MAX_POSTS_ON_PAGE) {
-                        // также удалять из loadedPostIds
-                        const firstPost = postsContainer.firstChild;
-                        if (firstPost && firstPost.dataset && firstPost.dataset.postId) {
-                            loadedPostIds.delete(parseInt(firstPost.dataset.postId));
-                        }
-                        postsContainer.removeChild(firstPost);
-                    }
-                }
-                firstLoadDone = true;
             });
     }
 
@@ -548,7 +534,6 @@ document.addEventListener('DOMContentLoaded', function() {
             currentPage = 1;
             postsContainer.innerHTML = '';
             loadedPostIds = new Set();
-            firstLoadDone = false;
             autoLoadPostsUntilScrollable();
         });
     });
@@ -556,7 +541,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Infinite scroll: подгружаем посты при достижении низа страницы
     let isLoadingPosts = false;
     window.addEventListener('scroll', function() {
-        if (isLoadingPosts || !firstLoadDone) return;
+        if (isLoadingPosts) return;
         // Проверяем, близко ли низ страницы
         if ((window.innerHeight + window.scrollY) >= (document.body.offsetHeight - 200)) {
             isLoadingPosts = true;
