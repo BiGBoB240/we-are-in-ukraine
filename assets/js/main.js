@@ -3,9 +3,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchResults = document.getElementById('search-results');
     const searchBar = document.getElementById('search');
     const postsContainer = document.getElementById('posts-container');
-    const loadMoreBtn = document.getElementById('load-more');
     let currentPage = 1;
     let currentFilter = 'date-new';
+    const MAX_POSTS_ON_PAGE = 12; // лимит одновременных постов на странице
 
     // Create modal container
     const modalContainer = document.createElement('div');
@@ -88,19 +88,31 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // Флаг для первой загрузки
+    let firstLoadDone = false;
     // Load posts
     function loadPosts() {
-        fetch(`api/posts.php?page=${currentPage}&filter=${currentFilter}`)
+        return fetch(`api/posts.php?page=${currentPage}&filter=${currentFilter}`)
             .then(response => response.json())
             .then(data => {
+                console.log('Ответ от posts.php:', data); // Для отладки
+                if (!data.posts || data.posts.length === 0) {
+                    if (postsContainer.children.length === 0) {
+                        postsContainer.innerHTML = '<div style="text-align:center;color:#888;margin:2rem;">Постів немає</div>';
+                    }
+                    return;
+                }
                 data.posts.forEach(post => {
                     const postElement = createPostElement(post);
                     postsContainer.appendChild(postElement);
                 });
-                
-                if (!data.hasMore) {
-                    loadMoreBtn.style.display = 'none';
+                // Только после первой загрузки ограничиваем количество постов
+                if (firstLoadDone) {
+                    while (postsContainer.children.length > MAX_POSTS_ON_PAGE) {
+                        postsContainer.removeChild(postsContainer.firstChild);
+                    }
                 }
+                firstLoadDone = true;
             });
     }
 
@@ -519,15 +531,22 @@ document.addEventListener('DOMContentLoaded', function() {
             currentFilter = this.dataset.filter;
             currentPage = 1;
             postsContainer.innerHTML = '';
-            loadMoreBtn.style.display = 'block';
             loadPosts();
         });
     });
 
-    // Load more button
-    loadMoreBtn.addEventListener('click', function() {
-        currentPage++;
-        loadPosts();
+    // Infinite scroll: подгружаем посты при достижении низа страницы
+    let isLoadingPosts = false;
+    window.addEventListener('scroll', function() {
+        if (isLoadingPosts || !firstLoadDone) return;
+        // Проверяем, близко ли низ страницы
+        if ((window.innerHeight + window.scrollY) >= (document.body.offsetHeight - 200)) {
+            isLoadingPosts = true;
+            currentPage++;
+            loadPosts().finally(() => {
+                isLoadingPosts = false;
+            });
+        }
     });
 
     // Initial load

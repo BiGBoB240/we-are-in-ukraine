@@ -71,7 +71,7 @@ if (isset($_SESSION['user_id'])) {
                 <div id="posts-container">
                     <!-- Posts will be loaded here dynamically -->
                 </div>
-                <button id="load-more" class="buttons-style-one" style="display: block; margin: 2rem auto;">ЗАВАНТАЖИТИ ЩЕ</button>
+
             </div>
         </div>
     </main>

@@ -5,7 +5,7 @@ header('Content-Type: application/json');
 
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $filter = isset($_GET['filter']) ? $_GET['filter'] : 'date-new';
-$limit = 10;
+$limit = 3;
 $offset = ($page - 1) * $limit;
 
 // Prepare the ORDER BY clause based on filter
