@@ -441,6 +441,40 @@ div{
     padding: 2rem 0;
 }
 
+.post {
+    animation: postFadeIn 0.5s ease both;
+    will-change: opacity;
+}
+
+.modal-content {
+    animation: postPopIn 0.4s cubic-bezier(.32,1.56,.64,1) both;
+    will-change: opacity, transform;
+}
+
+@keyframes postFadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes postPopIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.7);
+    }
+    80% {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
 .buttons-style-one {
     padding: 0.5rem 1rem;
     background: var(--primary-gray);

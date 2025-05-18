@@ -95,7 +95,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return fetch(`api/posts.php?page=${currentPage}&filter=${currentFilter}`)
             .then(response => response.json())
             .then(data => {
-                console.log('Ответ от posts.php:', data); // Для отладки
                 if (!data.posts || data.posts.length === 0) {
                     if (postsContainer.children.length === 0) {
                         postsContainer.innerHTML = '<div style="text-align:center;color:#888;margin:2rem;">Постів немає</div>';
@@ -270,6 +269,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
 
                 modalContainer.style.display = 'block';
+
+                // Добавить анимацию появления модалки
+                setTimeout(() => {
+                    modalContainer.querySelector('.modal-content').classList.add('post-animate-in');
+                }, 10);
+                modalContainer.querySelector('.modal-content').addEventListener('animationend', () => {
+                    modalContainer.querySelector('.modal-content').classList.remove('post-animate-in');
+                }, { once: true });
 
                 // Кнопка скарги на пост в модалці
                 const reportPostBtn = document.getElementById('modal-report-post-btn');
@@ -531,7 +538,8 @@ document.addEventListener('DOMContentLoaded', function() {
             currentFilter = this.dataset.filter;
             currentPage = 1;
             postsContainer.innerHTML = '';
-            loadPosts();
+            firstLoadDone = false;
+            autoLoadPostsUntilScrollable();
         });
     });
 
@@ -549,8 +557,39 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // Автоматическая подгрузка постов на больших экранах
+    let autoLoadInProgress = false;
+
     // Initial load
-    loadPosts();
+    autoLoadPostsUntilScrollable();
+
+    function autoLoadPostsUntilScrollable() {
+        if (autoLoadInProgress) return; // не запускать параллельно
+        autoLoadInProgress = true;
+        let lastPostsCount = -1;
+        let lastPage = currentPage;
+        function tryLoad() {
+            loadPosts().then(() => {
+                // Если постов не прибавилось или скролл появился — прекращаем
+                const enoughScroll = document.body.offsetHeight > window.innerHeight + 20;
+                const postsCount = postsContainer.children.length;
+                if (enoughScroll || postsCount === lastPostsCount) {
+                    autoLoadInProgress = false;
+                    return;
+                }
+                lastPostsCount = postsCount;
+                // Если постов не было добавлено, значит посты закончились
+                if (postsCount === 0) {
+                    autoLoadInProgress = false;
+                    return;
+                }
+                // Иначе пробуем ещё раз
+                currentPage++;
+                setTimeout(tryLoad, 50);
+            });
+        }
+        tryLoad();
+    }
 });
 
 document.addEventListener('DOMContentLoaded', function() {
