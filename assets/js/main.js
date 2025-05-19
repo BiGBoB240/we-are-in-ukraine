@@ -150,8 +150,8 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="image-slider">
                 <img src="assets/upload/${images[0]}" alt="Post image" class="slider-main-img" data-is-modal="${isInModal}">
                 ${images.length > 1 ? `
-                    <button class="slider-prev">&lt;</button>
-                    <button class="slider-next">&gt;</button>
+                    <button class="slider-prev" tabindex="-1">&lt;</button>
+                    <button class="slider-next" tabindex="-1">&gt;</button>
                 ` : ''}
             </div>
         `;

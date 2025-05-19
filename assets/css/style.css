@@ -609,6 +609,15 @@ display: block;
     cursor: pointer;
     font-size: 1.5rem;
     border-radius: 10px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+}
+
+.image-slider:hover .slider-prev,
+.image-slider:hover .slider-next {
+    opacity: 1;
+    pointer-events: auto;
 }
 
 .slider-prev { left: 0; }
