@@ -248,7 +248,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                     ${comment.can_edit || comment.can_delete ? `
                                         <div class="comment-actions">
                                             ${comment.can_edit ? `<button class="buttons-style-one" onclick="editComment(${comment.id})">Редагувати</button>` : ''}
-                                            ${comment.can_delete ? `<button class="buttons-style-one" onclick="deleteComment(${comment.id})">Видалити</button>` : ''}
+                                            ${comment.can_delete ? `<button class="buttons-style-one buttons-style-two" onclick="deleteComment(${comment.id})">Видалити</button>` : ''}
                                         </div>
                                     ` : ''}
                                 </div>

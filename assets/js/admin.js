@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <span id="custom-btn-1">Обрати фото</span>
                     </label>
                     <div class="file-name" id="file-name-1">Фото не було обране</div>
-                    <button class="buttons-style-one" type="button" id="remove-image1" style="display:none; margin-left:10px;">Видалити</button>
+                    <button class="buttons-style-one buttons-style-two" type="button" id="remove-image1" style="display:none; margin-left:10px;">Видалити</button>
                 </div>
                 <div class="image-preview-container">
                     <img id="preview-image2">
@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <span id="custom-btn-2">Обрати фото</span>
                     </label>
                     <div class="file-name" id="file-name-2">Фото не було обране</div>
-                    <button class="buttons-style-one" type="button" id="remove-image2" style="display:none; margin-left:10px;">Видалити</button>
+                    <button class="buttons-style-one buttons-style-two" type="button" id="remove-image2" style="display:none; margin-left:10px;">Видалити</button>
                 </div>
                 <div class="image-preview-container">
                     <img id="preview-image3">
@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <span id="custom-btn-3">Обрати фото</span>
                     </label>
                     <div class="file-name" id="file-name-3">Фото не було обране</div>
-                    <button class="buttons-style-one" type="button" id="remove-image3" style="display:none; margin-left:10px;">Видалити</button>
+                    <button class="buttons-style-one buttons-style-two" type="button" id="remove-image3" style="display:none; margin-left:10px;">Видалити</button>
                 </div>
                 <button class="buttons-style-one" type="submit">Опублікувати</button>
             </div>
@@ -190,7 +190,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 ${(c.can_edit || c.can_delete) ? `
                                     <div class="comment-actions">
                                         ${c.can_edit ? `<button class="buttons-style-one" onclick="editComment(${c.id})">Редагувати</button>` : ''}
-                                        ${c.can_delete ? `<button class="buttons-style-one" onclick="adminDeleteComment(${c.id})">Видалити</button>` : ''}
+                                        ${c.can_delete ? `<button class="buttons-style-one buttons-style-two" onclick="adminDeleteComment(${c.id})">Видалити</button>` : ''}
                                     </div>
                                 ` : ''}
                             </div>

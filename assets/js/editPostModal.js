@@ -57,7 +57,7 @@ window.editPostModal = function(post) {
                 </div>
                 <div class="post-edit-buttons">
                 <button class="buttons-style-one" type="submit">Зберегти зміни</button>
-                <button class="buttons-style-one modal-delete-post-btn" type="button" data-post-id="${post.id}">Видалити пост</button>
+                <button class="buttons-style-one buttons-style-two modal-delete-post-btn" type="button" data-post-id="${post.id}">Видалити пост</button>
                 </div>
             </form>
         </div>

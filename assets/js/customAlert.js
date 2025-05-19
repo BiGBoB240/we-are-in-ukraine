@@ -10,7 +10,7 @@ function showCustomAlert(message) {
     modal.innerHTML = `
         <div class="custom-alert-content">
             <div class="custom-alert-message">${message}</div>
-            <button class="custom-alert-ok">OK</button>
+            <button class="buttons-style-one custom-alert-ok">OK</button>
         </div>
     `;
     document.body.appendChild(modal);
@@ -42,8 +42,8 @@ function showCustomConfirm(message, callback) {
             <div class="custom-alert-content">
                 <div class="custom-alert-message">${message}</div>
                 <div style="margin-top: 18px; display: flex; justify-content: center; gap: 16px;">
-                    <button class="custom-confirm-ok">OK</button>
-                    <button class="custom-confirm-cancel">Скасувати</button>
+                    <button class="buttons-style-one custom-confirm-ok">OK</button>
+                    <button class="buttons-style-one custom-confirm-cancel">Скасувати</button>
                 </div>
             </div>
         `;

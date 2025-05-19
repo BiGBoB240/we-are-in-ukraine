@@ -501,6 +501,13 @@ display: block;
     border-color: var(--black);
 }
 
+.buttons-style-two:hover {
+    opacity: 80%;
+    background: var(--red);
+    box-shadow: 0 4px 24px var(--red);
+    border-color: var(--red);
+}
+
 .profile-control-btn {
     padding: 0.5rem 1rem;
     background: var(--primary-gray);
@@ -1228,6 +1235,19 @@ box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
     text-align: center;
     border-top: 1px solid #e0e0e0;
 }
+
+.existed-comments{
+    text-align: center;
+    margin: 5rem auto;
+    border: 1px solid var(--light-gray);
+    border-radius: 8px;
+    padding: 18px 20px;
+    background: var(--white);
+    font-size: 16px;
+    line-height: 1.6;
+    width: 400px;
+}
+
 /* Стили для кастомного alert */
 .custom-alert-modal {
     position: fixed;
@@ -1239,20 +1259,20 @@ box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
     z-index: 9999;
 }
 .custom-alert-content {
-    background: #fff;
+    background: var(--white);
     border-radius: 8px;
     padding: 26px 32px 20px 32px;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.18);
     min-width: 260px;
     max-width: 90vw;
     text-align: center;
-    font-family: Arial, sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 .custom-alert-message {
     margin-bottom: 18px;
     font-size: 1.08rem;
     color: #222;
 }
+/*
 .custom-alert-ok, .custom-confirm-ok , .custom-confirm-cancel{
     padding: 7px 22px;
     background: #007bff;
@@ -1266,15 +1286,5 @@ box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 .custom-alert-ok:hover, .custom-confirm-ok:hover, .custom-confirm-cancel:hover {
     background: #0056b3;
 }
+*/
 
-.existed-comments{
-    text-align: center;
-    margin: 5rem auto;
-    border: 1px solid var(--light-gray);
-    border-radius: 8px;
-    padding: 18px 20px;
-    background: var(--white);
-    font-size: 16px;
-    line-height: 1.6;
-    width: 400px;
-}
