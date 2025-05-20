@@ -24,14 +24,15 @@ document.addEventListener('DOMContentLoaded', function() {
     // Modal functionality
     const nameModal = document.getElementById('nameChangeModal');
     const passwordModal = document.getElementById('passwordChangeModal');
-    const closeBtns = document.getElementsByClassName('close');
+    const closeBtns = document.getElementsByClassName('modal-close');
 
     // Close modals when clicking (x)
     Array.from(closeBtns).forEach(btn => {
-        btn.onclick = function() {
-            nameModal.style.display = 'none';
-            passwordModal.style.display = 'none';
-        }
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (nameModal) nameModal.style.display = 'none';
+            if (passwordModal) passwordModal.style.display = 'none';
+        });
     });
 
     // Close modals when clicking outside
