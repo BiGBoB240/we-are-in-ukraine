@@ -46,7 +46,15 @@ if ($password !== $password_confirm) {
     exit;
 }
 
-try {
+// Проверка: заблокирован ли email
+    $stmt = $pdo->prepare("SELECT 1 FROM blockedusers WHERE email = ?");
+    $stmt->execute([$email]);
+    if ($stmt->fetch()) {
+        echo json_encode(['error' => 'Цей email заблоковано для реєстрації.']);
+        exit;
+    }
+
+    try {
     $stmt = $pdo->prepare("SELECT id FROM Users WHERE email = ?");
     $stmt->execute([$email]);
     if ($stmt->fetch()) {

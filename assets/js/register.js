@@ -26,6 +26,10 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch(() => {
                 customAlert('Помилка при реєстрації. Спробуйте пізніше.');
             });
+            if (btn) {
+                btn.disabled = false;
+                btn.textContent = 'ЗАРЕЄСТРУВАТИСЯ';
+            }
         });
     }
 });
