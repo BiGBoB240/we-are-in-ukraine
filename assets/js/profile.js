@@ -132,34 +132,40 @@ function openPasswordChangeModal() {
 }
 
 // Function to delete a user profile (for admin)
-function deleteUserProfile(userId) {
-customConfirm('Ви впевнені, що хочете видалити цей профіль? Ця дія незворотна!').then(function(confirmed){
-        
-    if (confirmed) {
-    fetch('api/delete_user.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            user_id: userId
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            showAlertOnIndex('Профіль успішно видалений');
-        } else {
-            customAlert(data.error || 'Помилка при видаленні профілю');
+function deleteUserProfile(userId, username, email) {
+    customConfirmWithCheckbox(
+        'Ви впевнені, що хочете видалити цей профіль? Ця дія незворотна!',
+        'Заблокувати email користувача?'
+    ).then(function(result){
+        if (result.confirmed) {
+            fetch('api/delete_user.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    user_id: userId,
+                    block_user: result.checked,
+                    username: username,
+                    email: email
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showAlertOnIndex('Профіль успішно видалений');
+                } else {
+                    customAlert(data.error || 'Помилка при видаленні профілю');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                customAlert('Помилка при видаленні профілю');
+            });
         }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        customAlert('Помилка при видаленні профілю');
     });
-    }
-});
 }
+
 
 
 

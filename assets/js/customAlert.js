@@ -62,6 +62,40 @@ function showCustomConfirm(message, callback) {
 }
 window.customConfirm = showCustomConfirm;
 
+// Кастомный confirm с чекбоксом
+function showCustomConfirmWithCheckbox(message, checkboxLabel) {
+    return new Promise((resolve) => {
+        if (document.getElementById('custom-confirm-modal')) return;
+        const modal = document.createElement('div');
+        modal.id = 'custom-confirm-modal';
+        modal.className = 'custom-alert-modal';
+        modal.innerHTML = `
+            <div class="custom-alert-content">
+                <div class="custom-alert-message">${message}</div>
+                <label style="display: flex; align-items: center; margin: 14px 0;">
+                    <input type="checkbox" id="block-email-checkbox" style="margin-right: 8px;">
+                    ${checkboxLabel}
+                </label>
+                <div style="margin-top: 12px; display: flex; justify-content: center; gap: 16px;">
+                    <button class="buttons-style-one custom-confirm-ok">OK</button>
+                    <button class="buttons-style-one custom-confirm-cancel">Скасувати</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        const close = (result, checked) => {
+            modal.remove();
+            resolve({confirmed: result, checked: checked});
+        };
+        modal.querySelector('.custom-confirm-ok').onclick = () => close(true, document.getElementById('block-email-checkbox').checked);
+        modal.querySelector('.custom-confirm-cancel').onclick = () => close(false, false);
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) close(false, false);
+        });
+    });
+}
+window.customConfirmWithCheckbox = showCustomConfirmWithCheckbox;
+
 // Показывать alert после обновления страницы
 function showAlertAfterReload(message) {
     sessionStorage.setItem('postReloadAlert', message);

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1
--- Время создания: Май 12 2025 г., 15:28
+-- Время создания: Май 20 2025 г., 22:18
 -- Версия сервера: 10.4.32-MariaDB
 -- Версия PHP: 8.2.12
 
@@ -31,9 +31,22 @@ CREATE TABLE `administrations` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `verificated` tinyint(1) DEFAULT 0,
-  `added_id` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `verification_token` char(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `blockedusers`
+--
+
+CREATE TABLE `blockedusers` (
+  `id` int(11) NOT NULL,
+  `username` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `blocked_by_id` int(11) NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -63,21 +76,6 @@ CREATE TABLE `comments` (
   `redacted` tinyint(1) DEFAULT 0,
   `comments_likes` int(11) DEFAULT 0,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `dustbin`
---
-
-CREATE TABLE `dustbin` (
-  `id` int(11) NOT NULL,
-  `content_id` int(11) NOT NULL,
-  `content_type` enum('post','comment','user') NOT NULL,
-  `reason` text NOT NULL,
-  `deleted_by` int(11) NOT NULL,
-  `deleted_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -166,8 +164,14 @@ CREATE TABLE `users` (
 --
 ALTER TABLE `administrations`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `user_id` (`user_id`),
-  ADD KEY `added_id` (`added_id`);
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Индексы таблицы `blockedusers`
+--
+ALTER TABLE `blockedusers`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `blocked_by_id` (`blocked_by_id`);
 
 --
 -- Индексы таблицы `commentlikes`
@@ -184,13 +188,6 @@ ALTER TABLE `comments`
   ADD PRIMARY KEY (`id`),
   ADD KEY `post_id` (`post_id`),
   ADD KEY `user_id` (`user_id`);
-
---
--- Индексы таблицы `dustbin`
---
-ALTER TABLE `dustbin`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `deleted_by` (`deleted_by`);
 
 --
 -- Индексы таблицы `feedback`
@@ -240,6 +237,12 @@ ALTER TABLE `administrations`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT для таблицы `blockedusers`
+--
+ALTER TABLE `blockedusers`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT для таблицы `commentlikes`
 --
 ALTER TABLE `commentlikes`
@@ -249,12 +252,6 @@ ALTER TABLE `commentlikes`
 -- AUTO_INCREMENT для таблицы `comments`
 --
 ALTER TABLE `comments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT для таблицы `dustbin`
---
-ALTER TABLE `dustbin`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -295,8 +292,7 @@ ALTER TABLE `users`
 -- Ограничения внешнего ключа таблицы `administrations`
 --
 ALTER TABLE `administrations`
-  ADD CONSTRAINT `administrations_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `administrations_ibfk_2` FOREIGN KEY (`added_id`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `administrations_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
 -- Ограничения внешнего ключа таблицы `commentlikes`
@@ -311,12 +307,6 @@ ALTER TABLE `commentlikes`
 ALTER TABLE `comments`
   ADD CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`post_id`) REFERENCES `posts` (`id`),
   ADD CONSTRAINT `comments_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
-
---
--- Ограничения внешнего ключа таблицы `dustbin`
---
-ALTER TABLE `dustbin`
-  ADD CONSTRAINT `dustbin_ibfk_1` FOREIGN KEY (`deleted_by`) REFERENCES `users` (`id`);
 
 --
 -- Ограничения внешнего ключа таблицы `postlikes`

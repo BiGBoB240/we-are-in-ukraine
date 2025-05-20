@@ -31,6 +31,7 @@ if (!isset($data['user_id']) || !is_numeric($data['user_id'])) {
 }
 
 $userId = (int)$data['user_id'];
+$blockUser = isset($data['block_user']) ? (bool)$data['block_user'] : false;
 
 // Don't allow deleting own account
 if ($userId === (int)$_SESSION['user_id']) {
@@ -49,8 +50,23 @@ if ($stmt->fetchColumn() !== false) {
 try {
     // Start transaction
     $pdo->beginTransaction();
+    // Если нужно заблокировать пользователя
+    if ($blockUser) {
+        // Получить username и email пользователя перед удалением
+        $stmt = $pdo->prepare('SELECT username, email FROM Users WHERE id = ?');
+        $stmt->execute([$userId]);
+        $userInfo = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($userInfo) {
+            $stmt = $pdo->prepare('INSERT INTO blockedusers (username, email, blocked_by_id, created_at) VALUES (?, ?, ?, NOW())');
+            $stmt->execute([$userInfo['username'], $userInfo['email'], $_SESSION['user_id']]);
+        }
+    }
     
-    // Delete user's comments likes
+    // Удалить все лайки пользователя на комментарии
+    $stmt = $pdo->prepare('DELETE FROM CommentLikes WHERE user_id = ?');
+    $stmt->execute([$userId]);
+
+    // Delete user's comments likes (на комментарии, где он автор комментария)
     $stmt = $pdo->prepare('DELETE FROM CommentLikes WHERE comment_id IN (SELECT id FROM Comments WHERE user_id = ?)');
     $stmt->execute([$userId]);
     
