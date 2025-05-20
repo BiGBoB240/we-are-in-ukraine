@@ -12,8 +12,9 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-$firstName = trim($_POST['firstName'] ?? '');
-$lastName = trim($_POST['lastName'] ?? '');
+require_once __DIR__ . '/../utils/filter_bad_words.php';
+$firstName = filter_bad_words(trim($_POST['firstName'] ?? ''));
+$lastName = filter_bad_words(trim($_POST['lastName'] ?? ''));
 $userIdToUpdate = $_SESSION['user_id'];
 
 if (isset($_POST['user_id']) && $_POST['user_id'] != $_SESSION['user_id']) {
@@ -38,6 +39,7 @@ $username = $firstName;
 if (!empty($lastName)) {
     $username .= ' ' . $lastName;
 }
+$username = filter_bad_words($username);
 
 try {
     $stmt = $pdo->prepare("UPDATE Users SET username = ? WHERE id = ?");

@@ -19,15 +19,18 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 $email = trim($_POST['email'] ?? '');
-$first_name = trim($_POST['first_name'] ?? '');
-$last_name = trim($_POST['last_name'] ?? '');
+require_once __DIR__ . '/../utils/filter_bad_words.php';
+$first_name = filter_bad_words(trim($_POST['first_name'] ?? ''));
+$last_name = filter_bad_words(trim($_POST['last_name'] ?? ''));
 $password = $_POST['password'] ?? '';
 $password_confirm = $_POST['password_confirm'] ?? '';
+
 
 $username = $first_name;
 if ($last_name !== '') {
     $username .= ' ' . $last_name;
 }
+$username = filter_bad_words($username);
 
 if (!$email || !$first_name || !$password || !$password_confirm) {
     echo json_encode(['error' => 'Всі обов\'язкові поля мають бути заповнені.']);

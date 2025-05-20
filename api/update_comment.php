@@ -20,7 +20,9 @@ $isAdmin = $adminCheck->fetchColumn() !== false;
 
 $data = json_decode(file_get_contents('php://input'), true);
 $commentId = $data['comment_id'] ?? null;
+require_once __DIR__ . '/../utils/filter_bad_words.php';
 $text = trim($data['text'] ?? '');
+$text = filter_bad_words($text);
 
 if (!$commentId || empty($text)) {
     echo json_encode(['error' => 'Неправильні параметри']);

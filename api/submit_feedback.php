@@ -10,10 +10,13 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 // Validate input
+require_once __DIR__ . '/../utils/filter_bad_words.php';
 $username = trim($_POST['username'] ?? '');
+$username = filter_bad_words($username);
 $email = filter_var(trim($_POST['email'] ?? ''), FILTER_VALIDATE_EMAIL);
 $phone = trim($_POST['phone'] ?? '');
 $message = trim($_POST['message'] ?? '');
+$message = filter_bad_words($message);
 
 if (empty($username) || empty($email) || empty($phone) || empty($message)) {
     http_response_code(400);

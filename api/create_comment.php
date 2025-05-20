@@ -28,7 +28,9 @@ if ($currentUserId) {
 
 $data = json_decode(file_get_contents('php://input'), true);
 $postId = isset($data['post_id']) ? (int)$data['post_id'] : null;
+require_once __DIR__ . '/../utils/filter_bad_words.php';
 $text = trim($data['comment_text'] ?? '');
+$text = filter_bad_words($text);
 
 if (!$postId || $text === '') {
     http_response_code(400);
