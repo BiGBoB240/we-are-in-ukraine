@@ -36,6 +36,12 @@ if (!$email || !$first_name || !$password || !$password_confirm) {
     echo json_encode(['error' => 'Всі обов\'язкові поля мають бути заповнені.']);
     exit;
 }
+
+// Check for spaces in names
+if (str_contains($first_name, ' ') || ($last_name && str_contains($last_name, ' '))) {
+    echo json_encode(['error' => 'Ім\'я та прізвище не повинні містити пробілів.']);
+    exit;
+}
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     echo json_encode(['error' => 'Некоректний email.']);
     exit;

@@ -164,7 +164,7 @@ $lastName = isset($nameParts[1]) ? $nameParts[1] : '';
     <!-- Modal for name change -->
     <div id="nameChangeModal" class="modal">
         <div class="modal-content">
-            <span class="modal-close">&times;</span>
+            <button class="modal-close">&times;</button>
             <h2>Змінити ім'я</h2>
             <form id="nameChangeForm">
                 <div class="form-group">
@@ -184,7 +184,7 @@ $lastName = isset($nameParts[1]) ? $nameParts[1] : '';
     <!-- Modal for password change -->
     <div id="passwordChangeModal" class="modal">
         <div class="modal-content">
-            <span class="modal-close">&times;</span>
+            <button class="modal-close">&times;</button>
             <h2>Змінити пароль</h2>
             <form id="passwordChangeForm">
                 <div class="form-group">

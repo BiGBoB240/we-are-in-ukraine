@@ -34,6 +34,12 @@ if (empty($firstName)) {
     exit;
 }
 
+// Check for spaces in names
+if (str_contains($firstName, ' ') || ($lastName && str_contains($lastName, ' '))) {
+    echo json_encode(['error' => 'Ім\'я та прізвище не повинні містити пробілів.']);
+    exit;
+}
+
 // Combine first name and last name
 $username = $firstName;
 if (!empty($lastName)) {

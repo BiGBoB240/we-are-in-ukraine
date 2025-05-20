@@ -68,9 +68,36 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Handle name change form
     const nameChangeForm = document.getElementById('nameChangeForm');
+    const firstNameInput = document.getElementById('firstName');
+    const lastNameInput = document.getElementById('lastName');
+
+    function validateNameInput(input) {
+        if (input && input.value.includes(' ')) {
+            input.setCustomValidity("Ім'я та прізвище не повинні містити пробілів.");
+            input.reportValidity();
+            return false;
+        }
+        if (input) input.setCustomValidity('');
+        return true;
+    }
+
+    if (firstNameInput) {
+        firstNameInput.addEventListener('input', () => validateNameInput(firstNameInput));
+    }
+    if (lastNameInput) {
+        lastNameInput.addEventListener('input', () => validateNameInput(lastNameInput));
+    }
+
     if (nameChangeForm) {
         nameChangeForm.addEventListener('submit', function(e) {
             e.preventDefault();
+            
+            // Validate names before submission
+            if ((firstNameInput && !validateNameInput(firstNameInput)) || 
+                (lastNameInput && lastNameInput.value && !validateNameInput(lastNameInput))) {
+                return;
+            }
+            
             const formData = new FormData(nameChangeForm);
             if (window.profileUserIdForAdmin !== undefined) {
                 formData.append('user_id', window.profileUserIdForAdmin);
