@@ -19,7 +19,7 @@ if (isset($_SESSION['user_id']) || !$token) {
 </head>
 <body>
     <header class="header">
-        <div class="container">
+    <div class="container">
             <div class="header-content">
                 <div class="logo">
                     <a href="index.php">
@@ -27,9 +27,14 @@ if (isset($_SESSION['user_id']) || !$token) {
                         <span class="logo-part2">МИ В УКРАЇНІ</span>
                     </a>
                 </div>
+                <button class="nav-toggle" aria-label="Відкрити меню">
+                    <span class="nav-toggle-bar"></span>
+                    <span class="nav-toggle-bar"></span>
+                    <span class="nav-toggle-bar"></span>
+                </button>
                 <nav class="nav-links">
-                    <a href="login.php">Вхід</a>
-                    <a href="register.php">Реєстрація</a>
+                    <a href="index.php">ВХІД</a>
+                    <a href="register.php">РЕЄСТРАЦІЯ</a>
                 </nav>
             </div>
         </div>
@@ -60,6 +65,8 @@ if (isset($_SESSION['user_id']) || !$token) {
         </div>
     </footer>
     <script src="assets/js/reset_password.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/mobileMenu.js"></script>
     <script src="assets/js/customAlert.js"></script>
 </body>
 </html>

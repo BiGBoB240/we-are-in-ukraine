@@ -13,19 +13,13 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    resetMessage.style.color = 'green';
-                    resetMessage.textContent = data.success;
-                    setTimeout(() => {
-                        window.location.href = 'login.php';
-                    }, 2000);
+                    (data.success);
                 } else {
-                    resetMessage.style.color = 'red';
-                    resetMessage.textContent = data.error;
+                    customAlert(data.error);
                 }
             })
             .catch(() => {
-                resetMessage.style.color = 'red';
-                resetMessage.textContent = 'Помилка при зміні пароля. Спробуйте пізніше.';
+                customAlert('Помилка при зміні пароля. Спробуйте пізніше.');
             });
         });
     }
