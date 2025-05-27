@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    (data.success);
+                    showAlertAndRedirect(data.success, 'login.php');
                 } else {
                     customAlert(data.error);
                 }

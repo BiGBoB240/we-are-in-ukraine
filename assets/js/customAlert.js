@@ -121,3 +121,10 @@ function showAlertOnIndex(message) {
     sessionStorage.setItem('postReloadAlert', message);
     window.location.href = 'index.php';
 }
+
+// Универсальный alert с редиректом на любую страницу
+function showAlertAndRedirect(message, url) {
+    sessionStorage.setItem('postReloadAlert', message);
+    window.location.href = url;
+}
+window.showAlertAndRedirect = showAlertAndRedirect;
