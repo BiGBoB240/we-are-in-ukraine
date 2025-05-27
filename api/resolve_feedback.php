@@ -1,9 +1,7 @@
 <?php
 require_once '../config/db.php';
 // PHPMailer
-require_once __DIR__ . '/../includes/PHPMailer/src/Exception.php';
-require_once __DIR__ . '/../includes/PHPMailer/src/PHPMailer.php';
-require_once __DIR__ . '/../includes/PHPMailer/src/SMTP.php';
+require_once __DIR__ . '/send_mail.php'; // Unified mail helper
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -52,35 +50,11 @@ try {
         exit;
     }
 
-    try {
-        $mail = new PHPMailer(true);
-        // SMTP settings
-        $mail->isSMTP();
-        $mail->Host = 'smtp.gmail.com';
-        $mail->SMTPAuth = true;
-        $mail->Username = 'mybloguasup77@gmail.com';
-        $mail->Password = 'eehf lsbk yesl qxdu';
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port = 587;
-        $mail->CharSet = 'UTF-8';
-        $mail->Encoding = 'base64';
-        // Sender and recipient
-        $mail->setFrom('mybloguasup77@gmail.com', 'Ми в Україні');
-        $mail->addAddress($feedback['email'] ?? 'recipient@example.com', $feedback['username'] ?? 'User');
-
-        // Email content
-        $mail->isHTML(true);
-        $mail->Subject = 'Ваше звернення оброблено';
-        $mail->Body = "<p>Шановний(а) <b>" . htmlspecialchars($feedback['username'] ?? '') . "</b>,</p>"
-            . "<p>Ваше звернення було успішно оброблено.<br>"
-            . "Дякуємо за вашу співпрацю!</p>"
-            . "<p>З повагою,<br>Команда Ми в Україні</p>";
-
-        $mail->send();
-    } catch (Exception $e) {
-        error_log("Mailer Error: {$mail->ErrorInfo}");
-        // Ошибка отправки письма залогирована, продолжаем выполнение
-    }
+    $body_html = "<p>Шановний(а) <b>" . htmlspecialchars($feedback['username'] ?? '') . "</b>,</p>"
+        . "<p>Ваше звернення було успішно оброблено.<br>"
+        . "Дякуємо за вашу співпрацю!</p>"
+        . "<p>З повагою,<br>Команда Ми в Україні</p>";
+    send_custom_mail($feedback['email'] ?? 'recipient@example.com', $feedback['username'] ?? 'User', 'Ваше звернення оброблено', $body_html);
 
     // Delete feedback
     $stmt = $pdo->prepare("DELETE FROM Feedback WHERE id = ?");

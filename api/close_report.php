@@ -2,11 +2,7 @@
 // API для закриття скарги: надсилання листів і видалення скарг за content_id
 header('Content-Type: application/json');
 require_once '../config/db.php';
-require_once '../includes/PHPMailer/src/PHPMailer.php';
-require_once '../includes/PHPMailer/src/SMTP.php';
-require_once '../includes/PHPMailer/src/Exception.php';
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
+require_once __DIR__ . '/send_mail.php'; // Unified mail helper
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
@@ -32,26 +28,8 @@ $subject = 'Ваше повідомлення було розглянуто';
 $message = 'Ваше повідомлення було розглянуто, дякуємо що допомагаєте стати кращими!';
 foreach ($users as $user) {
     if (!empty($user['email'])) {
-        try {
-            $mail = new PHPMailer(true);
-            $mail->isSMTP();
-            $mail->Host = 'smtp.gmail.com';
-            $mail->SMTPAuth = true;
-            $mail->Username = 'mybloguasup77@gmail.com';
-            $mail->Password = 'eehf lsbk yesl qxdu';
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
-            $mail->Port = 465;
-            $mail->setFrom('mybloguasup77@gmail.com', 'Ми в Україні');
-            $mail->CharSet = 'UTF-8';
-            $mail->Encoding = 'base64';
-            $mail->addAddress($user['email']);
-            $mail->isHTML(true);
-            $mail->Subject = $subject;
-            $mail->Body = "<p>$message</p>";
-            $mail->send();
-        } catch (Exception $e) {
-            // Можна логувати помилку або зберігати її для відповіді
-        }
+        $body_html = "<p>Доброго дня!</p><p>$message</p><p>З повагою,<br>Команда Ми в Україні</p>";
+        send_custom_mail($user['email'], $user['email'], $subject, $body_html);
     }
 }
 
