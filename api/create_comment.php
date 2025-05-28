@@ -28,6 +28,7 @@ if ($currentUserId) {
 
 $data = json_decode(file_get_contents('php://input'), true);
 $postId = isset($data['post_id']) ? (int)$data['post_id'] : null;
+$replyTo = isset($data['reply_to']) ? (int)$data['reply_to'] : null;
 require_once __DIR__ . '/../utils/filter_bad_words.php';
 $text = trim($data['comment_text'] ?? '');
 $text = filter_bad_words($text);
@@ -42,6 +43,18 @@ try {
     $stmt = $pdo->prepare("INSERT INTO Comments (post_id, user_id, comment_text) VALUES (?, ?, ?)");
     $stmt->execute([$postId, $currentUserId, $text]);
     $commentId = $pdo->lastInsertId();
+
+    // Если это reply, создаём уведомление
+    if ($replyTo) {
+        // Получить user_id родительского комментария
+        $stmtReply = $pdo->prepare("SELECT user_id FROM Comments WHERE id = ?");
+        $stmtReply->execute([$replyTo]);
+        $parentUserId = $stmtReply->fetchColumn();
+        if ($parentUserId && $parentUserId != $currentUserId) { // не уведомлять себя
+            $stmtNotif = $pdo->prepare("INSERT INTO notifications (recipient_user_id, sender_user_id, post_id, comment_id, is_read) VALUES (?, ?, ?, ?, 0)");
+            $stmtNotif->execute([$parentUserId, $currentUserId, $postId, $commentId]);
+        }
+    }
 
     $stmt = $pdo->prepare("SELECT c.id, c.comment_text, c.created_at, c.comments_likes, u.username, c.user_id
         FROM Comments c 

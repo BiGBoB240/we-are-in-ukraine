@@ -222,9 +222,12 @@ document.addEventListener('DOMContentLoaded', function() {
                             <h3>Коментарі</h3>` : ''}
                             ${isLoggedIn ? `
                                 <form class="comment-form">
-                                    <textarea placeholder="Додати коментар..." maxlength="300"></textarea>
-                                    <button class="buttons-style-one" type="submit">Відправити</button>
-                                </form>` : ''}
+    <textarea placeholder="Додати коментар..." maxlength="300"></textarea>
+    <div style="display: flex; gap: 8px; align-items: center;">
+        <button class="buttons-style-one" type="submit">Відправити</button>
+        <button class="buttons-style-one" type="button" id="cancel-reply-btn" style="display:none;">Скасувати відповідь</button>
+    </div>
+</form>` : ''}
                             ${post.comments.map(comment => `
                                 <div class="comment" data-comment-id="${comment.id}">
                                     <div class="comment-content">
@@ -236,6 +239,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                             <span class="likes-count">${comment.likes_count}</span>
                                         </button>
                                         ${(isLoggedIn && window.currentUserId !== comment.user_id) ? `<button class="report-btn" title="Поскаржитись на коментар" onclick="reportComment(${comment.id})">Поскаржитись</button>` : ''}
+                                        ${(isLoggedIn && window.currentUserId !== comment.user_id) ? `<button class="reply-btn" data-reply-username="${comment.username}" data-reply-id="${comment.id}">Відповісти користувачу</button>` : ''}
                                     </div>
                                     
                                     <div class="edit-form" id="edit-form-${comment.id}" style="display: none;">
@@ -321,18 +325,52 @@ document.addEventListener('DOMContentLoaded', function() {
                  });
                 }
                 
-                // Handle comment submission
+                // Handle reply-to-user logic
+                let replyTo = null;
+                let replyToUsername = '';
                 const commentForm = modalBody.querySelector('.comment-form');
                 if (commentForm) {
+                    const textarea = commentForm.querySelector('textarea');
+                    // Reply button logic
+                    const replyBtns = modalBody.querySelectorAll('.reply-btn');
+                    const cancelReplyBtn = modalBody.querySelector('#cancel-reply-btn');
+                    replyBtns.forEach(btn => {
+                        btn.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            replyTo = this.getAttribute('data-reply-id');
+                            replyToUsername = this.getAttribute('data-reply-username');
+                            textarea.placeholder = `Відповідь користувачу ${replyToUsername}:`;
+                            textarea.focus();
+                            commentForm.classList.add('reply-mode');
+                            if (cancelReplyBtn) cancelReplyBtn.style.display = '';
+                        });
+                    });
+                    // Cancel reply logic
+                    if (cancelReplyBtn) {
+                        cancelReplyBtn.addEventListener('click', function() {
+                            replyTo = null;
+                            replyToUsername = '';
+                            textarea.placeholder = 'Додати коментар...';
+                            commentForm.classList.remove('reply-mode');
+                            cancelReplyBtn.style.display = 'none';
+                        });
+                    }
+
+                    // Submission logic
                     commentForm.addEventListener('submit', function(e) {
                         e.preventDefault();
-                        const textarea = commentForm.querySelector('textarea');
                         const text = textarea.value.trim();
                         if (!text) return;
+                        let commentText = text;
+                        let payload = { post_id: postId, comment_text: commentText };
+                        if (replyTo && replyToUsername) {
+                            commentText = `Відповідь користувачу ${replyToUsername}: ${text}`;
+                            payload = { post_id: postId, comment_text: commentText, reply_to: replyTo };
+                        }
                         fetch('api/create_comment.php', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ post_id: postId, comment_text: text })
+                            body: JSON.stringify(payload)
                         })
                         .then(response => response.json())
                         .then(data => {
@@ -343,6 +381,20 @@ document.addEventListener('DOMContentLoaded', function() {
                             }
                         })
                         .catch(err => console.error('Comment error:', err));
+                        // Reset reply mode
+                        replyTo = null;
+                        replyToUsername = '';
+                        textarea.placeholder = 'Додати коментар...';
+                        commentForm.classList.remove('reply-mode');
+                        if (cancelReplyBtn) cancelReplyBtn.style.display = 'none';
+                    });
+                    // Reset reply mode on modal close
+                    modalContainer.querySelector('.modal-close').addEventListener('click', function() {
+                        replyTo = null;
+                        replyToUsername = '';
+                        textarea.placeholder = 'Додати коментар...';
+                        commentForm.classList.remove('reply-mode');
+                        if (cancelReplyBtn) cancelReplyBtn.style.display = 'none';
                     });
                 }
             });
