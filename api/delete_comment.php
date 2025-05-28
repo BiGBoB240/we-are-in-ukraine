@@ -61,6 +61,9 @@ try {
         $stmt = $pdo->prepare("DELETE FROM Reports WHERE content_id = ? AND content_type = 'comment'");
         $stmt->execute([$commentId]);
         
+        $stmt = $pdo->prepare("DELETE FROM notifications WHERE comment_id = ?");
+        $stmt->execute([$commentId]);
+
         $pdo->commit();
         echo json_encode(['success' => true, 'message' => 'Коментар видалено']);
     } catch (Exception $e) {
