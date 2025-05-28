@@ -8,6 +8,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let loadedPostIds = new Set(); // Для защиты от дубликатов
 
+    // --- Открытие модалки поста по параметрам URL ---
+    const urlParams = new URLSearchParams(window.location.search);
+    const postIdFromUrl = urlParams.get('post_id');
+    const replyToFromUrl = urlParams.get('reply_to');
+    // replyToFromUrl сохраняем для будущей интеграции
+    // Открывать модалку поста только после загрузки всех постов
+    loadPosts().then(() => {
+        if (postIdFromUrl) {
+            openPostModal(postIdFromUrl, replyToFromUrl || null);
+        }
+    });
+    // Если нет post_id, просто загрузить посты
+    if (!postIdFromUrl) {
+        loadPosts();
+    }
+
     // Create modal container
     const modalContainer = document.createElement('div');
     modalContainer.className = 'modal';
@@ -198,7 +214,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Open post modal
-    window.openPostModal = function(postId) {
+    window.openPostModal = function(postId, replyTo = null) {
         fetch(`api/post.php?id=${postId}`)
             .then(response => response.json())
             .then(post => {
@@ -326,20 +342,44 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 
                 // Handle reply-to-user logic
-                let replyTo = null;
-                let replyToUsername = '';
                 const commentForm = modalBody.querySelector('.comment-form');
                 if (commentForm) {
-                    const textarea = commentForm.querySelector('textarea');
+        const textarea = commentForm.querySelector('textarea');
+        const replyBtns = modalBody.querySelectorAll('.reply-btn');
+        const cancelReplyBtn = modalBody.querySelector('#cancel-reply-btn');
+        // --- Новый строгий режим: если replyTo есть, готовим форму для ответа ---
+        if (replyTo) {
+            const commentBlock = modalBody.querySelector(`.comment[data-comment-id='${replyTo}']`);
+            let replyToUsername = '';
+            if (commentBlock) {
+                // Прокрутка к комментарию
+                commentBlock.scrollIntoView({behavior: 'smooth', block: 'center'});
+                // Пробуем взять имя пользователя
+                const strong = commentBlock.querySelector('.comment-content > strong');
+                if (strong) replyToUsername = strong.textContent;
+                // Если не нашли, ищем через reply-btn
+                if (!replyToUsername) {
+                    const replyBtn = commentBlock.querySelector('.reply-btn');
+                    if (replyBtn) replyToUsername = replyBtn.getAttribute('data-reply-username') || '';
+                }
+                // Готовим форму
+                textarea.placeholder = `Відповідь користувачу ${replyToUsername}:`;
+                textarea.focus();
+                commentForm.classList.add('reply-mode');
+                if (cancelReplyBtn) cancelReplyBtn.style.display = '';
+                // replyTo и replyToUsername будут использованы при отправке
+                commentForm._replyTo = replyTo;
+                commentForm._replyToUsername = replyToUsername;
+            }
+        }
+
                     // Reply button logic
-                    const replyBtns = modalBody.querySelectorAll('.reply-btn');
-                    const cancelReplyBtn = modalBody.querySelector('#cancel-reply-btn');
                     replyBtns.forEach(btn => {
                         btn.addEventListener('click', function(e) {
                             e.preventDefault();
-                            replyTo = this.getAttribute('data-reply-id');
-                            replyToUsername = this.getAttribute('data-reply-username');
-                            textarea.placeholder = `Відповідь користувачу ${replyToUsername}:`;
+                            commentForm._replyTo = this.getAttribute('data-reply-id');
+                            commentForm._replyToUsername = this.getAttribute('data-reply-username');
+                            textarea.placeholder = `Відповідь користувачу ${commentForm._replyToUsername}:`;
                             textarea.focus();
                             commentForm.classList.add('reply-mode');
                             if (cancelReplyBtn) cancelReplyBtn.style.display = '';
@@ -348,8 +388,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Cancel reply logic
                     if (cancelReplyBtn) {
                         cancelReplyBtn.addEventListener('click', function() {
-                            replyTo = null;
-                            replyToUsername = '';
+                            commentForm._replyTo = null;
+                            commentForm._replyToUsername = '';
                             textarea.placeholder = 'Додати коментар...';
                             commentForm.classList.remove('reply-mode');
                             cancelReplyBtn.style.display = 'none';
@@ -363,9 +403,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         if (!text) return;
                         let commentText = text;
                         let payload = { post_id: postId, comment_text: commentText };
-                        if (replyTo && replyToUsername) {
-                            commentText = `Відповідь користувачу ${replyToUsername}: ${text}`;
-                            payload = { post_id: postId, comment_text: commentText, reply_to: replyTo };
+                        // Используем только сохранённые значения для ответа
+                        if (commentForm._replyTo && commentForm._replyToUsername) {
+                            commentText = `Відповідь користувачу ${commentForm._replyToUsername}: ${text}`;
+                            payload = { post_id: postId, comment_text: commentText, reply_to: commentForm._replyTo };
                         }
                         fetch('api/create_comment.php', {
                             method: 'POST',
@@ -382,8 +423,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         })
                         .catch(err => console.error('Comment error:', err));
                         // Reset reply mode
-                        replyTo = null;
-                        replyToUsername = '';
+                        commentForm._replyTo = null;
+                        commentForm._replyToUsername = '';
                         textarea.placeholder = 'Додати коментар...';
                         commentForm.classList.remove('reply-mode');
                         if (cancelReplyBtn) cancelReplyBtn.style.display = 'none';

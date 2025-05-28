@@ -117,9 +117,9 @@ $lastName = isset($nameParts[1]) ? $nameParts[1] : '';
                         <div class="profile-actions-container">
                             <?php if (isset($_SESSION['user_id']) && $_SESSION['user_id'] == $profileUserId): ?>
                                 <button id="notification-bell" class="notification-bell profile-settings-btn" title="Повідомлення">
-    <i class="fas fa-bell"></i>
-    <span id="notification-dot" style="display:none;"></span>
-</button>
+                                    <i class="fas fa-bell"></i>
+                                    <span id="notification-dot" style="display:none;"></span>
+                                </button>
                             <?php endif; ?>
                             <?php if (isset($_SESSION['user_id']) && $_SESSION['user_id'] != $profileUserId): ?>
                                 <button class="report-btn" title="Поскаржитись на профіль" id="report-profile-btn">Поскаржитись</button>

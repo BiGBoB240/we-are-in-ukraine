@@ -44,11 +44,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         const item = document.createElement('div');
                         item.className = 'modal-list-item' + (n.is_read == 0 ? ' unread' : ' read');
                         item.innerHTML =
-                            `<div class='notif-author'>${n.sender_username || 'Користувач'}</div>` +
-                            `<div class='notif-text'>${n.comment_text || ''}</div>` +
-                            `<div class='notif-status'>${n.is_read == 0 ? 'Не прочитано' : 'Прочитано'}</div>` +
-                            `<button class='modal-btn buttons-style-one reply-notif-btn' data-comment-id='${n.comment_id}' data-username='${n.sender_username}'>Відповісти користувачу</button>` +
-                            (n.is_read == 0 ? `<button class='modal-btn buttons-style-one mark-read-btn' data-notif-id='${n.id}'>Позначити як прочитане</button>` : '');
+    `<div class='notif-author'>${n.sender_username || 'Користувач'}</div>` +
+    `<div class='notif-text'>${n.comment_text || ''}</div>` +
+    `<div class='notif-status'>${n.is_read == 0 ? 'Не прочитано' : 'Прочитано'}</div>` +
+    `<button class='modal-btn buttons-style-one reply-notif-btn' data-comment-id='${n.comment_id}' data-post-id='${n.post_id}' data-username='${n.sender_username}'>Відповісти користувачу</button>` +
+    (n.is_read == 0 ? `<button class='modal-btn buttons-style-one mark-read-btn' data-notif-id='${n.id}'>Позначити як прочитане</button>` : '');
                         list.appendChild(item);
                         if (n.is_read == 0) hasUnread = true;
                     });
@@ -89,6 +89,19 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     // Делегирование для кнопок "Позначити як прочитане"
     notifList.addEventListener('click', function(e) {
+        // Ответ пользователю
+        if (e.target && e.target.matches('.reply-notif-btn')) {
+            const btn = e.target;
+            const commentId = btn.getAttribute('data-comment-id');
+            const postId = btn.getAttribute('data-post-id');
+            // Открываем index.php с нужным якорем и reply_to
+            if (postId && commentId) {
+                window.location.href = `index.php?post_id=${postId}&reply_to=${commentId}`;
+            } else {
+                customAlert('Не вдалося перейти до відповіді');
+            }
+            return;
+        }
         if (e.target && e.target.matches('.mark-read-btn')) {
             const btn = e.target;
             const notifId = btn.getAttribute('data-notif-id');
