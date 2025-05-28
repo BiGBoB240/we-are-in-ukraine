@@ -115,6 +115,12 @@ $lastName = isset($nameParts[1]) ? $nameParts[1] : '';
                             <?php echo htmlspecialchars($user['username']); ?>
                         </h1>
                         <div class="profile-actions-container">
+                            <?php if (isset($_SESSION['user_id']) && $_SESSION['user_id'] == $profileUserId): ?>
+                                <button id="notification-bell" class="notification-bell profile-settings-btn" title="Повідомлення">
+    <i class="fas fa-bell"></i>
+    <span id="notification-dot" style="display:none;"></span>
+</button>
+                            <?php endif; ?>
                             <?php if (isset($_SESSION['user_id']) && $_SESSION['user_id'] != $profileUserId): ?>
                                 <button class="report-btn" title="Поскаржитись на профіль" id="report-profile-btn">Поскаржитись</button>
                             <?php endif; ?>
@@ -160,6 +166,18 @@ $lastName = isset($nameParts[1]) ? $nameParts[1] : '';
             </div>
         </div>
     </main>
+
+    <!-- Notifications Modal -->
+    <div id="notifications-modal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <button class="modal-close" id="notifications-modal-close">&times;</button>
+            <h2>Повідомлення</h2>
+            <button id="mark-all-read-btn" class="buttons-style-one" style="margin-bottom: 16px;">Прочитати все</button>
+            <div id="notifications-list">
+                <!-- Notifications will be loaded here -->
+            </div>
+        </div>
+    </div>
 
     <!-- Modal for name change -->
     <div id="nameChangeModal" class="modal">

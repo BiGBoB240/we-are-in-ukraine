@@ -1,4 +1,122 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // === Notifications Bell Logic ===
+    const bellBtn = document.getElementById('notification-bell');
+    const notifModal = document.getElementById('notifications-modal');
+    const notifClose = document.getElementById('notifications-modal-close');
+    const notifDot = document.getElementById('notification-dot');
+    const notifList = document.getElementById('notifications-list');
+    const markAllReadBtn = document.getElementById('mark-all-read-btn');
+
+    // Показываем/скрываем модалку уведомлений
+    if (bellBtn && notifModal) {
+        bellBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            notifModal.style.display = 'block';
+            loadNotifications();
+        });
+    }
+    if (notifClose) {
+        notifClose.addEventListener('click', function() {
+            notifModal.style.display = 'none';
+        });
+    }
+    notifModal && notifModal.addEventListener('mousedown', function(event) {
+        if (event.target === notifModal) {
+            notifModal.style.display = 'none';
+            updateNotifDot();
+        }
+    });
+
+    // Загрузка уведомлений и отображение красной точки
+    function loadNotifications() {
+        fetch('api/notifications.php?action=get')
+            .then(res => res.json())
+            .then(data => {
+                if (!data.success) return;
+                notifList.innerHTML = '';
+                let hasUnread = false;
+                if (data.notifications.length === 0) {
+                    notifList.innerHTML = '<div class="modal-empty">Немає нових повідомлень</div>';
+                } else {
+                    const list = document.createElement('div');
+                    list.className = 'modal-list';
+                    data.notifications.forEach(n => {
+                        const item = document.createElement('div');
+                        item.className = 'modal-list-item' + (n.is_read == 0 ? ' unread' : ' read');
+                        item.innerHTML =
+                            `<div class='notif-author'>${n.sender_username || 'Користувач'}</div>` +
+                            `<div class='notif-text'>${n.comment_text || ''}</div>` +
+                            `<div class='notif-status'>${n.is_read == 0 ? 'Не прочитано' : 'Прочитано'}</div>` +
+                            `<button class='modal-btn buttons-style-one reply-notif-btn' data-comment-id='${n.comment_id}' data-username='${n.sender_username}'>Відповісти користувачу</button>` +
+                            (n.is_read == 0 ? `<button class='modal-btn buttons-style-one mark-read-btn' data-notif-id='${n.id}'>Позначити як прочитане</button>` : '');
+                        list.appendChild(item);
+                        if (n.is_read == 0) hasUnread = true;
+                    });
+                    notifList.appendChild(list);
+                }
+                updateNotifDot();
+            });
+    }
+
+    // Функція для оновлення кружечка
+    function updateNotifDot() {
+        // Якщо є хоча б одне .modal-list-item.unread — показуємо, інакше ховаємо
+        const hasUnread = notifList.querySelector('.modal-list-item.unread');
+        if (notifDot) notifDot.style.display = hasUnread ? 'inline-block' : 'none';
+    }
+
+    // Инициализация точки при загрузке страницы
+    if (bellBtn && notifDot) {
+        loadNotifications();
+    }
+    // Кнопка "Прочитати все"
+    if (markAllReadBtn) {
+        markAllReadBtn.addEventListener('click', function() {
+            customConfirm('Відзначити всі повідомлення як прочитані?').then(confirmed => {
+                if (confirmed) {
+                    fetch('api/notifications.php?action=mark_all_read', {method: 'POST'})
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.success) {
+                                showAlertAfterReload('Всі повідомлення відзначено як прочитані!');
+                            } else {
+                                customAlert('Помилка при оновленні повідомлень');
+                            }
+                        });
+                }
+            });
+        });
+    }
+    // Делегирование для кнопок "Позначити як прочитане"
+    notifList.addEventListener('click', function(e) {
+        if (e.target && e.target.matches('.mark-read-btn')) {
+            const btn = e.target;
+            const notifId = btn.getAttribute('data-notif-id');
+            const notifItem = btn.closest('.modal-list-item');
+            fetch('api/notifications.php?action=mark_one_read', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({id: notifId})
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    if (notifItem) {
+                        notifItem.classList.remove('unread');
+                        notifItem.classList.add('read');
+                        const status = notifItem.querySelector('.notif-status');
+                        if (status) status.textContent = 'Прочитано';
+                        btn.style.display = 'none';
+                    }
+                    updateNotifDot();
+                } else {
+                    customAlert('Не вдалося позначити як прочитане');
+                }
+            });
+        }
+    });
+    // === END Notifications ===
+
     // Перенос обработчика жалобы на профиль из profile.php
     var reportBtn = document.getElementById('report-profile-btn');
     if (reportBtn) {

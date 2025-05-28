@@ -57,7 +57,73 @@ body {
 }
 
 
-    
+.modal-list-item{
+    border: 1px solid var(--light-gray);
+    border-radius: 8px;
+    padding: 18px 20px;
+    background: var(--white);
+    margin-top: 18px;
+    text-align: justify;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+
+.notification-bell, .profile-settings-btn {
+    background-color: var(--primary-gray);
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s;
+    position: relative;
+    margin-left: 12px;
+}
+.notification-bell:hover, .profile-settings-btn:hover {
+    background-color: var(--black);
+}
+.notification-bell i.fas.fa-bell {
+    color: #fff;
+    font-size: 22px;
+}
+.profile-settings-btn i.fas.fa-cog {
+    color: #fff;
+    font-size: 22px;
+}
+#notification-dot {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 12px;
+    height: 12px;
+    background: #e53935;
+    border-radius: 50%;
+    display: none;
+    border: 2px solid #fff;
+    pointer-events: none;
+    z-index: 2;
+}
+
+
+#notification-dot {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 12px;
+    height: 12px;
+    background: #e53935;
+    border-radius: 50%;
+    display: none;
+    border: 2px solid #fff;
+    pointer-events: none;
+    z-index: 2;
+}
 
 
 .modal-content h2{

@@ -222,12 +222,12 @@ document.addEventListener('DOMContentLoaded', function() {
                             <h3>Коментарі</h3>` : ''}
                             ${isLoggedIn ? `
                                 <form class="comment-form">
-    <textarea placeholder="Додати коментар..." maxlength="300"></textarea>
-    <div style="display: flex; gap: 8px; align-items: center;">
-        <button class="buttons-style-one" type="submit">Відправити</button>
-        <button class="buttons-style-one" type="button" id="cancel-reply-btn" style="display:none;">Скасувати відповідь</button>
-    </div>
-</form>` : ''}
+                                    <textarea placeholder="Додати коментар..." maxlength="300"></textarea>
+                                    <div style="display: flex; gap: 8px; align-items: center;">
+                                        <button class="buttons-style-one" type="submit">Відправити</button>
+                                        <button class="buttons-style-one" type="button" id="cancel-reply-btn" style="display:none;">Скасувати відповідь</button>
+                                    </div>
+                                </form>` : ''}
                             ${post.comments.map(comment => `
                                 <div class="comment" data-comment-id="${comment.id}">
                                     <div class="comment-content">
@@ -238,8 +238,8 @@ document.addEventListener('DOMContentLoaded', function() {
                                             <span class="like-icon">❤️</span>
                                             <span class="likes-count">${comment.likes_count}</span>
                                         </button>
-                                        ${(isLoggedIn && window.currentUserId !== comment.user_id) ? `<button class="report-btn" title="Поскаржитись на коментар" onclick="reportComment(${comment.id})">Поскаржитись</button>` : ''}
                                         ${(isLoggedIn && window.currentUserId !== comment.user_id) ? `<button class="reply-btn" data-reply-username="${comment.username}" data-reply-id="${comment.id}">Відповісти користувачу</button>` : ''}
+                                        ${(isLoggedIn && window.currentUserId !== comment.user_id) ? `<button class="report-btn" title="Поскаржитись на коментар" onclick="reportComment(${comment.id})">Поскаржитись</button>` : ''}
                                     </div>
                                     
                                     <div class="edit-form" id="edit-form-${comment.id}" style="display: none;">
