@@ -3,6 +3,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchResults = document.getElementById('search-results');
     const searchBar = document.getElementById('search');
     const postsContainer = document.getElementById('posts-container');
+
+    // Если нет контейнера для постов и/или поиска, не выполнять остальной код
+    if (!searchInput || !searchResults || !searchBar || !postsContainer) {
+        return;
+    }
     let currentPage = 1;
     let currentFilter = 'date-new';
 
