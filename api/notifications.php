@@ -41,6 +41,23 @@ if ($action === 'get') {
         echo json_encode(['error' => 'Invalid notification id']);
         exit;
     }
+} elseif ($action === 'delete_one') {
+    $input = json_decode(file_get_contents('php://input'), true);
+    $notifId = isset($input['id']) ? (int)$input['id'] : 0;
+    if ($notifId) {
+        $stmt = $pdo->prepare("DELETE FROM notifications WHERE id = ? AND recipient_user_id = ?");
+        $stmt->execute([$notifId, $userId]);
+        echo json_encode(['success' => true]);
+        exit;
+    } else {
+        echo json_encode(['error' => 'Invalid notification id']);
+        exit;
+    }
+} elseif ($action === 'delete_all') {
+    $stmt = $pdo->prepare("DELETE FROM notifications WHERE recipient_user_id = ?");
+    $stmt->execute([$userId]);
+    echo json_encode(['success' => true]);
+    exit;
 } else {
     http_response_code(400);
     echo json_encode(['error' => 'Invalid action']);

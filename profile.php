@@ -172,7 +172,10 @@ $lastName = isset($nameParts[1]) ? $nameParts[1] : '';
         <div class="modal-content">
             <button class="modal-close" id="notifications-modal-close">&times;</button>
             <h2>Повідомлення</h2>
-            <button id="mark-all-read-btn" class="buttons-style-one" style="margin-bottom: 16px;">Прочитати все</button>
+            <div style="margin-bottom: 16px;">
+  <button id="mark-all-read-btn" class="buttons-style-one">Прочитати все</button>
+  <button id="delete-all-btn" class="buttons-style-one buttons-style-two">Видалити все</button>
+</div>
             <div id="notifications-list">
                 <!-- Notifications will be loaded here -->
             </div>

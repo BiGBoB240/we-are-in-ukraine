@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const notifDot = document.getElementById('notification-dot');
     const notifList = document.getElementById('notifications-list');
     const markAllReadBtn = document.getElementById('mark-all-read-btn');
+    const deleteAllBtn = document.getElementById('delete-all-btn');
 
     // Показываем/скрываем модалку уведомлений
     if (bellBtn && notifModal) {
@@ -33,11 +34,22 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(res => res.json())
             .then(data => {
                 if (!data.success) return;
+                const notifList = document.getElementById('notifications-list');
+                if (!notifList) {
+                    console.error('Element #notifications-list not found!');
+                    return;
+                }
                 notifList.innerHTML = '';
                 let hasUnread = false;
+                const markAllReadBtn = document.getElementById('mark-all-read-btn');
+                const deleteAllBtn = document.getElementById('delete-all-btn');
                 if (data.notifications.length === 0) {
                     notifList.innerHTML = '<div class="modal-empty">Немає нових повідомлень</div>';
+                    if (markAllReadBtn) markAllReadBtn.style.display = 'none';
+                    if (deleteAllBtn) deleteAllBtn.style.display = 'none';
                 } else {
+                    if (markAllReadBtn) markAllReadBtn.style.display = '';
+                    if (deleteAllBtn) deleteAllBtn.style.display = '';
                     const list = document.createElement('div');
                     list.className = 'modal-list';
                     data.notifications.forEach(n => {
@@ -47,8 +59,9 @@ document.addEventListener('DOMContentLoaded', function() {
     `<div class='notif-author'>${n.sender_username || 'Користувач'}</div>` +
     `<div class='notif-text'>${n.comment_text || ''}</div>` +
     `<div class='notif-status'>${n.is_read == 0 ? 'Не прочитано' : 'Прочитано'}</div>` +
-    `<button class='modal-btn buttons-style-one reply-notif-btn' data-comment-id='${n.comment_id}' data-post-id='${n.post_id}' data-username='${n.sender_username}'>Відповісти користувачу</button>` +
-    (n.is_read == 0 ? `<button class='modal-btn buttons-style-one mark-read-btn' data-notif-id='${n.id}'>Позначити як прочитане</button>` : '');
+    `<button class='modal-btn buttons-style-one mark-read-btn' data-notif-id='${n.id}' style='${n.is_read == 0 ? '' : 'display:none;'}'>Позначити як прочитане</button>` +
+    `<button class='modal-btn buttons-style-one buttons-style-two delete-notif-btn' data-notif-id='${n.id}' style='${n.is_read == 1 ? '' : 'display:none;'}'>Видалити</button>` +
+    `<button class='modal-btn buttons-style-one reply-notif-btn' data-comment-id='${n.comment_id}' data-post-id='${n.post_id}' data-username='${n.sender_username}'>Відповісти користувачу</button>`;
                         list.appendChild(item);
                         if (n.is_read == 0) hasUnread = true;
                     });
@@ -69,6 +82,10 @@ document.addEventListener('DOMContentLoaded', function() {
     if (bellBtn && notifDot) {
         loadNotifications();
     }
+    // Кнопка "Видалити все"
+
+    
+
     // Кнопка "Прочитати все"
     if (markAllReadBtn) {
         markAllReadBtn.addEventListener('click', function() {
@@ -78,9 +95,31 @@ document.addEventListener('DOMContentLoaded', function() {
                         .then(res => res.json())
                         .then(data => {
                             if (data.success) {
-                                showAlertAfterReload('Всі повідомлення відзначено як прочитані!');
+                                // showAlertAfterReload('Всі повідомлення відзначено як прочитані!');
+                                loadNotifications();
+                                customAlert('Всі повідомлення відзначено як прочитані!');
                             } else {
                                 customAlert('Помилка при оновленні повідомлень');
+                            }
+                        });
+                }
+            });
+        });
+    }
+
+    // Кнопка "Видалити все"
+    if (deleteAllBtn) {
+        deleteAllBtn.addEventListener('click', function() {
+            customConfirm('Видалити всі повідомлення?').then(confirmed => {
+                if (confirmed) {
+                    fetch('api/notifications.php?action=delete_all', {method: 'POST'})
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.success) {
+                                loadNotifications();
+                                customAlert('Всі повідомлення видалено!');
+                            } else {
+                                customAlert('Помилка при видаленні повідомлень');
                             }
                         });
                 }
@@ -103,27 +142,53 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         if (e.target && e.target.matches('.mark-read-btn')) {
+    const btn = e.target;
+    const notifId = btn.getAttribute('data-notif-id');
+    const notifItem = btn.closest('.modal-list-item');
+    fetch('api/notifications.php?action=mark_one_read', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({id: notifId})
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            if (notifItem) {
+                notifItem.classList.remove('unread');
+                notifItem.classList.add('read');
+                const status = notifItem.querySelector('.notif-status');
+                if (status) status.textContent = 'Прочитано';
+                btn.style.display = 'none';
+                const deleteBtn = notifItem.querySelector('.delete-notif-btn');
+                if (deleteBtn) deleteBtn.style.display = '';
+            }
+            updateNotifDot();
+        } else {
+            customAlert('Не вдалося позначити як прочитане');
+        }
+    });
+}
+        // Удаление одного уведомления
+        if (e.target && e.target.matches('.delete-notif-btn')) {
             const btn = e.target;
             const notifId = btn.getAttribute('data-notif-id');
             const notifItem = btn.closest('.modal-list-item');
-            fetch('api/notifications.php?action=mark_one_read', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({id: notifId})
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    if (notifItem) {
-                        notifItem.classList.remove('unread');
-                        notifItem.classList.add('read');
-                        const status = notifItem.querySelector('.notif-status');
-                        if (status) status.textContent = 'Прочитано';
-                        btn.style.display = 'none';
-                    }
-                    updateNotifDot();
-                } else {
-                    customAlert('Не вдалося позначити як прочитане');
+            customConfirm('Видалити це повідомлення?').then(confirmed => {
+                if (confirmed) {
+                    fetch('api/notifications.php?action=delete_one', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({id: notifId})
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            if (notifItem) notifItem.remove();
+                            updateNotifDot();
+                        } else {
+                            customAlert('Не вдалося видалити повідомлення');
+                        }
+                    });
                 }
             });
         }
