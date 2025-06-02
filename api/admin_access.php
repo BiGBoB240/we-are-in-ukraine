@@ -53,4 +53,39 @@ if ($action === 'verify') {
     exit;
 }
 
+// --- Вибірка всіх користувачів
+if ($action === 'get_users') {
+    $users = $pdo->query('SELECT id, username, email FROM users ORDER BY id DESC')->fetchAll(PDO::FETCH_ASSOC);
+    echo json_encode(['users' => $users]);
+    exit;
+}
+// --- Вибірка всіх адміністраторів
+if ($action === 'get_admins') {
+    $admins = $pdo->query('SELECT u.id, u.username, u.email FROM administrations a JOIN users u ON a.user_id = u.id ORDER BY u.id DESC')->fetchAll(PDO::FETCH_ASSOC);
+    echo json_encode(['admins' => $admins]);
+    exit;
+}
+// --- Додати адміністратора
+if ($action === 'add_admin') {
+    $user_id = (int)($_POST['user_id'] ?? 0);
+    if (!$user_id) { echo json_encode(['error' => 'Вкажіть ID користувача.']); exit; }
+    // Перевірити чи вже є адміністратором
+    $stmt = $pdo->prepare('SELECT id FROM administrations WHERE user_id = ?');
+    $stmt->execute([$user_id]);
+    if ($stmt->fetch()) { echo json_encode(['error' => 'Користувач вже адміністратор.']); exit; }
+    $stmt = $pdo->prepare('INSERT INTO administrations (user_id, verificated, admin_level, verification_token) VALUES (?, 1, 1, "")');
+    $stmt->execute([$user_id]);
+    echo json_encode(['success' => 'Додано доступ адміністраторa.']);
+    exit;
+}
+// --- Видалити адміністратора
+if ($action === 'remove_admin') {
+    $user_id = (int)($_POST['user_id'] ?? 0);
+    if (!$user_id) { echo json_encode(['error' => 'Вкажіть ID користувача.']); exit; }
+    $stmt = $pdo->prepare('DELETE FROM administrations WHERE user_id = ?');
+    $stmt->execute([$user_id]);
+    echo json_encode(['success' => 'Доступ адміністратора забрано.']);
+    exit;
+}
+
 echo json_encode(['error' => 'Невірна дія.']);

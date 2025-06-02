@@ -44,6 +44,8 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(data => {
             if (data.success) {
                 verifySection.style.display = 'none';
+                document.getElementById('admin-panel-section').style.display = 'block';
+                loadAdminPanel();
                 customAlert(data.success);
             } else {
                 customAlert(data.error || 'Помилка');
@@ -54,4 +56,85 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 }
+
+// --- Admin Panel Logic ---
+function loadAdminPanel() {
+    let users = [], admins = [];
+    const usersTable = document.getElementById('users-table');
+    const adminsTable = document.getElementById('admins-table');
+    const searchInput = document.getElementById('user-search-input');
+    const addForm = document.getElementById('add-admin-form');
+    const removeForm = document.getElementById('remove-admin-form');
+
+    function renderTables(filter = '') {
+        // Users
+        let filteredUsers = users.filter(u => u.username.toLowerCase().includes(filter.toLowerCase()));
+        usersTable.innerHTML = '<tr><th>ID</th><th>Username</th><th>Email</th></tr>' +
+            filteredUsers.map(u => `<tr><td>${u.id}</td><td>${u.username}</td><td>${u.email}</td></tr>`).join('');
+        // Admins
+        let filteredAdmins = admins.filter(u => u.username.toLowerCase().includes(filter.toLowerCase()));
+        adminsTable.innerHTML = '<tr><th>ID</th><th>Username</th><th>Email</th></tr>' +
+            filteredAdmins.map(u => `<tr><td>${u.id}</td><td>${u.username}</td><td>${u.email}</td></tr>`).join('');
+    }
+
+    function loadUsers() {
+        fetch('api/admin_access.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: new URLSearchParams({action:'get_users'})
+        })
+        .then(r=>r.json())
+        .then(data=>{ users = data.users || []; renderTables(searchInput.value); });
+    }
+    function loadAdmins() {
+        fetch('api/admin_access.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: new URLSearchParams({action:'get_admins'})
+        })
+        .then(r=>r.json())
+        .then(data=>{ admins = data.admins || []; renderTables(searchInput.value); });
+    }
+
+    // Фільтр
+    searchInput.addEventListener('input', function() {
+        renderTables(this.value);
+    });
+
+    // Додати адміна
+    addForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const id = addForm.user_id.value;
+        fetch('api/admin_access.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: new URLSearchParams({action:'add_admin', user_id:id})
+        })
+        .then(r=>r.json())
+        .then(data=>{
+            customAlert(data.success || data.error || 'Помилка');
+            loadAdmins();
+        });
+    });
+    // Видалити адміна
+    removeForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const id = removeForm.user_id.value;
+        fetch('api/admin_access.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: new URLSearchParams({action:'remove_admin', user_id:id})
+        })
+        .then(r=>r.json())
+        .then(data=>{
+            customAlert(data.success || data.error || 'Помилка');
+            loadAdmins();
+        });
+    });
+
+    // Початкове завантаження
+    loadUsers();
+    loadAdmins();
+}
+
 });

@@ -141,7 +141,7 @@ $lastName = isset($nameParts[1]) ? $nameParts[1] : '';
     <a href="#" onclick="openPasswordChangeModal(); return false;">Змінити пароль</a>
     <a href="logout.php">Вийти з профілю</a>
     <?php if (isset($isAdmin) && $isAdmin): ?>
-        <a href="admin-access.php">Доступ до адмін панелі</a>
+    <a href="admin-access.php">Доступ до адмін панелі</a>
     <?php endif; ?>
 <?php endif; ?>
                                     </div>
