@@ -95,7 +95,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         .then(res => res.json())
                         .then(data => {
                             if (data.success) {
-                                // showAlertAfterReload('Всі повідомлення відзначено як прочитані!');
                                 loadNotifications();
                                 customAlert('Всі повідомлення відзначено як прочитані!');
                             } else {

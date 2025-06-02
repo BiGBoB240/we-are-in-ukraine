@@ -73,7 +73,7 @@ if ($action === 'add_admin') {
     $stmt = $pdo->prepare('SELECT id FROM administrations WHERE user_id = ?');
     $stmt->execute([$user_id]);
     if ($stmt->fetch()) { echo json_encode(['error' => 'Користувач вже адміністратор.']); exit; }
-    $stmt = $pdo->prepare('INSERT INTO administrations (user_id, verificated, admin_level, verification_token) VALUES (?, 1, 1, "")');
+    $stmt = $pdo->prepare('INSERT INTO administrations (user_id, verificated, verification_token) VALUES (?, 1, "")');
     $stmt->execute([$user_id]);
     echo json_encode(['success' => 'Додано доступ адміністраторa.']);
     exit;
@@ -84,7 +84,37 @@ if ($action === 'remove_admin') {
     if (!$user_id) { echo json_encode(['error' => 'Вкажіть ID користувача.']); exit; }
     $stmt = $pdo->prepare('DELETE FROM administrations WHERE user_id = ?');
     $stmt->execute([$user_id]);
-    echo json_encode(['success' => 'Доступ адміністратора забрано.']);
+    echo json_encode(['success' => 'Доступ адміністратора видалено.']);
+    exit;
+}
+
+// --- Зміна паролю супер-адміна
+if ($action === 'change_password') {
+    header('Content-Type: application/json');
+    $currentPassword = $_POST['currentPassword'] ?? '';
+    $newPassword = $_POST['newPassword'] ?? '';
+    $confirmPassword = $_POST['confirmPassword'] ?? '';
+    if (!$currentPassword || !$newPassword || !$confirmPassword) {
+        echo json_encode(['error' => 'Всі поля обовʼязкові.']); exit;
+    }
+    if ($newPassword !== $confirmPassword) {
+        echo json_encode(['error' => 'Паролі не співпадають.']); exit;
+    }
+    // Беремо першого супер-адміна (LIMIT 1)
+    $stmt = $pdo->query('SELECT * FROM superadmin LIMIT 1');
+    $admin = $stmt->fetch(PDO::FETCH_ASSOC);
+    if (!$admin) {
+        echo json_encode(['error' => 'Запис не знайдений.']); exit;
+    }
+    // Перевірка старого паролю
+    if (!password_verify($currentPassword, $admin['password_hash'])) {
+        echo json_encode(['error' => 'Невірний поточний пароль.']); exit;
+    }
+    // Оновлення паролю
+    $newHash = password_hash($newPassword, PASSWORD_DEFAULT);
+    $stmt = $pdo->prepare('UPDATE superadmin SET password_hash = ? WHERE id = ?');
+    $stmt->execute([$newHash, $admin['id']]);
+    echo json_encode(['success' => 'Пароль власника сайту змінено успішно.']);
     exit;
 }
 

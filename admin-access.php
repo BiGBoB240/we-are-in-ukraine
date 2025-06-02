@@ -21,13 +21,15 @@
                 </div>
                 <nav class="nav-links">
                     <a href="index.php">НА ГОЛОВНУ</a>
+                    <a href="#" id="openPasswordChangeModal" style="display:none; margin-left:1rem;">ЗМІНИТИ ПАРОЛЬ</a>
+                    
                 </nav>
             </div>
         </div>
     </header>
-
+    <div class="container">
+    <h1 style="text-align:center; margin:1rem 0;">Доступ до адмін панелі</h1>
     <div class="container auth-section">
-    <h1 style="text-align:center; margin-top:1rem;">Доступ до адмін панелі</h1>
         <section id="admin-login-section">
             <form id="admin-login-form" class="auth-form">
                 <div class="form-group">
@@ -52,11 +54,22 @@
         </section>
     </div>
     <section id="admin-panel-section" style="display:none; margin-top:2rem;">
-        <h2 style="text-align:center; margin-top:1rem;">Адмін-панель</h2>
-        <div style="margin-bottom:1rem;">
-            <input type="text" id="user-search-input" placeholder="Пошук за username..." style="max-width:300px; padding:0.5rem;">
+        <div class="modal-list-item" style="margin-top:2rem;display:flex;gap:2rem;flex-wrap:wrap;justify-content: center;">
+            <form id="add-admin-form" class="auth-form" style="max-width:300px;">
+                <h4>Додати розширений доступ</h4>
+                <input type="number" name="user_id" placeholder="ID користувача" required style="width:100%;margin-bottom:0.5rem;padding:0.5rem;">
+                <button type="submit" class="buttons-style-one">OK</button>
+            </form>
+            <form id="remove-admin-form" class="auth-form" style="max-width:300px;">
+                <h4>Позбавити розширеного доступу</h4>
+                <input type="number" name="user_id" placeholder="ID користувача" required style="width:100%;margin-bottom:0.5rem;padding:0.5rem;">
+                <button type="submit" class="buttons-style-one">OK</button>
+            </form>
         </div>
-        <div style="display:flex; gap:2rem; flex-wrap:wrap;">
+        <div class="modal-list-item" style="margin-bottom:1rem;">
+            <input type="text" id="user-search-input" placeholder="Пошук за username..." style="width: 100%; padding: 0.5rem;">
+        </div>
+        <div class="modal-list-item" style="display:flex; gap:2rem; flex-wrap:wrap;">
             <div style="flex:1; min-width:300px;">
                 <h3>Всі користувачі</h3>
                 <table id="users-table" class="modal-list-item" style="width:100%;margin-bottom:1rem;"></table>
@@ -66,20 +79,44 @@
                 <table id="admins-table" class="modal-list-item" style="width:100%;margin-bottom:1rem;"></table>
             </div>
         </div>
-        <div style="margin-top:2rem;display:flex;gap:2rem;flex-wrap:wrap;">
-            <form id="add-admin-form" class="auth-form" style="max-width:300px;">
-                <h4>Додати розширений доступ</h4>
-                <input type="number" name="user_id" placeholder="ID користувача" min="1" required style="width:100%;margin-bottom:0.5rem;">
-                <button type="submit" class="buttons-style-one">OK</button>
-            </form>
-            <form id="remove-admin-form" class="auth-form" style="max-width:300px;">
-                <h4>Позбавити розширеного доступу</h4>
-                <input type="number" name="user_id" placeholder="ID користувача" min="1" required style="width:100%;margin-bottom:0.5rem;">
-                <button type="submit" class="buttons-style-one">OK</button>
-            </form>
-        </div>
     </section>
-    <script src="assets/js/admin-access.js"></script>
-    <script src="assets/js/customAlert.js"></script>
+    </div>
+
+     <!-- Modal for password change -->
+     <div id="passwordChangeModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close">&times;</button>
+            <h2>Змінити пароль</h2>
+            <form id="passwordChangeForm">
+                <div class="form-group">
+                    <label for="currentPassword">Поточний пароль*</label>
+                    <input type="password" id="currentPassword" name="currentPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="newPassword">Новий пароль*</label>
+                    <input type="password" id="newPassword" name="newPassword" required minlength="8">
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Підтвердіть новий пароль*</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required minlength="8">
+                </div>
+                <button type="submit" class="buttons-style-one">Зберегти</button>
+            </form>
+            <div id="passwordChangeMessage"></div>
+        </div>
+    </div>
+
+    <style>
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            /* display: none; <- Crashes Chrome on hover */
+            -webkit-appearance: none;
+            margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+        }
+        tr {margin-right:1rem;}
+    </style>
+    
+<script src="assets/js/admin-access.js"></script>
+<script src="assets/js/customAlert.js"></script>
  </body>
  </html>

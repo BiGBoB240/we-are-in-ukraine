@@ -95,6 +95,12 @@ $lastName = isset($nameParts[1]) ? $nameParts[1] : '';
         // Check if this is the user's own profile
         if ($_SESSION['user_id'] == $profileUserId) {
             $showProfileActions = true;
+        // Перевірка: чи користувач є адміністратором
+        $stmtAdmin = $pdo->prepare("SELECT 1 FROM administrations WHERE user_id = ? AND verificated = 1");
+        $stmtAdmin->execute([$_SESSION['user_id']]);
+        if ($stmtAdmin->fetch()) {
+            $isAdmin = true;
+        }
         } else {
             // Check if the current user is an admin
             $stmtAdmin = $pdo->prepare("SELECT 1 FROM Administrations WHERE user_id = ? AND verificated = 1");
@@ -131,24 +137,25 @@ $lastName = isset($nameParts[1]) ? $nameParts[1] : '';
                                         <i class="fas fa-cog"></i>
                                     </button>
                                     <div class="profile-dropdown-content">
-                                        <?php if ($isAdmin && isset($_SESSION['user_id']) && $_SESSION['user_id'] != $profileUserId): ?>
-    <script>window.profileUserIdForAdmin = <?php echo (int)$profileUserId; ?>;</script>
-    <a href="#" onclick="openNameChangeModal(); return false;">Змінити ім'я</a>
-    <a href="#" onclick="deleteUserProfile(<?php echo (int)$profileUserId; ?>); return false;" class="delete-action">Видалити профіль</a>
-    <div class="admin-indicator">Адмін</div>
-<?php else: ?>
-    <a href="#" onclick="openNameChangeModal(); return false;">Змінити ім'я</a>
-    <a href="#" onclick="openPasswordChangeModal(); return false;">Змінити пароль</a>
-    <a href="logout.php">Вийти з профілю</a>
-    <?php if (isset($isAdmin) && $isAdmin): ?>
-    <a href="admin-access.php">Доступ до адмін панелі</a>
-    <?php endif; ?>
-<?php endif; ?>
+                                <?php if ($isAdmin && isset($_SESSION['user_id']) && $_SESSION['user_id'] != $profileUserId): ?>
+                                <script>window.profileUserIdForAdmin = <?php echo (int)$profileUserId; ?>;</script>
+                                <a href="#" onclick="openNameChangeModal(); return false;">Змінити ім'я</a>
+                                <a href="#" onclick="deleteUserProfile(<?php echo (int)$profileUserId; ?>); return false;" class="delete-action">Видалити профіль</a>
+                                <div class="admin-indicator">Адмін</div>
+                                <?php else: ?>
+                                <a href="#" onclick="openNameChangeModal(); return false;">Змінити ім'я</a>
+                                <a href="#" onclick="openPasswordChangeModal(); return false;">Змінити пароль</a>
+                                <a href="logout.php">Вийти з профілю</a>
+                                <?php if ($isAdmin): ?>
+                                    <a href="admin-access.php">Доступ до адмін панелі</a>
+                                <?php endif; ?>
+                                <?php endif; ?>
                                     </div>
                                 </div>
                             <?php endif; ?>
                         </div>
                     </div>
+
                     <p>Дата реєстрації: <?php echo date('d.m.Y', strtotime($user['created_at'])); ?></p>
                 </div>
                 <script>window.profileUserId = <?php echo (int)$profileUserId; ?>;</script>

@@ -45,6 +45,11 @@ document.addEventListener('DOMContentLoaded', function() {
             if (data.success) {
                 verifySection.style.display = 'none';
                 document.getElementById('admin-panel-section').style.display = 'block';
+                // Показати посилання для зміни паролю
+                var pwdLink = document.getElementById('openPasswordChangeModal');
+                if (pwdLink) pwdLink.style.display = '';
+                // Підключити логіку модального вікна
+                setupPasswordChangeModal();
                 loadAdminPanel();
                 customAlert(data.success);
             } else {
@@ -56,6 +61,50 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 }
+
+// --- Password change modal logic ---
+function setupPasswordChangeModal() {
+    var modal = document.getElementById('passwordChangeModal');
+    var openBtn = document.getElementById('openPasswordChangeModal');
+    if (!modal || !openBtn) return;
+    var closeBtn = modal.querySelector('.modal-close');
+    openBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        modal.style.display = 'block';
+    });
+    closeBtn.addEventListener('click', function() {
+        modal.style.display = 'none';
+    });
+    window.addEventListener('click', function(e) {
+        if (e.target === modal) modal.style.display = 'none';
+    });
+
+    // --- AJAX зміна паролю ---
+    var form = document.getElementById('passwordChangeForm');
+    if (form) {
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        var fd = new FormData(form);
+        fd.append('action', 'change_password');
+        fetch('api/admin_access.php', {
+            method: 'POST',
+            body: fd
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                showAlertAfterReload(data.success);
+            } else {
+                customAlert(data.error || 'Помилка');
+            }
+        })
+        .catch(() => {
+            customAlert('Помилка з’єднання з сервером.');
+        });
+    });
+}
+}
+
 
 // --- Admin Panel Logic ---
 function loadAdminPanel() {
