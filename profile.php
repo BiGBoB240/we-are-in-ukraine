@@ -132,15 +132,18 @@ $lastName = isset($nameParts[1]) ? $nameParts[1] : '';
                                     </button>
                                     <div class="profile-dropdown-content">
                                         <?php if ($isAdmin && isset($_SESSION['user_id']) && $_SESSION['user_id'] != $profileUserId): ?>
-                                            <script>window.profileUserIdForAdmin = <?php echo (int)$profileUserId; ?>;</script>
-                                            <a href="#" onclick="openNameChangeModal(); return false;">Змінити ім'я</a>
-                                            <a href="#" onclick="deleteUserProfile(<?php echo (int)$profileUserId; ?>); return false;" class="delete-action">Видалити профіль</a>
-                                            <div class="admin-indicator">Адмін</div>
-                                        <?php else: ?>
-                                            <a href="#" onclick="openNameChangeModal(); return false;">Змінити ім'я</a>
-                                            <a href="#" onclick="openPasswordChangeModal(); return false;">Змінити пароль</a>
-                                            <a href="logout.php">Вийти з профілю</a>
-                                        <?php endif; ?>
+    <script>window.profileUserIdForAdmin = <?php echo (int)$profileUserId; ?>;</script>
+    <a href="#" onclick="openNameChangeModal(); return false;">Змінити ім'я</a>
+    <a href="#" onclick="deleteUserProfile(<?php echo (int)$profileUserId; ?>); return false;" class="delete-action">Видалити профіль</a>
+    <div class="admin-indicator">Адмін</div>
+<?php else: ?>
+    <a href="#" onclick="openNameChangeModal(); return false;">Змінити ім'я</a>
+    <a href="#" onclick="openPasswordChangeModal(); return false;">Змінити пароль</a>
+    <a href="logout.php">Вийти з профілю</a>
+    <?php if (isset($isAdmin) && $isAdmin): ?>
+        <a href="admin-access.php">Доступ до адмін панелі</a>
+    <?php endif; ?>
+<?php endif; ?>
                                     </div>
                                 </div>
                             <?php endif; ?>
