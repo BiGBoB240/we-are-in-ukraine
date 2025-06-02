@@ -68,6 +68,26 @@ body {
     line-height: 1.6;
 }
 
+#mark-all-read-btn, #delete-all-btn{
+    width: calc(50% - 0.5rem);
+}
+
+.notif-buttons{
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+}
+
+.notif-buttons button{
+    width: calc(50% - 0.5rem);
+}
+
+.notif-div-buttons{
+    margin-bottom: 16px;
+    display:flex;
+    gap:1rem;
+    justify-content: center;
+}
 
 .notification-bell, .profile-settings-btn {
     background-color: var(--primary-gray);
@@ -549,6 +569,7 @@ display: block;
     }
 }
 
+
 .buttons-style-one {
     padding: 0.5rem 1rem;
     background: var(--primary-gray);
@@ -819,39 +840,6 @@ display: block;
     margin-top: 20px;
     width: 100%;
 }
-
-/*
-.report-action-btn{
-    display: inline-block;
-    background: linear-gradient(90deg, #ffd54f, #ffb300);
-    color: var(--text-color-two);
-    border: none;
-    border-radius: 8px;
-    padding: 9px 22px;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    box-shadow: 0 2px 8px rgba(255, 193, 7, 0.13);
-    transition: background 0.18s, color 0.18s, box-shadow 0.2s;
-    margin-top: 10px;
-}
-
-
-.close-report-btn {
-    display: inline-block;
-    background: linear-gradient(90deg, #58e946, #50c100);
-    color: var(--text-color-two);
-    border: none;
-    border-radius: 8px;
-    padding: 9px 22px;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    box-shadow: 0 2px 8px rgba(255, 193, 7, 0.13);
-    transition: background 0.18s, color 0.18s, box-shadow 0.2s;
-    width: 100%;
-}
-*/
 
 /* Modal */
 .modal {
@@ -1347,19 +1335,3 @@ box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
     font-size: 1.08rem;
     color: #222;
 }
-/*
-.custom-alert-ok, .custom-confirm-ok , .custom-confirm-cancel{
-    padding: 7px 22px;
-    background: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-.custom-alert-ok:hover, .custom-confirm-ok:hover, .custom-confirm-cancel:hover {
-    background: #0056b3;
-}
-*/
-

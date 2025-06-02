@@ -46,6 +46,9 @@
  margin-top: 1rem;
 }
 
+.comment .reply-btn{
+    width: 280px;
+}
 
 .comment-actions, .edit-buttons {
     display: flex;
@@ -58,7 +61,8 @@
     display: block;
     }
     .comment-actions .buttons-style-one,
-    .edit-buttons .buttons-style-one {
+    .edit-buttons .buttons-style-one,
+    .comment .reply-btn{
         width: 100%;
     }
 }

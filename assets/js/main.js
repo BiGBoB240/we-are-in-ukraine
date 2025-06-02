@@ -264,10 +264,10 @@ document.addEventListener('DOMContentLoaded', function() {
                                             <span class="like-icon">❤️</span>
                                             <span class="likes-count">${comment.likes_count}</span>
                                         </button>
-                                        ${(isLoggedIn && window.currentUserId !== comment.user_id) ? `<button class="reply-btn" data-reply-username="${comment.username}" data-reply-id="${comment.id}">Відповісти користувачу</button>` : ''}
+
                                         ${(isLoggedIn && window.currentUserId !== comment.user_id) ? `<button class="report-btn" title="Поскаржитись на коментар" onclick="reportComment(${comment.id})">Поскаржитись</button>` : ''}
                                     </div>
-                                    
+                                    ${(isLoggedIn && window.currentUserId !== comment.user_id) ? `<button class="reply-btn buttons-style-one" data-reply-username="${comment.username}" data-reply-id="${comment.id}">Відповісти користувачу</button>` : ''}
                                     <div class="edit-form" id="edit-form-${comment.id}" style="display: none;">
                                         <textarea class="edit-textarea">${comment.comment_text}</textarea>
                                         <div class="edit-buttons">

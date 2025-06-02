@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const notifList = document.getElementById('notifications-list');
     const markAllReadBtn = document.getElementById('mark-all-read-btn');
     const deleteAllBtn = document.getElementById('delete-all-btn');
+    const notifDivButtons = document.getElementsByClassName('notif-div-buttons')[0];
 
     // Показываем/скрываем модалку уведомлений
     if (bellBtn && notifModal) {
@@ -45,8 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const deleteAllBtn = document.getElementById('delete-all-btn');
                 if (data.notifications.length === 0) {
                     notifList.innerHTML = '<div class="modal-empty">Немає нових повідомлень</div>';
-                    if (markAllReadBtn) markAllReadBtn.style.display = 'none';
-                    if (deleteAllBtn) deleteAllBtn.style.display = 'none';
+                    notifDivButtons.style.display = 'none';
                 } else {
                     if (markAllReadBtn) markAllReadBtn.style.display = '';
                     if (deleteAllBtn) deleteAllBtn.style.display = '';
@@ -56,12 +56,14 @@ document.addEventListener('DOMContentLoaded', function() {
                         const item = document.createElement('div');
                         item.className = 'modal-list-item' + (n.is_read == 0 ? ' unread' : ' read');
                         item.innerHTML =
-    `<div class='notif-author'>${n.sender_username || 'Користувач'}</div>` +
-    `<div class='notif-text'>${n.comment_text || ''}</div>` +
-    `<div class='notif-status'>${n.is_read == 0 ? 'Не прочитано' : 'Прочитано'}</div>` +
-    `<button class='modal-btn buttons-style-one mark-read-btn' data-notif-id='${n.id}' style='${n.is_read == 0 ? '' : 'display:none;'}'>Позначити як прочитане</button>` +
-    `<button class='modal-btn buttons-style-one buttons-style-two delete-notif-btn' data-notif-id='${n.id}' style='${n.is_read == 1 ? '' : 'display:none;'}'>Видалити</button>` +
-    `<button class='modal-btn buttons-style-one reply-notif-btn' data-comment-id='${n.comment_id}' data-post-id='${n.post_id}' data-username='${n.sender_username}'>Відповісти користувачу</button>`;
+                     `<div class='notif-author'>${n.sender_username || 'Користувач'}</div>` +
+                     `<div class='notif-text'>${n.comment_text || ''}</div>` +
+                     `<div class='notif-status'>${n.is_read == 0 ? 'Не прочитано' : 'Прочитано'}</div>` +
+                     `<div class='notif-buttons'>
+                        <button class='buttons-style-one mark-read-btn' data-notif-id='${n.id}' style='${n.is_read == 0 ? '' : 'display:none;'}'>Позначити як прочитане</button>
+                        <button class='buttons-style-one buttons-style-two delete-notif-btn' data-notif-id='${n.id}' style='${n.is_read == 1 ? '' : 'display:none;'}'>Видалити</button>
+                        <button class='buttons-style-one reply-notif-btn' data-comment-id='${n.comment_id}' data-post-id='${n.post_id}' data-username='${n.sender_username}'>Відповісти користувачу</button>
+                     </div>`;
                         list.appendChild(item);
                         if (n.is_read == 0) hasUnread = true;
                     });
