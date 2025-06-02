@@ -128,7 +128,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (loadedPostIds.has(post.id)) return; // Не добавлять дубликаты
                     loadedPostIds.add(post.id);
                     const postElement = createPostElement(post);
-                    postsContainer.appendChild(postElement);
+                    if (postsContainer) {
+                        postsContainer.appendChild(postElement);
+                    }
                 });
             });
     }
@@ -677,7 +679,7 @@ document.addEventListener('DOMContentLoaded', function() {
             loadPosts().then(() => {
                 // Если постов не прибавилось или скролл появился — прекращаем
                 const enoughScroll = document.body.offsetHeight > window.innerHeight + 20;
-                const postsCount = postsContainer.children.length;
+                const postsCount = postsContainer ? postsContainer.children.length : 0;
                 if (enoughScroll || postsCount === lastPostsCount) {
                     autoLoadInProgress = false;
                     return;
