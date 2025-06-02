@@ -4,10 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchBar = document.getElementById('search');
     const postsContainer = document.getElementById('posts-container');
 
-    // Если нет контейнера для постов и/или поиска, не выполнять остальной код
-    if (!searchInput || !searchResults || !searchBar || !postsContainer) {
-        return;
-    }
+
     let currentPage = 1;
     let currentFilter = 'date-new';
 
@@ -60,12 +57,18 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Error checking login status:', error);
         });
         
+
+
     // Search functionality
-    let searchTimeout;
-    searchInput.addEventListener('input', function() {
+        // Если нет контейнера для постов и/или поиска, не выполнять остальной код
+        if (searchInput && searchResults && searchBar ) {
+        let searchTimeout;
+
+        searchInput.addEventListener('input', function() {
         clearTimeout(searchTimeout);
         const query = this.value.trim();
-        
+
+    
         if (query.length > 0) {
             searchTimeout = setTimeout(() => {
                 fetch(`api/search_bar.php?query=${encodeURIComponent(query)}`)
@@ -101,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function() {
             searchBar.classList.remove('no-bottom-radius');
         }
     });
-
+};
     // Hide search results when clicking outside
     document.addEventListener('click', function(e) {
         if (!searchResults.contains(e.target) && e.target !== searchInput) {

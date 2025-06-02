@@ -31,6 +31,7 @@ CREATE TABLE `administrations` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `verificated` tinyint(1) DEFAULT 0,
+   `admin_level` tinyint(3) UNSIGNED NOT NULL DEFAULT 1 COMMENT '1: Повний доступ, 2: Контент-менеджер',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `verification_token` char(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
