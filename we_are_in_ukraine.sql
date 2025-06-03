@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1
--- Время создания: Май 27 2025 г., 21:24
+-- Время создания: Июн 03 2025 г., 18:31
 -- Версия сервера: 10.4.32-MariaDB
 -- Версия PHP: 8.2.12
 
@@ -31,7 +31,6 @@ CREATE TABLE `administrations` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `verificated` tinyint(1) DEFAULT 0,
-   `admin_level` tinyint(3) UNSIGNED NOT NULL DEFAULT 1 COMMENT '1: Повний доступ, 2: Контент-менеджер',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `verification_token` char(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -158,6 +157,21 @@ CREATE TABLE `reports` (
 -- --------------------------------------------------------
 
 --
+-- Структура таблицы `superadmin`
+--
+
+CREATE TABLE `superadmin` (
+  `id` int(11) NOT NULL,
+  `login` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password_hash` varchar(255) NOT NULL,
+  `verification_password_hash` varchar(255) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Структура таблицы `users`
 --
 
@@ -244,6 +258,14 @@ ALTER TABLE `reports`
   ADD KEY `reported_by_id` (`reported_by_id`);
 
 --
+-- Индексы таблицы `superadmin`
+--
+ALTER TABLE `superadmin`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `login` (`login`),
+  ADD UNIQUE KEY `email` (`email`);
+
+--
 -- Индексы таблицы `users`
 --
 ALTER TABLE `users`
@@ -307,6 +329,12 @@ ALTER TABLE `posts`
 -- AUTO_INCREMENT для таблицы `reports`
 --
 ALTER TABLE `reports`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT для таблицы `superadmin`
+--
+ALTER TABLE `superadmin`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --

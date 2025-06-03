@@ -1335,3 +1335,20 @@ box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
     font-size: 1.08rem;
     color: #222;
 }
+
+.table {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr 1.5fr; /* ← збільшено останню колонку */
+    gap: 10px;
+    text-align: center;
+    align-items: center;
+  }
+  
+  .table-row {
+    display: contents;
+  }
+  
+  .table-cell {
+    padding: 10px;
+  }
+  

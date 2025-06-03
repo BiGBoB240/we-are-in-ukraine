@@ -23,13 +23,18 @@ $stmt = $pdo->prepare('SELECT r.reported_by_id, u.email FROM Reports r JOIN User
 $stmt->execute([$content_id, $content_type]);
 $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// 2. Відправляємо листи через PHPMailer
-$subject = 'Ваше повідомлення було розглянуто';
-$message = 'Ваше повідомлення було розглянуто, дякуємо що допомагаєте стати кращими!';
-foreach ($users as $user) {
-    if (!empty($user['email'])) {
-        $body_html = "<p>Доброго дня!</p><p>$message</p><p>З повагою,<br>Команда Ми в Україні</p>";
-        send_custom_mail($user['email'], $user['email'], $subject, $body_html);
+// Перевірка параметра send_message
+$send_message = isset($_POST['send_message']) ? intval($_POST['send_message']) : 0;
+
+// 2. Відправляємо листи через PHPMailer тільки якщо send_message == 1
+if ($send_message === 1) {
+    $subject = 'Ваше повідомлення було розглянуто';
+    $message = 'Ваше повідомлення було розглянуто, дякуємо що допомагаєте стати кращими!';
+    foreach ($users as $user) {
+        if (!empty($user['email'])) {
+            $body_html = "<p>Доброго дня!</p><p>$message</p><p>З повагою,<br>Команда Ми в Україні</p>";
+            send_custom_mail($user['email'], $user['email'], $subject, $body_html);
+        }
     }
 }
 

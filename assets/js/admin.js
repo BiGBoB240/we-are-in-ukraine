@@ -72,17 +72,130 @@ document.addEventListener('DOMContentLoaded', function() {
     document.body.appendChild(modal);
 
     // Модалка для скарг
-    const reportsModal = document.createElement('div');
-    reportsModal.className = 'modal';
-    reportsModal.style.display = 'none';
-    reportsModal.innerHTML = `
-        <div class="modal-content  modal-reports" style="max-width:700px;">
-            <span class="modal-close" id="close-reports-modal">&times;</span>
-            <h2>Скарги</h2>
-            <div id="reports-list">Завантаження...</div>
+const reportsModal = document.createElement('div');
+reportsModal.className = 'modal';
+reportsModal.style.display = 'none';
+reportsModal.innerHTML = `
+    <div class="modal-content  modal-reports" style="max-width:700px;">
+        <span class="modal-close" id="close-reports-modal">&times;</span>
+        <h2>Скарги</h2>
+        <div class="modal-list-item">
+            <button id="open-unblock-modal" class="buttons-style-one" style="width:100%;">Заблоковані користувачі</button>
         </div>
-    `;
-    document.body.appendChild(reportsModal);
+        <div id="reports-list" style="clear:both;">Завантаження...</div>
+    </div>
+`;
+document.body.appendChild(reportsModal);
+
+// Модалка для розблокування користувачів
+const unblockModal = document.createElement('div');
+unblockModal.className = 'modal';
+unblockModal.style.display = 'none';
+unblockModal.innerHTML = `
+    <div class="modal-content modal-unblock-users">
+        <span class="modal-close" id="close-unblock-modal">&times;</span>
+        <h3>Заблоковані користувачі</h3>
+        <input type="text" id="search-blocked-email" placeholder="Пошук за email..." class="search-blocked-email" style="width:100%;margin-top:1rem;padding:0.5rem;">
+        <div class="modal-list-item">
+        <div class="table">
+            <div class="table-row header">
+                <div class="table-cell">Username</div>
+                <div class="table-cell">Email</div>
+                <div class="table-cell">Заблокував</div>
+                <div class="table-cell">Дії</div>
+            </div>
+        </div>
+            <div id="table-list"></div>
+
+        </div>
+    </div>
+`;document.body.appendChild(unblockModal);
+
+// Открытие модалки разблокировки
+setTimeout(() => {
+    const openUnblockBtn = document.getElementById('open-unblock-modal');
+    if (openUnblockBtn) {
+        openUnblockBtn.onclick = function() {
+            unblockModal.style.display = 'block';
+            loadBlockedUsers();
+        };
+    }
+    const closeUnblockBtn = document.getElementById('close-unblock-modal');
+    if (closeUnblockBtn) {
+        closeUnblockBtn.onclick = function() {
+            unblockModal.style.display = 'none';
+        };
+    }
+    // Клик по фону для закрытия модалки разблокировки
+    unblockModal.addEventListener('mousedown', function(e) {
+        if (e.target === unblockModal) {
+            unblockModal.style.display = 'none';
+        }
+    });
+}, 500);
+
+// Загрузка заблокированных пользователей
+function loadBlockedUsers() {
+    fetch('api/get_blocked_users.php')
+        .then(res => res.json())
+        .then(data => {
+            renderBlockedUsers(data.blocked_users || []);
+        });
+}
+
+// Рендер таблицы
+function renderBlockedUsers(users) {
+    const usersList = document.getElementById('table-list');
+    usersList.innerHTML = '';
+    users.forEach(user => {
+        const row = document.createElement('div');
+        row.className = 'table';
+        row.innerHTML = `
+            <div class="table-cell">${user.username}</div>
+            <div class="table-cell">${user.email}</div>
+            <div class="table-cell">${user.admin_username || '—'}</div>
+            <div class="table-cell"><button class="unblock-btn buttons-style-one buttons-style-two" data-id="${user.id}">Розблокувати</button></div>
+        `;
+        usersList.appendChild(row);
+    });
+    // Событие на разблокировку
+    document.querySelectorAll('.unblock-btn').forEach(btn => {
+        btn.onclick = function() {
+            if (customConfirm('Розблокувати цього користувача?')) {
+                fetch('api/unblock_user.php', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                    body: 'id=' + encodeURIComponent(this.dataset.id)
+                })
+                .then(res => res.json())
+                .then(resp => {
+                    if (resp.success) {
+                        this.closest('.blocked-user-row').remove();
+                    } else {
+                        customAlert('Помилка: ' + (resp.error || ''));
+                    }
+                });
+            }
+        };
+    });
+}
+
+// Поиск по email (оновлено під нову структуру grid-таблиці)
+unblockModal.addEventListener('input', function(e) {
+    if (e.target && e.target.id === 'search-blocked-email') {
+        const val = e.target.value.trim().toLowerCase();
+        const userRows = document.querySelectorAll('#table-list .table');
+        userRows.forEach(row => {
+            const cells = row.querySelectorAll('.table-cell');
+            if (cells.length > 1) {
+                const email = cells[1].textContent.toLowerCase();
+                row.style.display = email.includes(val) ? '' : 'none';
+            } else {
+                row.style.display = '';
+            }
+        });
+    }
+});
 
     // Открытие модального окна
     document.getElementById('admin-add-post').onclick = () => {
@@ -144,7 +257,7 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 if (!data.reports || data.reports.length === 0) {
-                    reportsList.innerHTML = 'Скарг немає.';
+                    reportsList.innerHTML = '<div class="modal-list-item">Скарг немає.</div>';
                     return;
                 }
                 reportsList.innerHTML = '';
@@ -263,44 +376,46 @@ document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('click', function(e) {
         if (e.target && e.target.classList.contains('close-report-btn')) {
 
-            customConfirm('Ви впевнені, що хочете закрити цю скаргу?').then(function(confirmed){
-                if (confirmed) {
+            customConfirmWithCheckbox(
+                'Ви впевнені, що хочете закрити цю скаргу?',
+                'Надіслати повідомлення користувачам?'
+            ).then(function(result){
+                if (result.confirmed) {
+                    const btn = e.target;
+                    btn.disabled = true;
+                    btn.textContent = 'Обробка...';
 
-            const btn = e.target;
-            btn.disabled = true;
-            btn.textContent = 'Обробка...';
-
-            const contentId = btn.getAttribute('data-content-id');
-            const contentType = btn.getAttribute('data-content-type');
-            if (!contentId || !contentType) {
-                customAlert('Не вдалося визначити елемент скарги.');
-                return;
-            }
-            btn.disabled = true;
-            btn.textContent = 'Обробка...';
-            fetch('/we-are-in-ukraine/api/close_report.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: `content_id=${encodeURIComponent(contentId)}&content_type=${encodeURIComponent(contentType)}`
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    customAlert('Скаргу успішно закрито. Користувачі отримають повідомлення.');
-                    loadReports(); // Оновити список скарг
-                } else {
-                    customAlert('Помилка при закритті скарги: ' + (data.error || ''));
+                    const contentId = btn.getAttribute('data-content-id');
+                    const contentType = btn.getAttribute('data-content-type');
+                    if (!contentId || !contentType) {
+                        customAlert('Не вдалося визначити елемент скарги.');
+                        return;
+                    }
+                    btn.disabled = true;
+                    btn.textContent = 'Обробка...';
+                    fetch('/we-are-in-ukraine/api/close_report.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: `content_id=${encodeURIComponent(contentId)}&content_type=${encodeURIComponent(contentType)}&send_message=${result.checked ? 1 : 0}`
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            customAlert('Скаргу успішно закрито. ' + (result.checked ? 'Користувачі отримають повідомлення.' : '')); 
+                            loadReports(); // Оновити список скарг
+                        } else {
+                            customAlert('Помилка при закритті скарги: ' + (data.error || ''));
+                        }
+                    })
+                    .catch(() => {
+                        customAlert('Помилка при з’єднанні з сервером.');
+                    })
+                    .finally(() => {
+                        btn.disabled = false;
+                        btn.textContent = 'Закрити скаргу';
+                    });
                 }
-            })
-            .catch(() => {
-                customAlert('Помилка при з’єднанні з сервером.');
-            })
-            .finally(() => {
-                btn.disabled = false;
-                btn.textContent = 'Закрити скаргу';
             });
-            }
-        });
     }
 });
 
