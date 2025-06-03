@@ -119,8 +119,10 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 if (!data.posts || data.posts.length === 0) {
+                    if (postsContainer) {
                     if (postsContainer.children.length === 0) {
-                        postsContainer.innerHTML = '<div style="text-align:center;color:#888;margin:2rem;">Постів немає</div>';
+                            postsContainer.innerHTML = '<div style="text-align:center;color:#888;margin:2rem;">Постів немає</div>';
+                        }
                     }
                     return;
                 }
