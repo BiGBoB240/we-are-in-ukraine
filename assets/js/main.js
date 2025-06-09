@@ -126,6 +126,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                     return;
                 }
+                if (data.hasMore === false) {
+                    hasMorePosts = false;
+                }
                 data.posts.forEach(post => {
                     if (loadedPostIds.has(post.id)) return; // Не добавлять дубликаты
                     loadedPostIds.add(post.id);
@@ -645,8 +648,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Infinite scroll: подгружаем посты при достижении низа страницы
     let isLoadingposts = false;
+let hasMorePosts = true; // Флаг, что есть еще посты для загрузки
     window.addEventListener('scroll', function() {
-        if (isLoadingposts) return;
+        if (isLoadingposts || !hasMorePosts) return;
         // Проверяем, близко ли низ страницы
         if ((window.innerHeight + window.scrollY) >= (document.body.offsetHeight - 200)) {
             isLoadingposts = true;
@@ -673,7 +677,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function autoLoadpostsUntilScrollable() {
-        if (autoLoadInProgress) return; // не запускать параллельно
+        if (autoLoadInProgress || !hasMorePosts) return; // не запускать параллельно
         autoLoadInProgress = true;
         let lastpostsCount = -1;
         let lastPage = currentPage;
