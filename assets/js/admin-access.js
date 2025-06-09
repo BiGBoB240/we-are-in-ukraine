@@ -116,17 +116,17 @@ function loadAdminPanel() {
     const removeForm = document.getElementById('remove-admin-form');
 
     function renderTables(filter = '') {
-        // Users
-        let filteredUsers = users.filter(u => u.username.toLowerCase().includes(filter.toLowerCase()));
+        // users
+        let filteredusers = users.filter(u => u.username.toLowerCase().includes(filter.toLowerCase()));
         usersTable.innerHTML = '<tr><th>ID</th><th>Username</th><th>Email</th></tr>' +
-            filteredUsers.map(u => `<tr><td>${u.id}</td><td>${u.username}</td><td>${u.email}</td></tr>`).join('');
+            filteredusers.map(u => `<tr><td>${u.id}</td><td>${u.username}</td><td>${u.email}</td></tr>`).join('');
         // Admins
         let filteredAdmins = admins.filter(u => u.username.toLowerCase().includes(filter.toLowerCase()));
         adminsTable.innerHTML = '<tr><th>ID</th><th>Username</th><th>Email</th></tr>' +
             filteredAdmins.map(u => `<tr><td>${u.id}</td><td>${u.username}</td><td>${u.email}</td></tr>`).join('');
     }
 
-    function loadUsers() {
+    function loadusers() {
         fetch('api/admin_access.php', {
             method: 'POST',
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
@@ -182,7 +182,7 @@ function loadAdminPanel() {
     });
 
     // Початкове завантаження
-    loadUsers();
+    loadusers();
     loadAdmins();
 }
 

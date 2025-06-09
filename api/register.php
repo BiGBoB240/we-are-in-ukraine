@@ -1,4 +1,10 @@
 <?php
+if (!function_exists('str_contains')) {
+    function str_contains($haystack, $needle) {
+        return $needle !== '' && mb_strpos($haystack, $needle) !== false;
+    }
+}
+
 require_once '../config/db.php';
 require_once __DIR__ . '/send_mail.php'; // Unified mail helper
 
@@ -60,7 +66,7 @@ if ($password !== $password_confirm) {
     }
 
     try {
-    $stmt = $pdo->prepare("SELECT id FROM Users WHERE email = ?");
+    $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ?");
     $stmt->execute([$email]);
     if ($stmt->fetch()) {
         echo json_encode(['error' => 'Користувач з таким email вже існує.']);
@@ -68,7 +74,7 @@ if ($password !== $password_confirm) {
     }
     $hash = password_hash($password, PASSWORD_DEFAULT);
     $token = bin2hex(random_bytes(16));
-    $stmt = $pdo->prepare("INSERT INTO Users (username, email, password_hash, verificated, show_comments, created_at, verification_token) VALUES (?, ?, ?, 0, 1, NOW(), ?)");
+    $stmt = $pdo->prepare("INSERT INTO users (username, email, password_hash, verificated, show_comments, created_at, verification_token) VALUES (?, ?, ?, 0, 1, NOW(), ?)");
     $stmt->execute([$username, $email, $hash, $token]);
     
         $verifyLink = 'http://' . $_SERVER['HTTP_HOST'] . dirname($_SERVER['REQUEST_URI']) . '/verify.php?token=' . $token;

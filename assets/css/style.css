@@ -630,7 +630,7 @@ display: block;
     cursor: pointer;
 }
 
-/* Posts */
+/* posts */
 .post {
     background: var(--white);
     border: 1px solid var(--light-gray);
@@ -1000,7 +1000,7 @@ textarea:focus {
     margin: 1rem 0;
 }
 
-/* Feedback Page */
+/* feedback Page */
 .feedback-section {
     max-width: 800px;
     margin: 0 auto;

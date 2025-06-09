@@ -16,14 +16,14 @@ document.addEventListener('DOMContentLoaded', function() {
     adminAddPostBtn.className = 'buttons-style-one';
     adminAddPostBtn.textContent = 'ДОДАТИ ПОСТ';
 
-    const adminReportsBtn = document.createElement('button');
-    adminReportsBtn.id = 'admin-reports-btn';
-    adminReportsBtn.className = 'buttons-style-one';
-    adminReportsBtn.textContent = 'СКАРГИ';
+    const adminreportsBtn = document.createElement('button');
+    adminreportsBtn.id = 'admin-reports-btn';
+    adminreportsBtn.className = 'buttons-style-one';
+    adminreportsBtn.textContent = 'СКАРГИ';
 
     // Добавляем админ кнопки в начало filter-buttons
     filterButtons.insertBefore(adminAddPostBtn, filterButtons.firstChild);
-    filterButtons.insertBefore(adminReportsBtn, filterButtons.firstChild);
+    filterButtons.insertBefore(adminreportsBtn, filterButtons.firstChild);
 
     // Модальное окно для добавления поста
     const modal = document.createElement('div');
@@ -117,7 +117,7 @@ setTimeout(() => {
     if (openUnblockBtn) {
         openUnblockBtn.onclick = function() {
             unblockModal.style.display = 'block';
-            loadBlockedUsers();
+            loadblockedusers();
         };
     }
     const closeUnblockBtn = document.getElementById('close-unblock-modal');
@@ -135,16 +135,16 @@ setTimeout(() => {
 }, 500);
 
 // Загрузка заблокированных пользователей
-function loadBlockedUsers() {
+function loadblockedusers() {
     fetch('api/get_blocked_users.php')
         .then(res => res.json())
         .then(data => {
-            renderBlockedUsers(data.blocked_users || []);
+            renderblockedusers(data.blocked_users || []);
         });
 }
 
 // Рендер таблицы
-function renderBlockedUsers(users) {
+function renderblockedusers(users) {
     const usersList = document.getElementById('table-list');
     usersList.innerHTML = '';
     users.forEach(user => {
@@ -249,7 +249,7 @@ unblockModal.addEventListener('input', function(e) {
 
 
     // Функція для завантаження скарг
-    function loadReports() {
+    function loadreports() {
         const reportsList = document.getElementById('reports-list');
         reportsList.innerHTML = 'Завантаження...';
 
@@ -341,7 +341,7 @@ unblockModal.addEventListener('input', function(e) {
     // Открытие модального окна скарг
     document.getElementById('admin-reports-btn').onclick = () => {
         reportsModal.style.display = 'block';
-        loadReports();
+        loadreports();
     };
 
     // Закрытие модального окна
@@ -402,7 +402,7 @@ unblockModal.addEventListener('input', function(e) {
                     .then(data => {
                         if (data.success) {
                             customAlert('Скаргу успішно закрито. ' + (result.checked ? 'Користувачі отримають повідомлення.' : '')); 
-                            loadReports(); // Оновити список скарг
+                            loadreports(); // Оновити список скарг
                         } else {
                             customAlert('Помилка при закритті скарги: ' + (data.error || ''));
                         }
@@ -433,7 +433,7 @@ unblockModal.addEventListener('input', function(e) {
             .then(data => {
                 if (data.success) {
                     // Оновлюємо список скарг
-                    loadReports();
+                    loadreports();
                 } else {
                     customAlert(data.error || 'Помилка при видаленні коментаря');
                 }

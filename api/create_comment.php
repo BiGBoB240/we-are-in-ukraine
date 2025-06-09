@@ -21,7 +21,7 @@ if (!$currentUserId) {
 // Check if current user is admin
 $isAdmin = false;
 if ($currentUserId) {
-    $adminCheck = $pdo->prepare('SELECT 1 FROM Administrations WHERE user_id = ? AND verificated = 1');
+    $adminCheck = $pdo->prepare('SELECT 1 FROM administrations WHERE user_id = ? AND verificated = 1');
     $adminCheck->execute([$currentUserId]);
     $isAdmin = $adminCheck->fetchColumn() !== false;
 }
@@ -40,14 +40,14 @@ if (!$postId || $text === '') {
 }
 
 try {
-    $stmt = $pdo->prepare("INSERT INTO Comments (post_id, user_id, comment_text) VALUES (?, ?, ?)");
+    $stmt = $pdo->prepare("INSERT INTO comments (post_id, user_id, comment_text) VALUES (?, ?, ?)");
     $stmt->execute([$postId, $currentUserId, $text]);
     $commentId = $pdo->lastInsertId();
 
     // Если это reply, создаём уведомление
     if ($replyTo) {
         // Получить user_id родительского комментария
-        $stmtReply = $pdo->prepare("SELECT user_id FROM Comments WHERE id = ?");
+        $stmtReply = $pdo->prepare("SELECT user_id FROM comments WHERE id = ?");
         $stmtReply->execute([$replyTo]);
         $parentUserId = $stmtReply->fetchColumn();
         if ($parentUserId && $parentUserId != $currentUserId) { // не уведомлять себя
@@ -57,8 +57,8 @@ try {
     }
 
     $stmt = $pdo->prepare("SELECT c.id, c.comment_text, c.created_at, c.comments_likes, u.username, c.user_id
-        FROM Comments c 
-        LEFT JOIN Users u ON c.user_id = u.id
+        FROM comments c 
+        LEFT JOIN users u ON c.user_id = u.id
         WHERE c.id = ?");
     $stmt->execute([$commentId]);
     $comment = $stmt->fetch();

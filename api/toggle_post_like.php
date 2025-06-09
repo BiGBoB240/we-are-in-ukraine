@@ -24,30 +24,30 @@ if (!$postId) {
 try {
     $pdo->beginTransaction();
 
-    $stmt = $pdo->prepare("SELECT id FROM PostLikes WHERE post_id = ? AND user_id = ?");
+    $stmt = $pdo->prepare("SELECT id FROM postlikes WHERE post_id = ? AND user_id = ?");
     $stmt->execute([$postId, $_SESSION['user_id']]);
     $existingLike = $stmt->fetch();
 
     if ($existingLike) {
         // Remove like
-        $stmt = $pdo->prepare("DELETE FROM PostLikes WHERE post_id = ? AND user_id = ?");
+        $stmt = $pdo->prepare("DELETE FROM postlikes WHERE post_id = ? AND user_id = ?");
         $stmt->execute([$postId, $_SESSION['user_id']]);
         // Update post likes count
-        $stmt = $pdo->prepare("UPDATE Posts SET post_likes = post_likes - 1 WHERE id = ?");
+        $stmt = $pdo->prepare("UPDATE posts SET post_likes = post_likes - 1 WHERE id = ?");
         $stmt->execute([$postId]);
         $action = 'unliked';
     } else {
         // Add like
-        $stmt = $pdo->prepare("INSERT INTO PostLikes (post_id, user_id) VALUES (?, ?)");
+        $stmt = $pdo->prepare("INSERT INTO postlikes (post_id, user_id) VALUES (?, ?)");
         $stmt->execute([$postId, $_SESSION['user_id']]);
         // Update post likes count
-        $stmt = $pdo->prepare("UPDATE Posts SET post_likes = post_likes + 1 WHERE id = ?");
+        $stmt = $pdo->prepare("UPDATE posts SET post_likes = post_likes + 1 WHERE id = ?");
         $stmt->execute([$postId]);
         $action = 'liked';
     }
 
     // Get updated likes count
-    $stmt = $pdo->prepare("SELECT post_likes FROM Posts WHERE id = ?");
+    $stmt = $pdo->prepare("SELECT post_likes FROM posts WHERE id = ?");
     $stmt->execute([$postId]);
     $likesCount = $stmt->fetchColumn();
 

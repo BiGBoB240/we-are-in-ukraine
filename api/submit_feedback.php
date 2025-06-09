@@ -25,7 +25,7 @@ if (empty($username) || empty($email) || empty($phone) || empty($message)) {
 }
 
 try {
-    $stmt = $pdo->prepare("INSERT INTO Feedback (username, email, phone_number, feedback_text) VALUES (?, ?, ?, ?)");
+    $stmt = $pdo->prepare("INSERT INTO feedback (username, email, phone_number, feedback_text) VALUES (?, ?, ?, ?)");
     $stmt->execute([$username, $email, $phone, $message]);
     
     echo json_encode(['success' => true]);

@@ -12,7 +12,7 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 
 // Проверяем, что пользователь админ
-$stmt = $pdo->prepare('SELECT 1 FROM Administrations WHERE user_id = ? AND verificated = 1');
+$stmt = $pdo->prepare('SELECT 1 FROM administrations WHERE user_id = ? AND verificated = 1');
 $stmt->execute([$user_id]);
 if ($stmt->fetchColumn() === false) {
     echo json_encode(['error' => 'Доступ заборонено']);
@@ -46,7 +46,7 @@ foreach ($image_fields as $field) {
 }
 
 try {
-    $stmt = $pdo->prepare('INSERT INTO Posts (author_id, title, content, picture1_path, picture2_path, picture3_path, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())');
+    $stmt = $pdo->prepare('INSERT INTO posts (author_id, title, content, picture1_path, picture2_path, picture3_path, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())');
     $stmt->execute([
         $user_id,
         $title,

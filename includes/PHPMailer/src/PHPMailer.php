@@ -1518,7 +1518,7 @@ class PHPMailer
                 return false;
             }
 
-            return $this->postSend();
+            return $this->postsend();
         } catch (Exception $exc) {
             $this->mailHeader = '';
             $this->setError($exc->getMessage());
@@ -1675,7 +1675,7 @@ class PHPMailer
      *
      * @return bool
      */
-    public function postSend()
+    public function postsend()
     {
         try {
             //Choose the mailer and send through it

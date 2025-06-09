@@ -14,7 +14,7 @@ if (!isset($_SESSION['user_id'])) {
 
 // Check if user is admin
 $isAdmin = false;
-$adminCheck = $pdo->prepare('SELECT 1 FROM Administrations WHERE user_id = ? AND verificated = 1');
+$adminCheck = $pdo->prepare('SELECT 1 FROM administrations WHERE user_id = ? AND verificated = 1');
 $adminCheck->execute([$_SESSION['user_id']]);
 $isAdmin = $adminCheck->fetchColumn() !== false;
 
@@ -37,7 +37,7 @@ if (strlen($text) > 300) {
 try {
     // Verify comment ownership or admin status
     if (!$isAdmin) {
-        $stmt = $pdo->prepare("SELECT id FROM Comments WHERE id = ? AND user_id = ?");
+        $stmt = $pdo->prepare("SELECT id FROM comments WHERE id = ? AND user_id = ?");
         $stmt->execute([$commentId, $_SESSION['user_id']]);
         if (!$stmt->fetch()) {
             echo json_encode(['error' => 'Коментар не знайдено або у вас немає прав для його редагування']);
@@ -45,7 +45,7 @@ try {
         }
     } else {
         // Admin just needs to verify comment exists
-        $stmt = $pdo->prepare("SELECT id FROM Comments WHERE id = ?");
+        $stmt = $pdo->prepare("SELECT id FROM comments WHERE id = ?");
         $stmt->execute([$commentId]);
         if (!$stmt->fetch()) {
             echo json_encode(['error' => 'Коментар не знайдено']);
@@ -56,7 +56,7 @@ try {
     if ($isAdmin) {
         // Admin: just update text, do not set redacted, do not reset likes
         $stmt = $pdo->prepare("
-            UPDATE Comments 
+            UPDATE comments 
             SET comment_text = ?
             WHERE id = ?
         ");
@@ -64,7 +64,7 @@ try {
     } else {
         // User: update text, set redacted, reset likes
         $stmt = $pdo->prepare("
-            UPDATE Comments 
+            UPDATE comments 
             SET comment_text = ?, 
                 redacted = 1
             WHERE id = ?
@@ -72,16 +72,16 @@ try {
         $stmt->execute([$text, $commentId]);
 
         // Remove all likes for this comment
-        $delStmt = $pdo->prepare("DELETE FROM CommentLikes WHERE comment_id = ?");
+        $delStmt = $pdo->prepare("DELETE FROM commentlikes WHERE comment_id = ?");
         $delStmt->execute([$commentId]);
 
-        // Reset comments_likes counter in Comments table
-        $resetLikes = $pdo->prepare("UPDATE Comments SET comments_likes = 0 WHERE id = ?");
+        // Reset comments_likes counter in comments table
+        $resetLikes = $pdo->prepare("UPDATE comments SET comments_likes = 0 WHERE id = ?");
         $resetLikes->execute([$commentId]);
     }
 
     // Get post_id for the updated comment
-    $stmt = $pdo->prepare("SELECT post_id FROM Comments WHERE id = ?");
+    $stmt = $pdo->prepare("SELECT post_id FROM comments WHERE id = ?");
     $stmt->execute([$commentId]);
     $postId = $stmt->fetchColumn();
 

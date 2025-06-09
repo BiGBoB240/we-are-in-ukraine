@@ -16,8 +16,8 @@ if ($action === 'get') {
     // Получить уведомления пользователя
     $stmt = $pdo->prepare("SELECT n.id, n.sender_user_id, n.post_id, n.comment_id, n.is_read, c.comment_text, u.username as sender_username
         FROM notifications n
-        LEFT JOIN Comments c ON n.comment_id = c.id
-        LEFT JOIN Users u ON n.sender_user_id = u.id
+        LEFT JOIN comments c ON n.comment_id = c.id
+        LEFT JOIN users u ON n.sender_user_id = u.id
         WHERE n.recipient_user_id = ?
         ORDER BY n.id DESC LIMIT 50");
     $stmt->execute([$userId]);

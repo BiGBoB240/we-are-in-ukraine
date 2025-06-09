@@ -8,7 +8,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 // Check admin rights (optional, but recommended)
-$stmt = $pdo->prepare('SELECT 1 FROM Administrations WHERE user_id = ? AND verificated = 1');
+$stmt = $pdo->prepare('SELECT 1 FROM administrations WHERE user_id = ? AND verificated = 1');
 $stmt->execute([$_SESSION['user_id']]);
 if (!$stmt->fetchColumn()) {
     echo json_encode(['error' => 'Access denied']);
@@ -16,29 +16,29 @@ if (!$stmt->fetchColumn()) {
 }
 
 // Отримуємо всі скарги
-$sql = "SELECT * FROM Reports ORDER BY created_at DESC";
+$sql = "SELECT * FROM reports ORDER BY created_at DESC";
 $stmt = $pdo->query($sql);
 $reports = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 foreach ($reports as &$report) {
     $report['type'] = $report['content_type']; // для зручності на фронті
     if ($report['content_type'] === 'post') {
-        $stmt2 = $pdo->prepare("SELECT id, title, created_at FROM Posts WHERE id = ?");
+        $stmt2 = $pdo->prepare("SELECT id, title, created_at FROM posts WHERE id = ?");
         $stmt2->execute([$report['content_id']]);
         $report['post'] = $stmt2->fetch(PDO::FETCH_ASSOC);
     }
     if ($report['content_type'] === 'user') {
-        $stmt2 = $pdo->prepare("SELECT id, username FROM Users WHERE id = ?");
+        $stmt2 = $pdo->prepare("SELECT id, username FROM users WHERE id = ?");
         $stmt2->execute([$report['content_id']]);
         $report['user'] = $stmt2->fetch(PDO::FETCH_ASSOC);
     }
     if ($report['content_type'] === 'comment') {
         // Підвантажуємо розширену інформацію про коментар
         $stmt2 = $pdo->prepare("SELECT c.*, u.username, p.title as post_title,
-            (SELECT COUNT(*) FROM CommentLikes cl WHERE cl.comment_id = c.id) as likes_count
-            FROM Comments c
-            LEFT JOIN Users u ON c.user_id = u.id
-            LEFT JOIN Posts p ON c.post_id = p.id
+            (SELECT COUNT(*) FROM commentlikes cl WHERE cl.comment_id = c.id) as likes_count
+            FROM comments c
+            LEFT JOIN users u ON c.user_id = u.id
+            LEFT JOIN posts p ON c.post_id = p.id
             WHERE c.id = ?");
         $stmt2->execute([$report['content_id']]);
         $comment = $stmt2->fetch(PDO::FETCH_ASSOC);
@@ -47,14 +47,14 @@ foreach ($reports as &$report) {
             // Чи лайкнув цей користувач
             $hasLiked = false;
             if ($currentUserId) {
-                $likeStmt = $pdo->prepare('SELECT 1 FROM CommentLikes WHERE comment_id = ? AND user_id = ?');
+                $likeStmt = $pdo->prepare('SELECT 1 FROM commentlikes WHERE comment_id = ? AND user_id = ?');
                 $likeStmt->execute([$comment['id'], $currentUserId]);
                 $hasLiked = $likeStmt->fetchColumn() !== false;
             }
             // Чи може редагувати/видаляти
             $isAdmin = false;
             if ($currentUserId) {
-                $adminCheck = $pdo->prepare('SELECT 1 FROM Administrations WHERE user_id = ? AND verificated = 1');
+                $adminCheck = $pdo->prepare('SELECT 1 FROM administrations WHERE user_id = ? AND verificated = 1');
                 $adminCheck->execute([$currentUserId]);
                 $isAdmin = $adminCheck->fetchColumn() !== false;
             }

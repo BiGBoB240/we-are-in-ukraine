@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     const feedbackForm = document.getElementById('feedbackForm');
-    const showFeedbacksBtn = document.getElementById('showFeedbacks');
+    const showfeedbacksBtn = document.getElementById('showfeedbacks');
     const feedbacksList = document.getElementById('feedbacksList');
     const phoneInput = document.getElementById('phone');
     
@@ -44,10 +44,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Admin functionality
-    if (showFeedbacksBtn) {
-        showFeedbacksBtn.addEventListener('click', function() {
+    if (showfeedbacksBtn) {
+        showfeedbacksBtn.addEventListener('click', function() {
             if (feedbacksList.style.display === 'none') {
-                loadFeedbacks();
+                loadfeedbacks();
                 feedbacksList.style.display = 'block';
                 this.textContent = 'Сховати звернення';
             } else {
@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Load feedbacks for admin
-    function loadFeedbacks() {
+    function loadfeedbacks() {
         fetch('api/get_feedbacks.php')
             .then(response => response.json())
             .then(data => {
@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <p><strong>Звернення:</strong> ${feedback.feedback_text}</p>
                         <p><strong>Дата:</strong> ${feedback.created_at}</p>
                         <div class="feedback-actions">
-                            <button class="buttons-style-one" onclick="resolveFeedback(${feedback.id})">Вирішено</button>
+                            <button class="buttons-style-one" onclick="resolvefeedback(${feedback.id})">Вирішено</button>
                         </div>
                     </div>
                 `).join('') || '<p>Немає нових звернень</p>';
@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Resolve feedback (for admin)
-function resolveFeedback(feedbackId) {
+function resolvefeedback(feedbackId) {
     customConfirm('Ви впевнені, що хочете позначити це звернення як вирішене?').then(function(confirmed){
         if (confirmed) {
             const btn = document.querySelector(`.feedback-item[data-id="${feedbackId}"] .buttons-style-one`);

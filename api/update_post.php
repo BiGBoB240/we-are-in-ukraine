@@ -25,7 +25,7 @@ if (!$post_id || !$title || !$content) {
 }
 
 // Отримуємо старі дані поста
-$stmt = $pdo->prepare('SELECT * FROM Posts WHERE id = ?');
+$stmt = $pdo->prepare('SELECT * FROM posts WHERE id = ?');
 $stmt->execute([$post_id]);
 $post = $stmt->fetch(PDO::FETCH_ASSOC);
 if (!$post) {
@@ -76,7 +76,7 @@ for ($i = 1; $i <= 3; $i++) {
 }
 
 // Оновлюємо пост
-$update_sql = 'UPDATE Posts SET title=?, content=?'.(count($updateFields) ? ', '.implode(', ', $updateFields) : '').' WHERE id=?';
+$update_sql = 'UPDATE posts SET title=?, content=?'.(count($updateFields) ? ', '.implode(', ', $updateFields) : '').' WHERE id=?';
 $stmt = $pdo->prepare($update_sql);
 $res = $stmt->execute(array_merge($params, [$post_id]));
 

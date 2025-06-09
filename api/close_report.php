@@ -19,7 +19,7 @@ if (!$content_id || !$content_type) {
 }
 
 // 1. Знаходимо всі скарги на цей елемент
-$stmt = $pdo->prepare('SELECT r.reported_by_id, u.email FROM Reports r JOIN Users u ON r.reported_by_id = u.id WHERE r.content_id = ? AND r.content_type = ?');
+$stmt = $pdo->prepare('SELECT r.reported_by_id, u.email FROM reports r JOIN users u ON r.reported_by_id = u.id WHERE r.content_id = ? AND r.content_type = ?');
 $stmt->execute([$content_id, $content_type]);
 $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -39,7 +39,7 @@ if ($send_message === 1) {
 }
 
 // 3. Видаляємо всі скарги на цей елемент
-$stmt = $pdo->prepare('DELETE FROM Reports WHERE content_id = ? AND content_type = ?');
+$stmt = $pdo->prepare('DELETE FROM reports WHERE content_id = ? AND content_type = ?');
 $stmt->execute([$content_id, $content_type]);
 
 http_response_code(200);

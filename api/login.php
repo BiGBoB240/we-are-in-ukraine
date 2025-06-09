@@ -14,7 +14,7 @@ if (!$email || !$password) {
     exit;
 }
 try {
-    $stmt = $pdo->prepare("SELECT * FROM Users WHERE email = ?");
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
     $stmt->execute([$email]);
     $user = $stmt->fetch();
     if (!$user || !password_verify($password, $user['password_hash'])) {

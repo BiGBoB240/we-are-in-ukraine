@@ -9,19 +9,28 @@ $limit = 1;
 $offset = ($page - 1) * $limit;
 
 // Prepare the ORDER BY clause based on filter
-$orderBy = match($filter) {
-    'date-new' => 'created_at DESC',
-    'date-old' => 'created_at ASC',
-    'rating-high' => 'post_likes DESC',
-    'rating-low' => 'post_likes ASC',
-    default => 'created_at DESC'
-};
+switch ($filter) {
+    case 'date-new':
+        $orderBy = 'created_at DESC';
+        break;
+    case 'date-old':
+        $orderBy = 'created_at ASC';
+        break;
+    case 'rating-high':
+        $orderBy = 'post_likes DESC';
+        break;
+    case 'rating-low':
+        $orderBy = 'post_likes ASC';
+        break;
+    default:
+        $orderBy = 'created_at DESC';
+}
 
 try {
     // Get posts
     $query = "SELECT p.*, u.username as author_name 
-              FROM Posts p 
-              LEFT JOIN Users u ON p.author_id = u.id 
+              FROM posts p 
+              LEFT JOIN users u ON p.author_id = u.id 
               ORDER BY {$orderBy} 
               LIMIT :limit OFFSET :offset";
     
@@ -32,7 +41,7 @@ try {
     $posts = $stmt->fetchAll();
 
     // Count total posts for pagination
-    $stmt = $pdo->query("SELECT COUNT(*) FROM Posts");
+    $stmt = $pdo->query("SELECT COUNT(*) FROM posts");
     $total = $stmt->fetchColumn();
     
     // Process posts content based on type

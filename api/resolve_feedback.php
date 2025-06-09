@@ -20,7 +20,7 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-$stmt = $pdo->prepare("SELECT * FROM Administrations WHERE user_id = ? AND verificated = 1");
+$stmt = $pdo->prepare("SELECT * FROM administrations WHERE user_id = ? AND verificated = 1");
 $stmt->execute([$_SESSION['user_id']]);
 if ($stmt->rowCount() === 0) {
     http_response_code(403);
@@ -40,13 +40,13 @@ if (!$feedbackId) {
 
 try {
     // Get feedback info before deletion
-    $stmt = $pdo->prepare("SELECT * FROM Feedback WHERE id = ?");
+    $stmt = $pdo->prepare("SELECT * FROM feedback WHERE id = ?");
     $stmt->execute([$feedbackId]);
     $feedback = $stmt->fetch();
     
     if (!$feedback) {
         http_response_code(404);
-        echo json_encode(['error' => 'Feedback not found']);
+        echo json_encode(['error' => 'feedback not found']);
         exit;
     }
 
@@ -57,7 +57,7 @@ try {
     send_custom_mail($feedback['email'] ?? 'recipient@example.com', $feedback['username'] ?? 'User', 'Ваше звернення оброблено', $body_html);
 
     // Delete feedback
-    $stmt = $pdo->prepare("DELETE FROM Feedback WHERE id = ?");
+    $stmt = $pdo->prepare("DELETE FROM feedback WHERE id = ?");
     $stmt->execute([$feedbackId]);
     
     echo json_encode(['success' => true]);

@@ -1,4 +1,9 @@
 <?php
+if (!function_exists('str_contains')) {
+    function str_contains($haystack, $needle) {
+        return $needle !== '' && mb_strpos($haystack, $needle) !== false;
+    }
+}
 require_once '../config/db.php';
 session_start();
 
@@ -19,7 +24,7 @@ $userIdToUpdate = $_SESSION['user_id'];
 
 if (isset($_POST['user_id']) && $_POST['user_id'] != $_SESSION['user_id']) {
     // Проверка: если админ, можно менять имя другого пользователя
-    $stmtAdmin = $pdo->prepare("SELECT 1 FROM Administrations WHERE user_id = ? AND verificated = 1");
+    $stmtAdmin = $pdo->prepare("SELECT 1 FROM administrations WHERE user_id = ? AND verificated = 1");
     $stmtAdmin->execute([$_SESSION['user_id']]);
     if ($stmtAdmin->fetch()) {
         $userIdToUpdate = (int)$_POST['user_id'];
@@ -48,7 +53,7 @@ if (!empty($lastName)) {
 $username = filter_bad_words($username);
 
 try {
-    $stmt = $pdo->prepare("UPDATE Users SET username = ? WHERE id = ?");
+    $stmt = $pdo->prepare("UPDATE users SET username = ? WHERE id = ?");
     $stmt->execute([$username, $userIdToUpdate]);
     
     echo json_encode(['success' => "Ім'я успішно оновлено"]);

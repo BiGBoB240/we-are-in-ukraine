@@ -16,14 +16,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const replyToFromUrl = urlParams.get('reply_to');
     // replyToFromUrl сохраняем для будущей интеграции
     // Открывать модалку поста только после загрузки всех постов
-    loadPosts().then(() => {
+    loadposts().then(() => {
         if (postIdFromUrl) {
             openPostModal(postIdFromUrl, replyToFromUrl || null);
         }
     });
     // Если нет post_id, просто загрузить посты
     if (!postIdFromUrl) {
-        loadPosts();
+        loadposts();
     }
 
     // Create modal container
@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Load posts
-    function loadPosts() {
+    function loadposts() {
         return fetch(`api/posts.php?page=${currentPage}&filter=${currentFilter}`)
             .then(response => response.json())
             .then(data => {
@@ -545,7 +545,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
 
-    window.saveComment = function(commentId, fromReports = false) {
+    window.saveComment = function(commentId, fromreports = false) {
         const editForm = document.getElementById(`edit-form-${commentId}`);
         const textarea = editForm.querySelector('.edit-textarea');
         const newText = textarea.value.trim();
@@ -573,7 +573,7 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                if (data.post_id && !fromReports) {
+                if (data.post_id && !fromreports) {
                     openPostModal(data.post_id);
                 } else {
                     const commentText = document.getElementById(`comment-text-${commentId}`);
@@ -639,20 +639,20 @@ document.addEventListener('DOMContentLoaded', function() {
             currentPage = 1;
             postsContainer.innerHTML = '';
             loadedPostIds = new Set();
-            autoLoadPostsUntilScrollable();
+            autoLoadpostsUntilScrollable();
         });
     });
 
     // Infinite scroll: подгружаем посты при достижении низа страницы
-    let isLoadingPosts = false;
+    let isLoadingposts = false;
     window.addEventListener('scroll', function() {
-        if (isLoadingPosts) return;
+        if (isLoadingposts) return;
         // Проверяем, близко ли низ страницы
         if ((window.innerHeight + window.scrollY) >= (document.body.offsetHeight - 200)) {
-            isLoadingPosts = true;
+            isLoadingposts = true;
             currentPage++;
-            loadPosts().finally(() => {
-                isLoadingPosts = false;
+            loadposts().finally(() => {
+                isLoadingposts = false;
             });
         }
     });
@@ -661,32 +661,32 @@ document.addEventListener('DOMContentLoaded', function() {
     let autoLoadInProgress = false;
 
     // Initial load
-    autoLoadPostsUntilScrollable();
+    autoLoadpostsUntilScrollable();
 
     // Автодогрузка при изменении размера окна (например, пользователь уменьшил масштаб)
     window.addEventListener('resize', function() {
         // Если скролла нет и автодогрузка не идёт, запустить автодогрузку
         const enoughScroll = document.body.offsetHeight > window.innerHeight + 20;
         if (!enoughScroll && !autoLoadInProgress) {
-            autoLoadPostsUntilScrollable();
+            autoLoadpostsUntilScrollable();
         }
     });
 
-    function autoLoadPostsUntilScrollable() {
+    function autoLoadpostsUntilScrollable() {
         if (autoLoadInProgress) return; // не запускать параллельно
         autoLoadInProgress = true;
-        let lastPostsCount = -1;
+        let lastpostsCount = -1;
         let lastPage = currentPage;
         function tryLoad() {
-            loadPosts().then(() => {
+            loadposts().then(() => {
                 // Если постов не прибавилось или скролл появился — прекращаем
                 const enoughScroll = document.body.offsetHeight > window.innerHeight + 20;
                 const postsCount = postsContainer ? postsContainer.children.length : 0;
-                if (enoughScroll || postsCount === lastPostsCount) {
+                if (enoughScroll || postsCount === lastpostsCount) {
                     autoLoadInProgress = false;
                     return;
                 }
-                lastPostsCount = postsCount;
+                lastpostsCount = postsCount;
                 // Если постов не было добавлено, значит посты закончились
                 if (postsCount === 0) {
                     autoLoadInProgress = false;

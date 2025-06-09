@@ -13,7 +13,7 @@ if (isset($_GET['id'])) {
 }
 
 // Get user data by user_id
-$stmt = $pdo->prepare("SELECT username, created_at FROM Users WHERE id = ?");
+$stmt = $pdo->prepare("SELECT username, created_at FROM users WHERE id = ?");
 $stmt->execute([$profileUserId]);
 $user = $stmt->fetch();
 
@@ -103,7 +103,7 @@ $lastName = isset($nameParts[1]) ? $nameParts[1] : '';
         }
         } else {
             // Check if the current user is an admin
-            $stmtAdmin = $pdo->prepare("SELECT 1 FROM Administrations WHERE user_id = ? AND verificated = 1");
+            $stmtAdmin = $pdo->prepare("SELECT 1 FROM administrations WHERE user_id = ? AND verificated = 1");
             $stmtAdmin->execute([$_SESSION['user_id']]);
             if ($stmtAdmin->fetch()) {
                 $showProfileActions = true;
@@ -170,14 +170,14 @@ $lastName = isset($nameParts[1]) ? $nameParts[1] : '';
                     </div>
                     </div>
                     <div id="comments-container">
-                        <!-- Comments will be loaded here dynamically -->
+                        <!-- comments will be loaded here dynamically -->
                     </div>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- Notifications Modal -->
+    <!-- notifications Modal -->
     <div id="notifications-modal" class="modal" style="display:none;">
         <div class="modal-content">
             <button class="modal-close" id="notifications-modal-close">&times;</button>
@@ -187,7 +187,7 @@ $lastName = isset($nameParts[1]) ? $nameParts[1] : '';
             <button id="delete-all-btn" class="buttons-style-one buttons-style-two">Видалити все</button>
             </div>
             <div id="notifications-list">
-                <!-- Notifications will be loaded here -->
+                <!-- notifications will be loaded here -->
             </div>
         </div>
     </div>

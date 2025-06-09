@@ -10,7 +10,7 @@ $currentUserId = $_SESSION['user_id'] ?? null;
 // Check if current user is admin
 $isAdmin = false;
 if ($currentUserId) {
-    $adminCheck = $pdo->prepare('SELECT 1 FROM Administrations WHERE user_id = ? AND verificated = 1');
+    $adminCheck = $pdo->prepare('SELECT 1 FROM administrations WHERE user_id = ? AND verificated = 1');
     $adminCheck->execute([$currentUserId]);
     $isAdmin = $adminCheck->fetchColumn() !== false;
 }
@@ -26,8 +26,8 @@ $postId = (int)$_GET['id'];
 try {
     // Get post with author info
     $query = "SELECT p.*, u.username as author_name 
-              FROM Posts p 
-              LEFT JOIN Users u ON p.author_id = u.id 
+              FROM posts p 
+              LEFT JOIN users u ON p.author_id = u.id 
               WHERE p.id = :id";
     
     $stmt = $pdo->prepare($query);
@@ -52,7 +52,7 @@ try {
     // Определяем, лайкал ли пользователь этот пост
     $post['has_liked'] = false;
     if ($currentUserId) {
-        $likeStmt = $pdo->prepare('SELECT 1 FROM PostLikes WHERE post_id = ? AND user_id = ?');
+        $likeStmt = $pdo->prepare('SELECT 1 FROM postlikes WHERE post_id = ? AND user_id = ?');
         $likeStmt->execute([$postId, $currentUserId]);
         $post['has_liked'] = $likeStmt->fetchColumn() !== false;
     }
@@ -62,9 +62,9 @@ try {
     // Get comments for the post
     $query = "SELECT c.*, u.username,
               CASE WHEN cl.id IS NOT NULL THEN 1 ELSE 0 END as has_liked
-              FROM Comments c 
-              LEFT JOIN Users u ON c.user_id = u.id 
-              LEFT JOIN CommentLikes cl ON c.id = cl.comment_id AND cl.user_id = :current_user_id
+              FROM comments c 
+              LEFT JOIN users u ON c.user_id = u.id 
+              LEFT JOIN commentlikes cl ON c.id = cl.comment_id AND cl.user_id = :current_user_id
               WHERE c.post_id = :post_id 
               ORDER BY c.created_at DESC";
     

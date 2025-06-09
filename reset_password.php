@@ -33,8 +33,8 @@ if (isset($_SESSION['user_id']) || !$token) {
                     <span class="nav-toggle-bar"></span>
                 </button>
                 <nav class="nav-links">
-                    <a href="index.php">ВХІД</a>
-                    <a href="register.php">РЕЄСТРАЦІЯ</a>
+                    <a href="index.php">НА ГОЛОВНУ</a>
+                    <a href="login.php">ВХІД</a>
                 </nav>
             </div>
         </div>

@@ -33,7 +33,7 @@ if (strlen($newPassword) < 8 || !preg_match('/[a-zA-Z]/', $newPassword)) {
 
 try {
     // Verify current password
-    $stmt = $pdo->prepare("SELECT password_hash FROM Users WHERE id = ?");
+    $stmt = $pdo->prepare("SELECT password_hash FROM users WHERE id = ?");
     $stmt->execute([$_SESSION['user_id']]);
     $user = $stmt->fetch();
 
@@ -44,7 +44,7 @@ try {
 
     // Update password
     $hash = password_hash($newPassword, PASSWORD_DEFAULT);
-    $stmt = $pdo->prepare("UPDATE Users SET password_hash = ? WHERE id = ?");
+    $stmt = $pdo->prepare("UPDATE users SET password_hash = ? WHERE id = ?");
     $stmt->execute([$hash, $_SESSION['user_id']]);
     
     // Clear session after password change

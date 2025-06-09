@@ -24,15 +24,15 @@ function send_custom_mail($to, $to_name, $subject, $body_html, $alt_body = '', $
         $mail->isSMTP();
         $mail->Host = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
-        $mail->Username = 'mybloguasup77@gmail.com';
-        $mail->Password = 'eehf lsbk yesl qxdu';
+        $mail->Username = 'weareinukrainesup77@gmail.com';
+        $mail->Password = 'kwfz jdwt wsgr wied';
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
         $mail->Port = 465;
         $mail->CharSet = 'UTF-8';
         $mail->Encoding = 'base64';
 
         // Sender
-        $from = $options['from'] ?? 'mybloguasup77@gmail.com';
+        $from = $options['from'] ?? 'weareinukrainesup77@gmail.com';
         $from_name = $options['from_name'] ?? 'Ми в Україні';
         $mail->setFrom($from, $from_name);
 

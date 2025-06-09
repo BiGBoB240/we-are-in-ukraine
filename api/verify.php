@@ -5,11 +5,11 @@ $token = $_GET['token'] ?? '';
 $message = '';
 
 if ($token) {
-    $stmt = $pdo->prepare("SELECT id FROM Users WHERE verification_token = ? AND verificated = 0");
+    $stmt = $pdo->prepare("SELECT id FROM users WHERE verification_token = ? AND verificated = 0");
     $stmt->execute([$token]);
     $user = $stmt->fetch();
     if ($user) {
-        $stmt = $pdo->prepare("UPDATE Users SET verificated = 1, verification_token = NULL WHERE id = ?");
+        $stmt = $pdo->prepare("UPDATE users SET verificated = 1, verification_token = NULL WHERE id = ?");
         $stmt->execute([$user['id']]);
         $message = 'Ваш акаунт успішно підтверджено! Тепер ви можете увійти.';
     } else {

@@ -5,7 +5,7 @@ session_start();
 // Check if user is admin
 $isAdmin = false;
 if (isset($_SESSION['user_id'])) {
-    $stmt = $pdo->prepare("SELECT * FROM Administrations WHERE user_id = ? AND verificated = 1");
+    $stmt = $pdo->prepare("SELECT * FROM administrations WHERE user_id = ? AND verificated = 1");
     $stmt->execute([$_SESSION['user_id']]);
     $isAdmin = $stmt->rowCount() > 0;
 }
@@ -65,7 +65,7 @@ if (isset($_SESSION['user_id'])) {
                     </div>
                 </div>
 
-                <!-- Feedback Form -->
+                <!-- feedback Form -->
                 <div class="feedback-form">
                     <h2>Форма зворотнього зв'язку</h2>
                     <form id="feedbackForm">
@@ -97,10 +97,10 @@ if (isset($_SESSION['user_id'])) {
                 <!-- Admin Section -->
                 <div class="admin-section">
                     <h2>Звернення</h2>
-                    <button id="showFeedbacks" class="buttons-style-one">Показати звернення</button>
+                    <button id="showfeedbacks" class="buttons-style-one">Показати звернення</button>
                     
                     <div id="feedbacksList" class="feedbacks-list" style="display: none;">
-                        <!-- Feedbacks will be loaded here -->
+                        <!-- feedbacks will be loaded here -->
                     </div>
                 </div>
                 <?php endif; ?>

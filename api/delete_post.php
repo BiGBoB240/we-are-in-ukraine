@@ -22,7 +22,7 @@ $userId = (int)$_SESSION['user_id'];
 
 try {
     // Перевірка, чи є користувач автором поста
-    $stmt = $pdo->prepare('SELECT author_id FROM Posts WHERE id = ?');
+    $stmt = $pdo->prepare('SELECT author_id FROM posts WHERE id = ?');
     $stmt->execute([$postId]);
     $post = $stmt->fetch();
     
@@ -34,7 +34,7 @@ try {
     // Перевірка прав доступу
     if ($post['author_id'] !== $userId) {
         // Перевірка, чи є користувач адміністратором
-        $stmt = $pdo->prepare('SELECT 1 FROM Administrations WHERE user_id = ? AND verificated = 1');
+        $stmt = $pdo->prepare('SELECT 1 FROM administrations WHERE user_id = ? AND verificated = 1');
         $stmt->execute([$userId]);
         if (!$stmt->fetchColumn()) {
             echo json_encode(['error' => 'Ви не маєте прав для видалення цього поста']);
@@ -43,7 +43,7 @@ try {
     }
 
     // Отримуємо шляхи до зображень для видалення
-    $stmt = $pdo->prepare('SELECT picture1_path, picture2_path, picture3_path FROM Posts WHERE id = ?');
+    $stmt = $pdo->prepare('SELECT picture1_path, picture2_path, picture3_path FROM posts WHERE id = ?');
     $stmt->execute([$postId]);
     $images = $stmt->fetch();
 
@@ -63,27 +63,27 @@ try {
     
     try {
         // Видалення лайків поста
-        $stmt = $pdo->prepare('DELETE FROM PostLikes WHERE post_id = ?');
+        $stmt = $pdo->prepare('DELETE FROM postlikes WHERE post_id = ?');
         $stmt->execute([$postId]);
         
         // Видалення коментарів
-        $stmt = $pdo->prepare('DELETE FROM Comments WHERE post_id = ?');
+        $stmt = $pdo->prepare('DELETE FROM comments WHERE post_id = ?');
         $stmt->execute([$postId]);
         
         // Видалення лайків коментарів
-        $stmt = $pdo->prepare('DELETE FROM CommentLikes WHERE comment_id IN (SELECT id FROM Comments WHERE post_id = ?)');
+        $stmt = $pdo->prepare('DELETE FROM commentlikes WHERE comment_id IN (SELECT id FROM comments WHERE post_id = ?)');
         $stmt->execute([$postId]);
         
         // Видалення звітів про пост
-        $stmt = $pdo->prepare('DELETE FROM Reports WHERE content_id = ? AND content_type = ?');
+        $stmt = $pdo->prepare('DELETE FROM reports WHERE content_id = ? AND content_type = ?');
         $stmt->execute([$postId, 'post']);
         
         // Видалення звітів про коментарі до цього поста
-        $stmt = $pdo->prepare('DELETE FROM Reports WHERE content_id IN (SELECT id FROM Comments WHERE post_id = ?) AND content_type = ?');
+        $stmt = $pdo->prepare('DELETE FROM reports WHERE content_id IN (SELECT id FROM comments WHERE post_id = ?) AND content_type = ?');
         $stmt->execute([$postId, 'comment']);
         
         // Видалення поста
-        $stmt = $pdo->prepare('DELETE FROM Posts WHERE id = ?');
+        $stmt = $pdo->prepare('DELETE FROM posts WHERE id = ?');
         $stmt->execute([$postId]);
         
         $pdo->commit();

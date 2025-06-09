@@ -17,7 +17,7 @@ $currentUserId = $_SESSION['user_id'] ?? null;
 // Check if current user is admin
 $isAdmin = false;
 if ($currentUserId) {
-    $adminCheck = $pdo->prepare('SELECT 1 FROM Administrations WHERE user_id = ? AND verificated = 1');
+    $adminCheck = $pdo->prepare('SELECT 1 FROM administrations WHERE user_id = ? AND verificated = 1');
     $adminCheck->execute([$currentUserId]);
     $isAdmin = $adminCheck->fetchColumn() !== false;
 }
@@ -42,9 +42,9 @@ try {
             p.title as post_title,
             c.comments_likes,
             CASE WHEN cl.id IS NOT NULL THEN 1 ELSE 0 END as has_liked
-        FROM Comments c
-        LEFT JOIN Posts p ON c.post_id = p.id
-        LEFT JOIN CommentLikes cl ON c.id = cl.comment_id AND cl.user_id = :current_user_id
+        FROM comments c
+        LEFT JOIN posts p ON c.post_id = p.id
+        LEFT JOIN commentlikes cl ON c.id = cl.comment_id AND cl.user_id = :current_user_id
         WHERE c.user_id = :profile_user_id
         ORDER BY {$orderBy}
     ");
@@ -55,7 +55,7 @@ try {
     $comments = $stmt->fetchAll();
 
     // Format the data
-    $formattedComments = array_map(function($comment) use ($isAdmin, $currentUserId, $profileUserId) {
+    $formattedcomments = array_map(function($comment) use ($isAdmin, $currentUserId, $profileUserId) {
         return [
             'id' => $comment['id'],
             'user_id' => $comment['user_id'],
@@ -70,7 +70,7 @@ try {
         ];
     }, $comments);
 
-    echo json_encode(['comments' => $formattedComments]);
+    echo json_encode(['comments' => $formattedcomments]);
 } catch (PDOException $e) {
     echo json_encode([
         'error' => 'Помилка при отриманні коментарів',

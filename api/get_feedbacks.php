@@ -11,7 +11,7 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-$stmt = $pdo->prepare("SELECT * FROM Administrations WHERE user_id = ? AND verificated = 1");
+$stmt = $pdo->prepare("SELECT * FROM administrations WHERE user_id = ? AND verificated = 1");
 $stmt->execute([$_SESSION['user_id']]);
 if ($stmt->rowCount() === 0) {
     http_response_code(403);
@@ -21,7 +21,7 @@ if ($stmt->rowCount() === 0) {
 
 try {
     // Get all feedbacks ordered by newest first
-    $stmt = $pdo->query("SELECT * FROM Feedback ORDER BY created_at DESC");
+    $stmt = $pdo->query("SELECT * FROM feedback ORDER BY created_at DESC");
     $feedbacks = $stmt->fetchAll();
     
     // Format dates

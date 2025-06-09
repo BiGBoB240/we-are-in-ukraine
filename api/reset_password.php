@@ -26,7 +26,7 @@ if ($password !== $password_confirm) {
     echo json_encode(['error' => 'Паролі не співпадають.']);
     exit;
 }
-$stmt = $pdo->prepare("SELECT id FROM Users WHERE verification_token = ?");
+$stmt = $pdo->prepare("SELECT id FROM users WHERE verification_token = ?");
 $stmt->execute([$token]);
 $user = $stmt->fetch();
 if (!$user) {
@@ -34,6 +34,6 @@ if (!$user) {
     exit;
 }
 $hash = password_hash($password, PASSWORD_DEFAULT);
-$stmt = $pdo->prepare("UPDATE Users SET password_hash = ?, verification_token = NULL WHERE id = ?");
+$stmt = $pdo->prepare("UPDATE users SET password_hash = ?, verification_token = NULL WHERE id = ?");
 $stmt->execute([$hash, $user['id']]);
 echo json_encode(['success' => 'Пароль успішно змінено!']);

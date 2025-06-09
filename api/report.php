@@ -21,7 +21,7 @@ if (!$contentId || !in_array($contentType, ['post', 'comment', 'user'])) {
 $userId = $_SESSION['user_id'];
 
 // Check if report already exists
-$stmt = $pdo->prepare('SELECT id FROM Reports WHERE content_id = ? AND content_type = ? AND reported_by_id = ?');
+$stmt = $pdo->prepare('SELECT id FROM reports WHERE content_id = ? AND content_type = ? AND reported_by_id = ?');
 $stmt->execute([$contentId, $contentType, $userId]);
 if ($stmt->fetch()) {
     if ($contentType === 'post') {
@@ -33,7 +33,7 @@ if ($stmt->fetch()) {
 }
 
 // Insert report
-$stmt = $pdo->prepare('INSERT INTO Reports (content_id, content_type, reported_by_id) VALUES (?, ?, ?)');
+$stmt = $pdo->prepare('INSERT INTO reports (content_id, content_type, reported_by_id) VALUES (?, ?, ?)');
 try {
     $stmt->execute([$contentId, $contentType, $userId]);
     if ($contentType === 'post') {

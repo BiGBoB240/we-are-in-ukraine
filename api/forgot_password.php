@@ -14,7 +14,7 @@ if (!$email) {
     echo json_encode(['error' => 'Введіть email.']);
     exit;
 }
-$stmt = $pdo->prepare("SELECT id, username FROM Users WHERE email = ?");
+$stmt = $pdo->prepare("SELECT id, username FROM users WHERE email = ?");
 $stmt->execute([$email]);
 $user = $stmt->fetch();
 if (!$user) {
@@ -22,7 +22,7 @@ if (!$user) {
     exit;
 }
 $token = bin2hex(random_bytes(16));
-$stmt = $pdo->prepare("UPDATE Users SET verification_token = ? WHERE id = ?");
+$stmt = $pdo->prepare("UPDATE users SET verification_token = ? WHERE id = ?");
 $stmt->execute([$token, $user['id']]);
 
 $resetLink = 'http://' . $_SERVER['HTTP_HOST'] . dirname($_SERVER['REQUEST_URI']) . '/../reset_password.php?token=' . $token;

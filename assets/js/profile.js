@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // === Notifications Bell Logic ===
+    // === notifications Bell Logic ===
     const bellBtn = document.getElementById('notification-bell');
     const notifModal = document.getElementById('notifications-modal');
     const notifClose = document.getElementById('notifications-modal-close');
@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
         bellBtn.addEventListener('click', function(e) {
             e.stopPropagation();
             notifModal.style.display = 'block';
-            loadNotifications();
+            loadnotifications();
         });
     }
     if (notifClose) {
@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Загрузка уведомлений и отображение красной точки
-    function loadNotifications() {
+    function loadnotifications() {
         fetch('api/notifications.php?action=get')
             .then(res => res.json())
             .then(data => {
@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Инициализация точки при загрузке страницы
     if (bellBtn && notifDot) {
-        loadNotifications();
+        loadnotifications();
     }
     // Кнопка "Видалити все"
 
@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         .then(res => res.json())
                         .then(data => {
                             if (data.success) {
-                                loadNotifications();
+                                loadnotifications();
                                 customAlert('Всі повідомлення відзначено як прочитані!');
                             } else {
                                 customAlert('Помилка при оновленні повідомлень');
@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         .then(res => res.json())
                         .then(data => {
                             if (data.success) {
-                                loadNotifications();
+                                loadnotifications();
                                 customAlert('Всі повідомлення видалено!');
                             } else {
                                 customAlert('Помилка при видаленні повідомлень');
@@ -194,7 +194,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     });
-    // === END Notifications ===
+    // === END notifications ===
 
     // Перенос обработчика жалобы на профиль из profile.php
     var reportBtn = document.getElementById('report-profile-btn');
@@ -243,7 +243,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Load comments with default filter
-    loadComments('date-new');
+    loadcomments('date-new');
 
     // Add click handlers for filter buttons
     const filterIds = ['filter-date-new', 'filter-date-old', 'filter-rating-high', 'filter-rating-low'];
@@ -253,7 +253,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (btn) {
             btn.addEventListener('click', function() {
                 const filter = this.getAttribute('data-filter');
-                loadComments(filter);
+                loadcomments(filter);
                 
                 // Update active button
                 filterBtns.forEach(b => {
@@ -395,7 +395,7 @@ function deleteUserProfile(userId, username, email) {
 
 
 // Load user comments
-function loadComments(filter = 'date-new') {
+function loadcomments(filter = 'date-new') {
     const commentsContainer = document.getElementById('comments-container');
     // Get user ID from URL
     const urlParams = new URLSearchParams(window.location.search);
@@ -425,7 +425,6 @@ function loadComments(filter = 'date-new') {
                 const commentDiv = document.createElement('div');
                 commentDiv.className = 'comment';
                 commentDiv.dataset.commentId = comment.id;
-                
                 const commentContent = `
                     <p class="comment-text" id="comment-text-${comment.id}">${comment.comment_text}</p>
                     <p class="comment-meta">
@@ -436,7 +435,7 @@ function loadComments(filter = 'date-new') {
                             <span class="like-icon">❤️</span>
                             <span class="likes-count">${comment.likes_count}</span>
                         </button>
-                        ${(window.isLoggedIn && window.currentUserId !== comment.user_id) ? `<button class="report-btn" title="Поскаржитись на коментар" onclick="reportComment(${comment.id})">Поскаржитись</button>` : ''}
+                        ${(window.isLoggedIn && Number(window.currentUserId) !== Number(comment.user_id)) ? `<button class="report-btn" title="Поскаржитись на коментар" onclick="reportComment(${comment.id})">Поскаржитись</button>` : ''}
                     </p>
                 `;
 
