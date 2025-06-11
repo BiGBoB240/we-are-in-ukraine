@@ -253,7 +253,7 @@ unblockModal.addEventListener('input', function(e) {
         const reportsList = document.getElementById('reports-list');
         reportsList.innerHTML = 'Завантаження...';
 
-        fetch('/we-are-in-ukraine/api/get_reports.php')
+        fetch('api/get_reports.php')
             .then(response => response.json())
             .then(data => {
                 if (!data.reports || data.reports.length === 0) {
@@ -393,7 +393,7 @@ unblockModal.addEventListener('input', function(e) {
                     }
                     btn.disabled = true;
                     btn.textContent = 'Обробка...';
-                    fetch('/we-are-in-ukraine/api/close_report.php', {
+                    fetch('api/close_report.php', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                         body: `content_id=${encodeURIComponent(contentId)}&content_type=${encodeURIComponent(contentType)}&send_message=${result.checked ? 1 : 0}`
