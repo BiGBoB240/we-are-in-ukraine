@@ -641,6 +641,7 @@ document.addEventListener('DOMContentLoaded', function() {
             currentPage = 1;
             postsContainer.innerHTML = '';
             loadedPostIds = new Set();
+            hasMorePosts = true;
             autoLoadpostsUntilScrollable();
         });
     });
