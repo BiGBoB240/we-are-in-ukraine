@@ -8,23 +8,23 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentPage = 1;
     let currentFilter = 'date-new';
 
-    let loadedPostIds = new Set(); // Для защиты от дубликатов
+    let loadedPostIds = new Set();
 
-    // --- Открытие модалки поста по параметрам URL ---
+    
     const urlParams = new URLSearchParams(window.location.search);
     const postIdFromUrl = urlParams.get('post_id');
     const replyToFromUrl = urlParams.get('reply_to');
-    // replyToFromUrl сохраняем для будущей интеграции
-    // Открывать модалку поста только после загрузки всех постов
+
     loadposts().then(() => {
         if (postIdFromUrl) {
             openPostModal(postIdFromUrl, replyToFromUrl || null);
+            // Очищаємо параметри після першого відкриття
+            urlParams.delete('post_id');
+            urlParams.delete('reply_to');
+            const newUrl = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '');
+            window.history.replaceState({}, document.title, newUrl);
         }
     });
-    // Если нет post_id, просто загрузить посты
-    if (!postIdFromUrl) {
-        loadposts();
-    }
 
     // Create modal container
     const modalContainer = document.createElement('div');
@@ -60,8 +60,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     // Search functionality
-        // Если нет контейнера для постов и/или поиска, не выполнять остальной код
-        if (searchInput && searchResults && searchBar ) {
+    if (searchInput && searchResults && searchBar ) {
         let searchTimeout;
 
         searchInput.addEventListener('input', function() {
