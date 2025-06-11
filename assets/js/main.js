@@ -144,6 +144,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function createPostElement(post) {
         const filteredImages = post.images ? post.images.filter(img => img) : [];
         const postDiv = document.createElement('div');
+
         postDiv.className = 'post';
         postDiv.dataset.postId = post.id;
         postDiv.innerHTML = `
@@ -152,7 +153,9 @@ document.addEventListener('DOMContentLoaded', function() {
             ${post.content ? `<div class="post-content">${post.content}</div>` : ''}
             <div class="post-footer">
                 <div class="rating">
-                    <span>❤️ </span><span id="post-likes-${post.id}">${post.post_likes}</span>
+                    <button class="like-button${post.has_liked ? ' liked' : ''}" data-post-id="${post.id}" onclick="togglePostLike(${post.id}, this)">
+                        <span class="like-icon">❤️</span> <span class="likes-count">${post.post_likes}</span>
+                    </button>
                 </div>
                 <div class="date">${post.created_at}</div>
             </div>
@@ -160,7 +163,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Add click handlers for post and images
         postDiv.addEventListener('click', (e) => {
-            if (!e.target.closest('.slider-prev') && !e.target.closest('.slider-next')) {
+            if (!e.target.closest('.slider-prev') && !e.target.closest('.slider-next') && !e.target.closest('.like-button')) {
                 openPostModal(post.id);
             }
         });
@@ -170,6 +173,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (slider && filteredImages.length > 0) {
             initializeImageSlider(slider, filteredImages);
         }
+
 
         return postDiv;
     }
@@ -236,17 +240,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 const filteredImages = post.images ? post.images.filter(img => img) : [];
                 const modalBody = modalContainer.querySelector('.modal-body');
                 modalBody.innerHTML = `
+               
                     <h2>${post.title}</h2>
                     ${filteredImages.length > 0 ? createImageSlider(filteredImages, true) : ''}
                     ${post.content ? `<div class="post-content-box">${post.content}</div>` : ''}
-                    ${isLoggedIn ? `
+
                         <div class="post-content-box">
                         ${window.isAdmin ? `<button class="buttons-style-one" id="modal-edit-post-btn" style="float:left; margin-right:10px;">Редагувати пост</button>` : ''}
-                        <button class="like-button${post.has_liked ? ' liked' : ''}" onclick="togglePostLike(${post.id}, this)">
-                            <span class="like-icon">❤️</span> <span class="likes-count">${post.post_likes}</span>
+                        <button class="like-button${post.has_liked ? ' liked' : ''}" data-post-id="${post.id}" onclick="togglePostLike(${post.id}, this)">
+                        <span class="like-icon">❤️</span> <span class="likes-count">${post.post_likes}</span>
                         </button>
                         <button class="report-btn" id="modal-report-post-btn" onclick="reportPost(${post.id})" style="float:right;">Побачили помилку?</button>
-                        </div>` : ''}
+                        </div>
                     ${post.comments ? `
                         ${isLoggedIn || post.comments.length > 0 ? `
                         <div class="comment-section comment-section-box">
@@ -289,6 +294,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             `).join('')}
                         </div>
                     ` : ''}
+                </div>
                 `;
                 
                 // Initialize slider in modal if exists
@@ -459,31 +465,22 @@ document.addEventListener('DOMContentLoaded', function() {
         window.togglePostLike = function(postId, button) {
             fetch('api/toggle_post_like.php', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    post_id: postId
-                })
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ post_id: postId })
             })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    // Обновляем лайки в модальном окне
-                    const likesCount = button.querySelector('.likes-count');
-                    if (likesCount) {
-                        likesCount.textContent = data.likes_count;
-                    }
-                    // Обновляем лайки на карточке поста в ленте
-                    const cardLikes = document.getElementById(`post-likes-${postId}`);
-                    if (cardLikes) {
-                        cardLikes.textContent = data.likes_count;
-                    }
-                    if (data.action === 'liked') {
-                        button.classList.add('liked');
-                    } else {
-                        button.classList.remove('liked');
-                    }
+                    // Оновити всі кнопки лайку для цього поста
+                    document.querySelectorAll(`.like-button[data-post-id="${postId}"]`).forEach(btn => {
+                        const likesCount = btn.querySelector('.likes-count');
+                        if (likesCount) likesCount.textContent = data.likes_count;
+                        if (data.action === 'liked') {
+                            btn.classList.add('liked');
+                        } else {
+                            btn.classList.remove('liked');
+                        }
+                    });
                 } else {
                     customAlert(data.error || 'Помилка при оновленні лайку');
                 }

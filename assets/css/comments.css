@@ -14,7 +14,6 @@
 
 .like-button .like-icon {
     font-size: 16px;
-    opacity: 0.5;
     transition: opacity 0.2s;
 }
 
@@ -23,8 +22,8 @@
 }
 
 .like-button .likes-count {
-    font-size: 14px;
-    color: #666;
+    font-size: 16px;
+    color: var(--massive-text-color);
 }
 
 .like-button.liked .likes-count {
