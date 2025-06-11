@@ -80,33 +80,40 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Resolve feedback (for admin)
 function resolvefeedback(feedbackId) {
-    customConfirm('Ви впевнені, що хочете позначити це звернення як вирішене?').then(function(confirmed){
-        if (confirmed) {
+    customConfirmWithCheckbox(
+        'Ви впевнені, що хочете позначити це звернення як вирішене?',
+        'Надіслати повідомлення на пошту користувачу'
+    ).then(function(result) {
+        if (result.confirmed) {
             const btn = document.querySelector(`.feedback-item[data-id="${feedbackId}"] .buttons-style-one`);
             btn.disabled = true;
             btn.textContent = 'Обробка...';
-    fetch('api/resolve_feedback.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id: feedbackId })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            const feedbackItem = document.querySelector(`.feedback-item[data-id="${feedbackId}"]`);
-            if (feedbackItem) {
-                feedbackItem.remove();
-            }
-            customAlert('Звернення позначено як вирішене. Користувачу відправлено повідомлення.');
-        } else {
-            customAlert(data.error || 'Помилка при обробці звернення.');
+            fetch('api/resolve_feedback.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ id: feedbackId, send_email: result.checked ? 1 : 0 })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const feedbackItem = document.querySelector(`.feedback-item[data-id="${feedbackId}"]`);
+                    if (feedbackItem) {
+                        feedbackItem.remove();
+                    }
+                    customAlert('Звернення позначено як вирішене.' + (result.checked ? ' Користувачу відправлено повідомлення.' : ''));
+                } else {
+                    customAlert(data.error || 'Помилка при обробці звернення.');
+                }
+            })
+            .catch(error => {
+                customAlert('Помилка при обробці звернення.');
+            })
+            .finally(() => {
+                btn.disabled = false;
+                btn.textContent = 'Вирішено';
+            });
         }
-    })
-    .catch(error => {
-        customAlert('Помилка при обробці звернення.');
     });
-}
-});
 }
