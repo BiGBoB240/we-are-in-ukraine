@@ -1,4 +1,12 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // --- Нові елементи для реєстрації
+    const registerSection = document.getElementById('admin-register-section');
+    const registerForm = document.getElementById('admin-register-form');
+    const registerVerifySection = document.getElementById('admin-register-verify-section');
+    const registerVerifyForm = document.getElementById('admin-register-verify-form');
+    let registerAdminId = null;
+
+    // --- Старі елементи для логіну
     const loginForm = document.getElementById('admin-login-form');
     const verifyForm = document.getElementById('admin-verify-form');
     const loginSection = document.getElementById('admin-login-section');
@@ -6,6 +14,88 @@ document.addEventListener('DOMContentLoaded', function() {
     const resultMsg = document.getElementById('admin-access-result');
     let adminId = null;
 
+    // --- Перевірка чи є супер-адмін ---
+    fetch('api/admin_access.php', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: new URLSearchParams({action: 'check_superadmin_exists'})
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.exists) {
+            // Показати логін, приховати реєстрацію
+            if (registerSection) registerSection.style.display = 'none';
+            if (registerVerifySection) registerVerifySection.style.display = 'none';
+            if (loginSection) loginSection.style.display = '';
+        } else {
+            // Показати реєстрацію, приховати логін
+            if (registerSection) registerSection.style.display = '';
+            if (registerVerifySection) registerVerifySection.style.display = 'none';
+            if (loginSection) loginSection.style.display = 'none';
+            if (verifySection) verifySection.style.display = 'none';
+        }
+    });
+
+    // --- Реєстрація супер-адміна ---
+    if (registerForm) {
+        registerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const login = registerForm.login.value.trim();
+            const email = registerForm.email.value.trim();
+            const password = registerForm.password.value;
+            const confirm = registerForm.confirm.value;
+            // Валідація пароля
+            const passwordRegex = /^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{}.,<>?/|\\:;"']{8,}$/;
+            const hasLetter = /[A-Za-z]/.test(password);
+            if (!passwordRegex.test(password) || !hasLetter) {
+                customAlert('Пароль має містити не менше 8 символів, хоча б одну латинську літеру, цифри та спецсимволи.');
+                return;
+            }
+            fetch('api/admin_access.php', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: new URLSearchParams({action: 'register_superadmin', login, email, password, confirm})
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    registerAdminId = data.admin_id;
+                    if (registerSection) registerSection.style.display = 'none';
+                    if (registerVerifySection) registerVerifySection.style.display = '';
+                    customAlert('Код підтвердження надіслано на email!');
+                } else {
+                    customAlert(data.error || 'Помилка');
+                }
+            })
+            .catch(() => { customAlert('Помилка з’єднання з сервером.'); });
+        });
+    }
+
+    // --- Підтвердження email супер-адміна ---
+    if (registerVerifyForm) {
+        registerVerifyForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const code = registerVerifyForm.register_verification_code.value.trim();
+            fetch('api/admin_access.php', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: new URLSearchParams({action: 'verify_superadmin_registration', admin_id: registerAdminId, code})
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    if (registerVerifySection) registerVerifySection.style.display = 'none';
+                    if (loginSection) loginSection.style.display = '';
+                    customAlert(data.success);
+                } else {
+                    customAlert(data.error || 'Помилка');
+                }
+            })
+            .catch(() => { customAlert('Помилка з’єднання з сервером.'); });
+        });
+    }
+
+    // --- Стара логіка логіну ---
     if (loginForm) {
         loginForm.addEventListener('submit', function(e) {
             e.preventDefault();
@@ -19,48 +109,48 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(r => r.json())
             .then(data => {
                 if (data.success) {
-    adminId = data.admin_id;
-    loginSection.style.display = 'none';
-    verifySection.style.display = 'block';
-    customAlert('Лист був надісланий на вашу пошту!');
-} else {
-    customAlert(data.error || 'Помилка');
-}
+                    adminId = data.admin_id;
+                    loginSection.style.display = 'none';
+                    verifySection.style.display = 'block';
+                    customAlert('Лист був надісланий на вашу пошту!');
+                } else {
+                    customAlert(data.error || 'Помилка');
+                }
             })
             .catch(() => { customAlert('Помилка з’єднання з сервером.'); });
         });
     }
 
     if (verifyForm) {
-    verifyForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const code = verifyForm.verification_code.value.trim();
-        fetch('api/admin_access.php', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-            body: new URLSearchParams({action: 'verify', admin_id: adminId, code})
-        })
-        .then(r => r.json())
-        .then(data => {
-            if (data.success) {
-                verifySection.style.display = 'none';
-                document.getElementById('admin-panel-section').style.display = 'block';
-                // Показати посилання для зміни паролю
-                var pwdLink = document.getElementById('openPasswordChangeModal');
-                if (pwdLink) pwdLink.style.display = '';
-                // Підключити логіку модального вікна
-                setupPasswordChangeModal();
-                loadAdminPanel();
-                customAlert(data.success);
-            } else {
-                customAlert(data.error || 'Помилка');
-            }
-        })
-        .catch(() => {
-            customAlert('Помилка з’єднання з сервером.');
+        verifyForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const code = verifyForm.verification_code.value.trim();
+            fetch('api/admin_access.php', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: new URLSearchParams({action: 'verify', admin_id: adminId, code})
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    verifySection.style.display = 'none';
+                    document.getElementById('admin-panel-section').style.display = 'block';
+                    // Показати посилання для зміни паролю
+                    var pwdLink = document.getElementById('openPasswordChangeModal');
+                    if (pwdLink) pwdLink.style.display = '';
+                    // Підключити логіку модального вікна
+                    setupPasswordChangeModal();
+                    loadAdminPanel();
+                    customAlert(data.success);
+                } else {
+                    customAlert(data.error || 'Помилка');
+                }
+            })
+            .catch(() => {
+                customAlert('Помилка з’єднання з сервером.');
+            });
         });
-    });
-}
+    }
 
 // --- Password change modal logic ---
 function setupPasswordChangeModal() {

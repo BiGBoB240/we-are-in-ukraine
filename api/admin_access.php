@@ -5,6 +5,75 @@ header('Content-Type: application/json');
 
 $action = $_POST['action'] ?? '';
 
+// --- Перевірка, чи є супер-адмін
+if ($action === 'check_superadmin_exists') {
+    $stmt = $pdo->query('SELECT COUNT(*) as cnt FROM superadmin');
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    echo json_encode(['exists' => ($row['cnt'] > 0)]);
+    exit;
+}
+
+// --- Реєстрація першого супер-адміна
+if ($action === 'register_superadmin') {
+    $login = trim($_POST['login'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $password = $_POST['password'] ?? '';
+    $confirm = $_POST['confirm'] ?? '';
+    if (!$login || !$email || !$password || !$confirm) {
+        echo json_encode(['error' => 'Всі поля обовʼязкові.']); exit;
+    }
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        echo json_encode(['error' => 'Некоректний email.']); exit;
+    }
+    if ($password !== $confirm) {
+        echo json_encode(['error' => 'Паролі не співпадають.']); exit;
+    }
+    // Перевірити, чи вже є супер-адмін
+    $stmt = $pdo->query('SELECT COUNT(*) as cnt FROM superadmin');
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($row['cnt'] > 0) {
+        echo json_encode(['error' => 'Супер-адміністратор вже існує.']); exit;
+    }
+    // Генеруємо код підтвердження
+    $verification_code = bin2hex(random_bytes(5));
+    $verification_hash = password_hash($verification_code, PASSWORD_DEFAULT);
+    $password_hash = password_hash($password, PASSWORD_DEFAULT);
+    // Додаємо супер-адміна (але неактивного)
+    $stmt = $pdo->prepare('INSERT INTO superadmin (login, email, password_hash, verification_password_hash) VALUES (?, ?, ?, ?)');
+    $stmt->execute([$login, $email, $password_hash, $verification_hash]);
+    $admin_id = $pdo->lastInsertId();
+    // Надсилаємо код на email
+    $body_html = "<p>Ваш код для підтвердження реєстрації супер-адміністратора: <b>$verification_code</b></p>";
+    $result = send_custom_mail($email, $login, 'Підтвердження реєстрації супер-адміністратора', $body_html);
+    if ($result === true) {
+        echo json_encode(['success' => 'Код підтвердження надіслано на email.', 'admin_id' => $admin_id]);
+    } else {
+        echo json_encode(['error' => 'Помилка при надсиланні листа: ' . $result]);
+    }
+    exit;
+}
+
+// --- Підтвердження email супер-адміна
+if ($action === 'verify_superadmin_registration') {
+    $admin_id = $_POST['admin_id'] ?? null;
+    $code = $_POST['code'] ?? '';
+    if (!$admin_id || !$code) {
+        echo json_encode(['error' => 'Введіть код підтвердження.']); exit;
+    }
+    $stmt = $pdo->prepare('SELECT * FROM superadmin WHERE id = ?');
+    $stmt->execute([$admin_id]);
+    $admin = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($admin && $admin['verification_password_hash'] && password_verify($code, $admin['verification_password_hash'])) {
+        // Видаляємо verification_password_hash (активація)
+        $stmt = $pdo->prepare('UPDATE superadmin SET verification_password_hash = NULL WHERE id = ?');
+        $stmt->execute([$admin['id']]);
+        echo json_encode(['success' => 'Реєстрацію підтверджено. Тепер ви можете увійти.']);
+    } else {
+        echo json_encode(['error' => 'Невірний код підтвердження.']);
+    }
+    exit;
+}
+
 if ($action === 'login') {
     $login = trim($_POST['login'] ?? '');
     $password = $_POST['password'] ?? '';

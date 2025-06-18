@@ -30,6 +30,39 @@
     <div class="container">
     <h1 style="text-align:center; margin:1rem 0;">Доступ до адмін панелі</h1>
     <div class="container auth-section">
+        <!-- Форма реєстрації супер-адміна -->
+        <section id="admin-register-section" style="display:none">
+            <form id="admin-register-form" class="auth-form">
+                <div class="form-group">
+                    <label for="register_login">Логін</label>
+                    <input type="text" id="register_login" name="login" required autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label for="register_email">Email</label>
+                    <input type="email" id="register_email" name="email" required autocomplete="email">
+                </div>
+                <div class="form-group">
+                    <label for="register_password">Пароль</label>
+                    <input type="password" id="register_password" name="password" required autocomplete="new-password">
+                </div>
+                <div class="form-group">
+                    <label for="register_confirm">Підтвердіть пароль</label>
+                    <input type="password" id="register_confirm" name="confirm" required autocomplete="new-password">
+                </div>
+                <button type="submit" class="buttons-style-one">Зареєструвати</button>
+            </form>
+        </section>
+        <!-- Підтвердження email супер-адміна -->
+        <section id="admin-register-verify-section" style="display:none">
+            <form id="admin-register-verify-form" class="auth-form">
+                <div class="form-group">
+                    <label for="register_verification_code">Код з пошти</label>
+                    <input type="text" id="register_verification_code" name="verification_code" required autocomplete="one-time-code">
+                </div>
+                <button type="submit" class="buttons-style-one">Підтвердити</button>
+            </form>
+        </section>
+        <!-- Стара логін/верифікація -->
         <section id="admin-login-section">
             <form id="admin-login-form" class="auth-form">
                 <div class="form-group">
