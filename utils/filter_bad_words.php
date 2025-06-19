@@ -80,7 +80,7 @@ function filter_bad_words($text) {
     ];
 
 
-    // Английские маты
+    // English bad words
     $englishBadWords = [
         'fuck', 'shit', 'bitch', 'asshole', 'dick', 'cunt', 'pussy', 'whore', 'slut',
         'dickhead', 'cock', 'piss', 'crap', 'prick', 'twat', 'wanker', 'wank', 'fag', 'faggot',

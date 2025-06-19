@@ -29,24 +29,24 @@ try {
     $existingLike = $stmt->fetch();
 
     if ($existingLike) {
-        // Remove like
+        // Видаляємо лайк
         $stmt = $pdo->prepare("DELETE FROM postlikes WHERE post_id = ? AND user_id = ?");
         $stmt->execute([$postId, $_SESSION['user_id']]);
-        // Update post likes count
+        // Оновлюємо лайки
         $stmt = $pdo->prepare("UPDATE posts SET post_likes = post_likes - 1 WHERE id = ?");
         $stmt->execute([$postId]);
         $action = 'unliked';
     } else {
-        // Add like
+        // Додаємо лайк
         $stmt = $pdo->prepare("INSERT INTO postlikes (post_id, user_id) VALUES (?, ?)");
         $stmt->execute([$postId, $_SESSION['user_id']]);
-        // Update post likes count
+        // Оновлюємо лайки
         $stmt = $pdo->prepare("UPDATE posts SET post_likes = post_likes + 1 WHERE id = ?");
         $stmt->execute([$postId]);
         $action = 'liked';
     }
 
-    // Get updated likes count
+    // Отримуємо оновлені лайки
     $stmt = $pdo->prepare("SELECT post_likes FROM posts WHERE id = ?");
     $stmt->execute([$postId]);
     $likesCount = $stmt->fetchColumn();

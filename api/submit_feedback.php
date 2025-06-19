@@ -9,7 +9,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-// Validate input
 require_once __DIR__ . '/../utils/filter_bad_words.php';
 $username = trim($_POST['username'] ?? '');
 $username = filter_bad_words($username);

@@ -1,6 +1,7 @@
 <?php
+//API для відновлення пароля
 require_once '../config/db.php';
-require_once __DIR__ . '/send_mail.php'; // Unified mail helper
+require_once __DIR__ . '/send_mail.php';
 
 header('Content-Type: application/json');
 

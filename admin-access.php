@@ -115,7 +115,7 @@
     </section>
     </div>
 
-     <!-- Modal for password change -->
+     <!-- Модальне вікно зміни паролю -->
      <div id="passwordChangeModal" class="modal">
         <div class="modal-content">
             <button class="modal-close">&times;</button>

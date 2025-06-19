@@ -1,10 +1,11 @@
 <?php
+//API для отримання feedback
 require_once '../config/db.php';
 session_start();
 
 header('Content-Type: application/json');
 
-// Check if user is admin
+// Перевіряємо чи користувач увійшов і адміністратор
 if (!isset($_SESSION['user_id'])) {
     http_response_code(401);
     echo json_encode(['error' => 'Unauthorized']);
@@ -20,11 +21,11 @@ if ($stmt->rowCount() === 0) {
 }
 
 try {
-    // Get all feedbacks ordered by newest first
+    // Отримуємо всі feedback
     $stmt = $pdo->query("SELECT * FROM feedback ORDER BY created_at DESC");
     $feedbacks = $stmt->fetchAll();
     
-    // Format dates
+    // Форматуємо дати
     foreach ($feedbacks as &$feedback) {
         $feedback['created_at'] = date('d.m.Y H:i', strtotime($feedback['created_at']));
     }

@@ -1,4 +1,5 @@
 <?php
+//API для створення посту
 require_once '../config/db.php';
 session_start();
 
@@ -10,8 +11,6 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $user_id = $_SESSION['user_id'];
-
-// Проверяем, что пользователь админ
 $stmt = $pdo->prepare('SELECT 1 FROM administrations WHERE user_id = ? AND verificated = 1');
 $stmt->execute([$user_id]);
 if ($stmt->fetchColumn() === false) {

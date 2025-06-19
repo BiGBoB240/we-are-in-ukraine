@@ -54,18 +54,13 @@ if (isset($_SESSION['user_id'])) {
         <div class="container">
             <div class="feedback-section">
                 <h1>ЗВОРОТНІЙ ЗВ'ЯЗОК</h1>
-                
-                <!-- Contact Information -->
                 <div class="contact-info">
                     <h2>Прямий зв'язок</h2>
                     <div class="contact-details">
-                        <!-- These will be filled by the client -->
                         <p>Email: <span id="contact-email">pub.my.v.ukrayini@gmail.com</span></p>
                         <p>Телефон: <span id="contact-phone">+380969949894</span></p>
                     </div>
                 </div>
-
-                <!-- feedback Form -->
                 <div class="feedback-form">
                     <h2>Форма зворотнього зв'язку</h2>
                     <form id="feedbackForm">
@@ -94,13 +89,11 @@ if (isset($_SESSION['user_id'])) {
                 </div>
 
                 <?php if ($isAdmin): ?>
-                <!-- Admin Section -->
                 <div class="admin-section">
                     <h2>Звернення</h2>
                     <button id="showfeedbacks" class="buttons-style-one">Показати звернення</button>
                     
                     <div id="feedbacksList" class="feedbacks-list" style="display: none;">
-                        <!-- feedbacks will be loaded here -->
                     </div>
                 </div>
                 <?php endif; ?>

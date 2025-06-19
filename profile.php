@@ -31,7 +31,6 @@ if (!$user) {
     exit;
 }
 
-// Split username into first name and last name
 $nameParts = explode(' ', $user['username']);
 $firstName = $nameParts[0];
 $lastName = isset($nameParts[1]) ? $nameParts[1] : '';
@@ -88,21 +87,17 @@ $lastName = isset($nameParts[1]) ? $nameParts[1] : '';
     </header>
 
     <?php
-    // Initialize variables before using them
     $showProfileActions = false;
     $isAdmin = false;
     if (isset($_SESSION['user_id'])) {
-        // Check if this is the user's own profile
         if ($_SESSION['user_id'] == $profileUserId) {
             $showProfileActions = true;
-        // Перевірка: чи користувач є адміністратором
         $stmtAdmin = $pdo->prepare("SELECT 1 FROM administrations WHERE user_id = ? AND verificated = 1");
         $stmtAdmin->execute([$_SESSION['user_id']]);
         if ($stmtAdmin->fetch()) {
             $isAdmin = true;
         }
         } else {
-            // Check if the current user is an admin
             $stmtAdmin = $pdo->prepare("SELECT 1 FROM administrations WHERE user_id = ? AND verificated = 1");
             $stmtAdmin->execute([$_SESSION['user_id']]);
             if ($stmtAdmin->fetch()) {
@@ -160,7 +155,6 @@ $lastName = isset($nameParts[1]) ? $nameParts[1] : '';
                 </div>
                 <script>window.profileUserId = <?php echo (int)$profileUserId; ?>;</script>
                 <div class="comments-section">
-                  <!-- ! <h2><?php echo (isset($_SESSION['user_id']) && $_SESSION['user_id'] == $profileUserId) ? 'МОЇ КОМЕНТАРІ' : 'КОМЕНТАРІ КОРИСТУВАЧА'; ?></h2> -->
                     <div class="profile-actions-bars">
                     <div class="filter-buttons">
                         <button class="buttons-style-one filter-btn" id="filter-date-new" data-filter="date-new">ЗА ДАТОЮ: НОВІШЕ</button>
@@ -170,14 +164,13 @@ $lastName = isset($nameParts[1]) ? $nameParts[1] : '';
                     </div>
                     </div>
                     <div id="comments-container">
-                        <!-- comments will be loaded here dynamically -->
                     </div>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- notifications Modal -->
+    <!-- Модальне вікно повідомлень -->
     <div id="notifications-modal" class="modal" style="display:none;">
         <div class="modal-content">
             <button class="modal-close" id="notifications-modal-close">&times;</button>
@@ -187,12 +180,11 @@ $lastName = isset($nameParts[1]) ? $nameParts[1] : '';
             <button id="delete-all-btn" class="buttons-style-one buttons-style-two">Видалити все</button>
             </div>
             <div id="notifications-list">
-                <!-- notifications will be loaded here -->
             </div>
         </div>
     </div>
 
-    <!-- Modal for name change -->
+    <!-- Модальне вікно зміни імені -->
     <div id="nameChangeModal" class="modal">
         <div class="modal-content">
             <button class="modal-close">&times;</button>
@@ -212,7 +204,7 @@ $lastName = isset($nameParts[1]) ? $nameParts[1] : '';
         </div>
     </div>
 
-    <!-- Modal for password change -->
+    <!-- Модальне вікно зміни паролю -->
     <div id="passwordChangeModal" class="modal">
         <div class="modal-content">
             <button class="modal-close">&times;</button>

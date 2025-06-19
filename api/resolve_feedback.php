@@ -13,7 +13,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// Check if user is admin
+// Перевірка: якщо адмін, можна редагувати коментарі
 if (!isset($_SESSION['user_id'])) {
     http_response_code(401);
     echo json_encode(['error' => 'Unauthorized']);
@@ -28,7 +28,7 @@ if ($stmt->rowCount() === 0) {
     exit;
 }
 
-// Get request data
+// Отримання запиту
 $data = json_decode(file_get_contents('php://input'), true);
 $feedbackId = $data['id'] ?? null;
 
@@ -39,7 +39,7 @@ if (!$feedbackId) {
 }
 
 try {
-    // Get feedback info before deletion
+    // Отримання повідомлення перед видаленням
     $stmt = $pdo->prepare("SELECT * FROM feedback WHERE id = ?");
     $stmt->execute([$feedbackId]);
     $feedback = $stmt->fetch();
@@ -56,7 +56,7 @@ try {
         . "<p>З повагою,<br>Команда Ми в Україні</p>";
     send_custom_mail($feedback['email'] ?? 'recipient@example.com', $feedback['username'] ?? 'User', 'Ваше звернення оброблено', $body_html);
 
-    // Delete feedback
+    // Видалення повідомлення
     $stmt = $pdo->prepare("DELETE FROM feedback WHERE id = ?");
     $stmt->execute([$feedbackId]);
     

@@ -2,7 +2,7 @@
 // API для закриття скарги: надсилання листів і видалення скарг за content_id
 header('Content-Type: application/json');
 require_once '../config/db.php';
-require_once __DIR__ . '/send_mail.php'; // Unified mail helper
+require_once __DIR__ . '/send_mail.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);

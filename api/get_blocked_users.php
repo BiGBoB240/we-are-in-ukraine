@@ -1,4 +1,5 @@
 <?php
+//API для отримання заблокованих користувачів
 require_once '../config/db.php';
 
 $sql = "SELECT b.id, b.username, b.email, b.blocked_by_id, u.username AS admin_username

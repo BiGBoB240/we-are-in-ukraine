@@ -6,7 +6,7 @@ if (!function_exists('str_contains')) {
 }
 
 require_once '../config/db.php';
-require_once __DIR__ . '/send_mail.php'; // Unified mail helper
+require_once __DIR__ . '/send_mail.php'; // PHPMailer
 
 header('Content-Type: application/json');
 
@@ -39,7 +39,7 @@ if (!$email || !$first_name || !$password || !$password_confirm) {
     exit;
 }
 
-// Check for spaces in names
+// Перевірка на пробіли в імені та прізвищі
 if (str_contains($first_name, ' ') || ($last_name && str_contains($last_name, ' '))) {
     echo json_encode(['error' => 'Ім\'я та прізвище не повинні містити пробілів.']);
     exit;

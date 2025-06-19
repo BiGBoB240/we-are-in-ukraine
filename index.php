@@ -2,10 +2,8 @@
 require_once 'config/db.php';
 session_start();
 
-// Проверяем, является ли пользователь админом
 $isAdmin = false;
 if (isset($_SESSION['user_id'])) {
-    // $pdo уже определён в config/db.php
     $stmt = $pdo->prepare('SELECT 1 FROM administrations WHERE user_id = ? AND verificated = 1');
     $stmt->execute([$_SESSION['user_id']]);
     $isAdmin = $stmt->fetchColumn() !== false;
@@ -69,7 +67,7 @@ if (isset($_SESSION['user_id'])) {
                     </div>
                 </div>
                 <div id="posts-container">
-                    <!-- posts will be loaded here dynamically -->
+                    <!-- Пости -->
                 </div>
 
             </div>

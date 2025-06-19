@@ -1,5 +1,5 @@
 <?php
-// Unified PHPMailer helper for sending styled HTML emails with custom fonts
+// Допоміжний клас для відправки стилізованої HTML-пошти з власними шрифтами
 require_once __DIR__ . '/../includes/PHPMailer/src/PHPMailer.php';
 require_once __DIR__ . '/../includes/PHPMailer/src/SMTP.php';
 require_once __DIR__ . '/../includes/PHPMailer/src/Exception.php';
@@ -20,7 +20,7 @@ use PHPMailer\PHPMailer\Exception;
 function send_custom_mail($to, $to_name, $subject, $body_html, $alt_body = '', $options = []) {
     $mail = new PHPMailer(true);
     try {
-        // SMTP settings
+        // SMTP налаштування
         $mail->isSMTP();
         $mail->Host = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
@@ -31,19 +31,19 @@ function send_custom_mail($to, $to_name, $subject, $body_html, $alt_body = '', $
         $mail->CharSet = 'UTF-8';
         $mail->Encoding = 'base64';
 
-        // Sender
+        // Відправник
         $from = $options['from'] ?? 'weareinukrainesup77@gmail.com';
         $from_name = $options['from_name'] ?? 'Ми в Україні';
         $mail->setFrom($from, $from_name);
 
-        // Recipient
+        // Приймач
         $mail->addAddress($to, $to_name ?: '');
 
-        // Subject
+        // Тема
         $mail->Subject = $subject;
         $mail->isHTML(true);
     
-        // HTML Email Template with Google Fonts
+        // HTML Email Template
         $html = "<html><head><meta charset='UTF-8'>
         <link href='https://fonts.googleapis.com/css?family=Montserrat:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i' rel='stylesheet'>
         <link href='https://fonts.googleapis.com/css?family=Playfair+Display:400,400i,700,700i,900,900i' rel='stylesheet'>

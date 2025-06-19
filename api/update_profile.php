@@ -23,7 +23,7 @@ $lastName = filter_bad_words(trim($_POST['lastName'] ?? ''));
 $userIdToUpdate = $_SESSION['user_id'];
 
 if (isset($_POST['user_id']) && $_POST['user_id'] != $_SESSION['user_id']) {
-    // Проверка: если админ, можно менять имя другого пользователя
+    // Перевірка: якщо адмін, можна змінювати ім'я іншого користувача
     $stmtAdmin = $pdo->prepare("SELECT 1 FROM administrations WHERE user_id = ? AND verificated = 1");
     $stmtAdmin->execute([$_SESSION['user_id']]);
     if ($stmtAdmin->fetch()) {
@@ -39,13 +39,13 @@ if (empty($firstName)) {
     exit;
 }
 
-// Check for spaces in names
+// Перевірка на пробіли в імені та прізвищі
 if (str_contains($firstName, ' ') || ($lastName && str_contains($lastName, ' '))) {
     echo json_encode(['error' => 'Ім\'я та прізвище не повинні містити пробілів.']);
     exit;
 }
 
-// Combine first name and last name
+// Комбінування ім'я та прізвища
 $username = $firstName;
 if (!empty($lastName)) {
     $username .= ' ' . $lastName;

@@ -6,7 +6,7 @@ $query = isset($_GET['query']) ? trim($_GET['query']) : '';
 $results = [];
 
 if ($query !== '') {
-    // Найти посты по title
+    // Пошук постів по title
     $stmt = $pdo->prepare("SELECT id, title FROM posts WHERE title LIKE ? LIMIT 5");
     $stmt->execute(["%$query%"]);
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -16,7 +16,7 @@ if ($query !== '') {
             'type' => 'post'
         ];
     }
-    // Найти пользователей по username, только верифицированных
+    // Пошук користувачів по username, тільки верифікованих
     $stmt2 = $pdo->prepare("SELECT id, username FROM users WHERE username LIKE ? AND verificated = 1 LIMIT 5");
     $stmt2->execute(["%$query%"]);
     while ($row = $stmt2->fetch(PDO::FETCH_ASSOC)) {

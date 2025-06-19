@@ -1,4 +1,5 @@
 <?php
+//API для отримання скарг
 require_once '../config/db.php';
 session_start();
 
@@ -7,7 +8,7 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-// Check admin rights (optional, but recommended)
+// Перевірити чи користувач адміністратор
 $stmt = $pdo->prepare('SELECT 1 FROM administrations WHERE user_id = ? AND verificated = 1');
 $stmt->execute([$_SESSION['user_id']]);
 if (!$stmt->fetchColumn()) {

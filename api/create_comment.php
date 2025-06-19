@@ -9,7 +9,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-// Get current user id (if logged in)
 $currentUserId = $_SESSION['user_id'] ?? null;
 
 if (!$currentUserId) {
@@ -18,7 +17,7 @@ if (!$currentUserId) {
     exit;
 }
 
-// Check if current user is admin
+// Перевірити чи поточний користувач адміністратор
 $isAdmin = false;
 if ($currentUserId) {
     $adminCheck = $pdo->prepare('SELECT 1 FROM administrations WHERE user_id = ? AND verificated = 1');
@@ -44,13 +43,13 @@ try {
     $stmt->execute([$postId, $currentUserId, $text]);
     $commentId = $pdo->lastInsertId();
 
-    // Если это reply, создаём уведомление
+    // Якщо це reply, створюємо уведомлення
     if ($replyTo) {
-        // Получить user_id родительского комментария
+        // Отримати user_id родительського коментаря
         $stmtReply = $pdo->prepare("SELECT user_id FROM comments WHERE id = ?");
         $stmtReply->execute([$replyTo]);
         $parentUserId = $stmtReply->fetchColumn();
-        if ($parentUserId && $parentUserId != $currentUserId) { // не уведомлять себя
+        if ($parentUserId && $parentUserId != $currentUserId) { // не повідомляти себе
             $stmtNotif = $pdo->prepare("INSERT INTO notifications (recipient_user_id, sender_user_id, post_id, comment_id, is_read) VALUES (?, ?, ?, ?, 0)");
             $stmtNotif->execute([$parentUserId, $currentUserId, $postId, $commentId]);
         }

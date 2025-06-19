@@ -4,17 +4,17 @@ session_start();
 
 $filter = $_GET['filter'] ?? 'date-new';
 
-// Get profile user ID
+// Отримуємо ID профілю
 if (!isset($_GET['id'])) {
     echo json_encode(['error' => 'User ID not specified']);
     exit;
 }
 $profileUserId = (int)$_GET['id'];
 
-// Get current user ID
+// Отримуємо ID поточного користувача
 $currentUserId = $_SESSION['user_id'] ?? null;
 
-// Check if current user is admin
+// Перевіряємо чи користувач адміністратор
 $isAdmin = false;
 if ($currentUserId) {
     $adminCheck = $pdo->prepare('SELECT 1 FROM administrations WHERE user_id = ? AND verificated = 1');
@@ -22,7 +22,7 @@ if ($currentUserId) {
     $isAdmin = $adminCheck->fetchColumn() !== false;
 }
 
-// Replace PHP8 match() with associative array for compatibility
+// Заміняємо PHP8 match() на асоціативний масив для сумісності
 $allowedFilters = [
     'date-new'    => 'c.created_at DESC',
     'date-old'    => 'c.created_at ASC',
@@ -54,7 +54,7 @@ try {
     ]);
     $comments = $stmt->fetchAll();
 
-    // Format the data
+    // Форматуємо дані
     $formattedcomments = array_map(function($comment) use ($isAdmin, $currentUserId, $profileUserId) {
         return [
             'id' => $comment['id'],

@@ -12,7 +12,7 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-// Check if user is admin
+// Перевірка: якщо адмін, можна редагувати коментарі
 $isAdmin = false;
 $adminCheck = $pdo->prepare('SELECT 1 FROM administrations WHERE user_id = ? AND verificated = 1');
 $adminCheck->execute([$_SESSION['user_id']]);
@@ -35,7 +35,7 @@ if (strlen($text) > 300) {
 }
 
 try {
-    // Verify comment ownership or admin status
+    // Перевірка: якщо адмін, можна редагувати коментарі
     if (!$isAdmin) {
         $stmt = $pdo->prepare("SELECT id FROM comments WHERE id = ? AND user_id = ?");
         $stmt->execute([$commentId, $_SESSION['user_id']]);
@@ -44,7 +44,7 @@ try {
             exit;
         }
     } else {
-        // Admin just needs to verify comment exists
+        // Перевірка: якщо адмін, можна редагувати коментарі
         $stmt = $pdo->prepare("SELECT id FROM comments WHERE id = ?");
         $stmt->execute([$commentId]);
         if (!$stmt->fetch()) {
@@ -54,7 +54,7 @@ try {
     }
 
     if ($isAdmin) {
-        // Admin: just update text, do not set redacted, do not reset likes
+        // Перевірка: якщо адмін, можна редагувати коментарі
         $stmt = $pdo->prepare("
             UPDATE comments 
             SET comment_text = ?
@@ -62,7 +62,6 @@ try {
         ");
         $stmt->execute([$text, $commentId]);
     } else {
-        // User: update text, set redacted, reset likes
         $stmt = $pdo->prepare("
             UPDATE comments 
             SET comment_text = ?, 
@@ -71,16 +70,16 @@ try {
         ");
         $stmt->execute([$text, $commentId]);
 
-        // Remove all likes for this comment
+        // Видаляємо всі лайки для цього коментаря
         $delStmt = $pdo->prepare("DELETE FROM commentlikes WHERE comment_id = ?");
         $delStmt->execute([$commentId]);
 
-        // Reset comments_likes counter in comments table
+        // Перевірка: якщо адмін, можна редагувати коментарі
         $resetLikes = $pdo->prepare("UPDATE comments SET comments_likes = 0 WHERE id = ?");
         $resetLikes->execute([$commentId]);
     }
 
-    // Get post_id for the updated comment
+    // Отримуємо post_id для оновленого коментаря
     $stmt = $pdo->prepare("SELECT post_id FROM comments WHERE id = ?");
     $stmt->execute([$commentId]);
     $postId = $stmt->fetchColumn();

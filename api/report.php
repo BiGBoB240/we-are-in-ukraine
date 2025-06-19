@@ -20,7 +20,7 @@ if (!$contentId || !in_array($contentType, ['post', 'comment', 'user'])) {
 
 $userId = $_SESSION['user_id'];
 
-// Check if report already exists
+// Перевірити чи вже існує скарга
 $stmt = $pdo->prepare('SELECT id FROM reports WHERE content_id = ? AND content_type = ? AND reported_by_id = ?');
 $stmt->execute([$contentId, $contentType, $userId]);
 if ($stmt->fetch()) {
@@ -32,7 +32,7 @@ if ($stmt->fetch()) {
     exit;
 }
 
-// Insert report
+// Додати скаргу
 $stmt = $pdo->prepare('INSERT INTO reports (content_id, content_type, reported_by_id) VALUES (?, ?, ?)');
 try {
     $stmt->execute([$contentId, $contentType, $userId]);

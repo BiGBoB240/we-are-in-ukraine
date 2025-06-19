@@ -13,7 +13,7 @@ $userId = $_SESSION['user_id'];
 $action = $_GET['action'] ?? ($_POST['action'] ?? '');
 
 if ($action === 'get') {
-    // Получить уведомления пользователя
+    // Отримання повідомлень користувача
     $stmt = $pdo->prepare("SELECT n.id, n.sender_user_id, n.post_id, n.comment_id, n.is_read, c.comment_text, u.username as sender_username
         FROM notifications n
         LEFT JOIN comments c ON n.comment_id = c.id
