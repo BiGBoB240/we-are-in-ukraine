@@ -340,6 +340,10 @@ input {
     }
 }
 
+.header .container{
+    max-width: 1200px;
+}
+
 .container {
     max-width: 1200px;
     margin: 0 auto;
@@ -532,7 +536,7 @@ display: block;
 /* Main Content */
 .main-content {
     flex: 1;
-    padding: 2rem 0;
+    padding: 20px 0;
 }
 
 .post {
@@ -741,21 +745,7 @@ display: block;
     display:none;
 }
 
-/*
-.modal-add-post-btn {
-    padding: 0.5rem 1rem;
-    background: var(--primary-gray);
-    color: var(--text-color-one);
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background 0.2s;
-}
 
-.modal-add-post-btn:hover {
-    opacity: 80%;
-}
-*/
 /* --- Додавання поста (модалка) ---     */
 .modal-add-post-input {
     width: 100%;
@@ -782,29 +772,7 @@ display: block;
     width: 100%;
 }
 
-/*
-.modal-add-post-btn {
-    display: inline-block;
-    width: 100%;
-    background: linear-gradient(90deg, #ffd54f, #ffb300);
-    color: #333;
-    border: none;
-    border-radius: 8px;
-    padding: 12px 0;
-    font-size: 17px;
-    font-weight: 600;
-    cursor: pointer;
-    box-shadow: 0 2px 8px rgba(255, 193, 7, 0.13);
-    margin-top: 10px;
-    margin-bottom: 6px;
-    transition: background 0.18s, color 0.18s, box-shadow 0.2s;
-}
-.modal-add-post-btn:hover {
-    background: linear-gradient(90deg, #ffe082, #ffd54f);
-    color: #000;
-    box-shadow: 0 4px 18px rgba(255, 193, 7, 0.22);
-}
-*/
+
 .modal-content textarea[name="content"] {
     width: 100%;
     padding: 0.75rem 1rem;
@@ -856,8 +824,7 @@ display: block;
 .modal-content {
     position: relative;
     background: var(--white);
-    width: 90%;
-    max-width: 1000px;
+    max-width: 1200px;
     margin: 2rem auto;
     padding: 2rem;
     border-radius: 8px;
@@ -904,6 +871,96 @@ body::-webkit-scrollbar{
 
 .modal-image {
     cursor: pointer;
+}
+
+/* Медіа-запити для різних розмірів екранів */
+/* Великі екрани (за замовчуванням) */
+
+/* Середні екрани (ноутбуки, планшети в альбомній орієнтації) */
+@media (max-width: 1366px) {
+    .container {
+        max-width: 700px;
+    }
+    
+    .header .container{
+        max-width: 1200px;
+    }
+
+    .modal-content {
+        max-width: 650px;
+    }
+}
+
+/* Маленькі екрани (планшети в портретній орієнтації) */
+@media (max-width: 1024px) {
+    .container {
+        max-width: 500px;
+        padding: 0 10px;
+    }
+    
+    .post {
+        padding: 1rem;
+    }
+    
+    .modal-content {
+        max-width: 550px;
+        padding: 1.5rem;
+    }
+}
+
+/* Дуже малі екрани (телефони) */
+@media (max-width: 768px) {
+    .container {
+        max-width: 500px;
+        padding: 0 10px;
+    }
+    
+    .post {
+        padding: 0.75rem;
+        margin-bottom: 1rem;
+    }
+    
+    .modal-content {
+        padding: 1rem;
+        margin: 1rem auto;
+        max-height: 95vh;
+    }
+    
+    .filter-buttons button {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.85rem;
+    }
+}
+
+/* Найменші екрани */
+@media (max-width: 480px) {
+    .container {
+        padding: 0 8px;
+    }
+    
+    .post {
+        padding: 0.5rem;
+    }
+    
+    .modal-content {
+        padding: 0.75rem;
+        width: 95%;
+    }
+    
+    .comment-text {
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        word-break: break-word;
+        hyphens: auto;
+    }
+}
+
+/* Загальні стилі для перенесення слів у коментарях */
+.comment-text {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
 }
 
 textarea {
